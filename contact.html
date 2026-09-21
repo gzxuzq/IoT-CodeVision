@@ -160,6 +160,9 @@
           </p>
           <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-4 text-left space-y-3">
             <div class="text-xs font-bold text-brand-800 uppercase tracking-wider">着急验证技术可行性？欢迎即刻直联：</div>
+            <button id="copy-req-btn" type="button" class="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold p-2.5 rounded-lg hover:bg-emerald-700 transition-colors text-sm shadow-sm">
+              <span>📋 一键复制我的需求（方便发给微信顾问）</span>
+            </button>
             <a href="tel:19065223505" class="flex items-center justify-between bg-white border border-blue-200 p-2.5 rounded-lg hover:border-brand-400 transition-colors">
               <span class="text-sm font-bold text-brand-700">📞 点击一键拨打：19065223505</span>
               <span class="text-xs text-slate-400">优先接通 →</span>
@@ -292,6 +295,21 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   successBox.classList.remove('hidden');
   const snEl = document.getElementById('order-sn');
   if(snEl) snEl.textContent = sn;
+
+  // 复制需求文本
+  const copyBtn = document.getElementById('copy-req-btn');
+  if(copyBtn) {
+    copyBtn.onclick = function() {
+      const summaryText = `【码视野IoT咨询】\n工单号：${sn}\n客户姓名：${data.name || ''}\n联系方式：${data.contact || ''}\n所属行业：${data.industry || ''}\n需求详情：${data.description || ''}\n预算区间：${data.budget || '暂未确定'}`;
+      navigator.clipboard.writeText(summaryText).then(() => {
+        copyBtn.innerHTML = '<span>✅ 已复制到剪贴板！可直接粘贴在微信发送</span>';
+        copyBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        copyBtn.classList.add('bg-blue-600');
+      }).catch(() => {
+        alert(summaryText);
+      });
+    };
+  }
 });
 </script>
 </body>

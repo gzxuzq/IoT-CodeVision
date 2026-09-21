@@ -228,6 +228,13 @@ def main():
 
     print(f"\n[Done] 编译完成: {built_posts} 篇博文，{built_solutions} 个解决方案落地页")
 
+    # 3. 同步刷新 sitemap.xml
+    try:
+        import generate_sitemap
+        generate_sitemap.main() if hasattr(generate_sitemap, 'main') else None
+    except Exception:
+        os.system(f'"{sys.executable}" "{BASE_DIR / "generate_sitemap.py"}"')
+
 
 if __name__ == '__main__':
     main()

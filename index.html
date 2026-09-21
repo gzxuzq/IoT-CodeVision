@@ -596,6 +596,15 @@ async function loadBlogPreview() {
             <span class="text-xs text-slate-400">${p.read_time}</span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2">${p.title}</h3>
+          <p class="text-xs text-slate-500 line-clamp-2">${p.summary}</p>
+        </div>
+      </a>
+    `).join('');
+  } catch(e) {
+    console.log('博文数据加载中');
+  }
+}
+
 // 加载精选解决方案预览
 async function loadHomeSolutions() {
   try {
@@ -637,9 +646,103 @@ async function loadHomeSolutions() {
   }
 }
 
+// 案例详情弹窗
+let cachedCases = [];
+async function loadCases() {
+  try {
+    const res = await fetch('cases_index.json');
+    cachedCases = await res.json();
+    const grid = document.getElementById('cases-grid');
+    grid.innerHTML = cachedCases.map((c, idx) => `
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-300 transition-all flex flex-col group">
+        <div class="h-44 overflow-hidden relative">
+          <img src="${c.cover_image}" alt="${c.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+          <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-white text-xs px-2.5 py-1 rounded-md font-semibold">${c.industry_label}</span>
+        </div>
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="text-xs text-slate-400 mb-2 font-mono">工期：${c.duration_days} 天 · 接入设备：${c.devices_count} 台</div>
+          <h3 class="font-bold text-slate-900 leading-snug mb-3 text-base flex-1">${c.title}</h3>
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            ${c.delivery_highlights.slice(0,3).map(h => `
+              <div class="text-center bg-blue-50/70 border border-blue-100/60 rounded-lg p-1.5">
+                <div class="text-xs font-bold text-brand-700">${h.improvement}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">${h.metric}</div>
+              </div>
+            `).join('')}
+          </div>
+          <p class="text-xs text-slate-500 italic mb-4 border-l-2 border-brand-300 pl-2">"${c.client_quote.slice(0, 50)}…"</p>
+          <button onclick="showCaseModal(${idx})" class="w-full py-2 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs font-bold rounded-xl transition-colors">
+            查看案例架构与交付细节 →
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    console.log('案例数据加载中');
+  }
+}
+
+function showCaseModal(idx) {
+  const c = cachedCases[idx];
+  if(!c) return;
+  const modal = document.getElementById('case-modal');
+  document.getElementById('modal-title').textContent = c.title;
+  document.getElementById('modal-client').textContent = c.client_desc || '脱敏标杆客户';
+  document.getElementById('modal-protocols').textContent = (c.core_protocols || []).join(' · ');
+  document.getElementById('modal-stack').textContent = (c.tech_stack || []).join(' · ');
+  document.getElementById('modal-summary').textContent = c.solution_summary || '';
+  document.getElementById('modal-pains').innerHTML = (c.pain_points || []).map(p => `<li>${p}</li>`).join('');
+  document.getElementById('modal-results').innerHTML = (c.delivery_highlights || []).map(h => `
+    <div class="bg-blue-50 p-2.5 rounded-lg text-center">
+      <div class="text-sm font-bold text-brand-700">${h.improvement}</div>
+      <div class="text-xs text-slate-500 mt-0.5">${h.metric}（原：${h.before}）</div>
+    </div>
+  `).join('');
+  modal.classList.remove('hidden');
+}
+
+function closeCaseModal() {
+  document.getElementById('case-modal').classList.add('hidden');
+}
+
 loadCases();
 loadHomeSolutions();
 loadBlogPreview();
 </script>
+
+<!-- 案例详情全局弹窗 Modal -->
+<div id="case-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
+    <button onclick="closeCaseModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-2 text-xl font-bold">✕</button>
+    <div class="text-xs font-bold text-brand-600 mb-1" id="modal-client">客户背景</div>
+    <h3 class="text-xl font-bold text-slate-900 mb-4" id="modal-title">案例标题</h3>
+    
+    <div class="space-y-4 text-sm text-slate-600">
+      <div>
+        <h4 class="font-bold text-slate-800 mb-1 text-xs uppercase tracking-wider text-slate-400">现场核心痛点</h4>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600" id="modal-pains"></ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-slate-800 mb-1 text-xs uppercase tracking-wider text-slate-400">码视野解决架构</h4>
+        <p class="leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100" id="modal-summary"></p>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3 rounded-xl">
+        <div><span class="text-slate-400">接入通信协议：</span><span class="font-bold text-slate-700" id="modal-protocols"></span></div>
+        <div><span class="text-slate-400">核心交付技术栈：</span><span class="font-bold text-slate-700" id="modal-stack"></span></div>
+      </div>
+      <div>
+        <h4 class="font-bold text-slate-800 mb-2 text-xs uppercase tracking-wider text-slate-400">实际交付量化收益对照</h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="modal-results"></div>
+      </div>
+    </div>
+    
+    <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div class="text-xs text-slate-400">类似业务场景？码视野提供免费方案诊断</div>
+      <a href="tel:19065223505" class="bg-brand-600 text-white font-bold px-4 py-2 rounded-xl text-xs hover:bg-brand-700 transition-colors">
+        📞 拨打专线咨询：19065223505
+      </a>
+    </div>
+  </div>
+</div>
 </body>
 </html>

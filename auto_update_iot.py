@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 码视野 IoT 官网 - 自动化自造血更新引擎 (Pro Max)
-核心功能：
-1. 【每 1 小时】：自动新增一个垂直行业【系统解决方案】并编译独立落地页
-2. 【每 1 小时】：自动生成一篇高质量【技术深度博文】并编译独立落地页
-3. 【每 2 天】：自动检测并新增一个全新脱敏【落地交付案例】（写入 cases_index.json）
-4. 全量编译静态页 + 自动 git commit & push 至 GitHub 触发 Vercel 秒级部署
+核心功能与排期频率：
+1. 【行业解决方案】：一天 1 篇（每 24 小时自动更新 1 篇垂直行业系统解决方案与独立落地页）
+2. 【技术深度博文】：一天 6 篇（每 4 小时自动更新 1 篇技术深度博文与独立落地页，一天累计 6 篇）
+3. 【落地交付案例】：每 2 天 1 篇（每 48 小时自动更新 1 个真实脱敏交付项目案例）
+4. 【手动触发穿透】：GitHub Actions 网页端 workflow_dispatch 手动运行时强制新增并实时构建
+5. 全量编译静态页 + 自动 git commit & push 至 GitHub 触发 Vercel 秒级部署上线
 """
 import json
 import os
@@ -24,6 +25,26 @@ BEIJING_TZ = timezone(timedelta(hours=8))
 
 def get_beijing_now():
     return datetime.now(BEIJING_TZ)
+
+def parse_item_datetime(item, default_dt=None):
+    """解析数据项中的日期时间，统一返回带有时区 (BEIJING_TZ) 的 datetime"""
+    date_str = item.get('date') or item.get('created_at')
+    if date_str:
+        for fmt in ('%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M', '%Y/%m/%d'):
+            try:
+                dt = datetime.strptime(date_str, fmt)
+                return dt.replace(tzinfo=BEIJING_TZ)
+            except ValueError:
+                pass
+    item_id = str(item.get('id', ''))
+    digits = ''.join([c for c in item_id if c.isdigit()])
+    if len(digits) >= 12:
+        try:
+            dt = datetime.strptime(digits[:12], '%Y%m%d%H%M')
+            return dt.replace(tzinfo=BEIJING_TZ)
+        except ValueError:
+            pass
+    return default_dt or datetime(2020, 1, 1, tzinfo=BEIJING_TZ)
 
 # 强制禁用控制台编码异常并实时刷新
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -247,15 +268,35 @@ def call_agnes_llm(system_prompt, user_prompt, max_tokens=2500, timeout_sec=50):
 
 
 # ==========================================
-# 4. 自动更新行业解决方案 (每小时)
+# 4. 自动更新行业解决方案 (一天 1 篇 / 24 小时周期)
 # ==========================================
-def update_solutions_hourly():
-    print("\n--- [任务 1] 检查更新垂直行业解决方案 (每小时自造血) ---", flush=True)
+def update_solutions_daily(force=False):
+    print("\n--- [任务 1] 检查更新垂直行业解决方案 (一天 1 篇周期) ---", flush=True)
     if not SOLUTIONS_INDEX_FILE.exists():
         solutions = []
     else:
         with open(SOLUTIONS_INDEX_FILE, 'r', encoding='utf-8') as f:
             solutions = json.load(f)
+
+    is_manual = force or os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch' or os.getenv('FORCE_UPDATE') == 'true'
+    need_update = False
+    if is_manual:
+        need_update = True
+        print("[Solutions] ⚡ 检测到手动触发指令 (workflow_dispatch)，无视周期限制，强制新增行业解决方案！", flush=True)
+    elif not solutions:
+        need_update = True
+    else:
+        latest_dt = parse_item_datetime(solutions[0])
+        diff_hours = (get_beijing_now() - latest_dt).total_seconds() / 3600
+        # 一天 1 篇，周期限制为 24 小时
+        if diff_hours >= 24:
+            need_update = True
+            print(f"[Solutions] 上次方案更新于 {solutions[0].get('date', '')} (距今 {diff_hours:.1f}h >= 24h)，满足一天一篇周期，触发更新！", flush=True)
+        else:
+            print(f"[Solutions] 上次方案更新于 {solutions[0].get('date', '')} (距今 {diff_hours:.1f}h < 24h)，未满一天周期（1天/篇），保持现状。", flush=True)
+
+    if not need_update:
+        return
 
     existing_titles = {s['title'] for s in solutions}
     target_topic = None
@@ -400,15 +441,35 @@ def update_cases_every_two_days(force=False):
 
 
 # ==========================================
-# 6. 自动新增技术深度博文 (每小时)
+# 6. 自动新增技术深度博文 (一天 6 篇 / 4 小时周期)
 # ==========================================
-def update_blog_hourly():
-    print("\n--- [任务 3] 检查更新技术深度博文 (每小时自造血) ---", flush=True)
+def update_blog_daily_six(force=False):
+    print("\n--- [任务 3] 检查更新技术深度博文 (一天 6 篇周期 / 4h一篇) ---", flush=True)
     if not POSTS_INDEX_FILE.exists():
         posts = []
     else:
         with open(POSTS_INDEX_FILE, 'r', encoding='utf-8') as f:
             posts = json.load(f)
+
+    is_manual = force or os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch' or os.getenv('FORCE_UPDATE') == 'true'
+    need_update = False
+    if is_manual:
+        need_update = True
+        print("[Blog] ⚡ 检测到手动触发指令 (workflow_dispatch)，无视周期限制，强制新增技术博文！", flush=True)
+    elif not posts:
+        need_update = True
+    else:
+        latest_dt = parse_item_datetime(posts[0])
+        diff_hours = (get_beijing_now() - latest_dt).total_seconds() / 3600
+        # 一天 6 篇，即每 4 小时一篇 (24 / 6 = 4)
+        if diff_hours >= 4:
+            need_update = True
+            print(f"[Blog] 上次博文更新于 {posts[0].get('date', '')} (距今 {diff_hours:.1f}h >= 4h)，满足更新周期（一天6篇，即4h/篇），触发更新！", flush=True)
+        else:
+            print(f"[Blog] 上次博文更新于 {posts[0].get('date', '')} (距今 {diff_hours:.1f}h < 4h)，未满更新周期（一天6篇，即4h/篇），保持现状。", flush=True)
+
+    if not need_update:
+        return
 
     now = get_beijing_now()
     article_id = now.strftime('%Y%m%d%H%M%S')
@@ -502,6 +563,11 @@ def compile_and_deploy():
         print("[Build Warning]", res.stderr[:200], flush=True)
 
     try:
+        status_res = subprocess.run(['git', 'status', '--porcelain'], cwd=str(BASE_DIR), capture_output=True, text=True)
+        if not status_res.stdout.strip():
+            print("[Git] ℹ️ 本次运行各板块均处于周期内，无新增内容，保持最新状态无需重复推流。", flush=True)
+            return
+
         subprocess.run(['git', 'add', '.'], cwd=str(BASE_DIR), check=True, capture_output=True)
         now_str = get_beijing_now().strftime('%m-%d %H:%M')
         subprocess.run(['git', 'commit', '-m', f'[auto-update] 解决方案/案例/博文定时自造血更新 ({now_str})'], cwd=str(BASE_DIR), check=True, capture_output=True)
@@ -516,19 +582,19 @@ def main():
     print(f"[{get_beijing_now().strftime('%Y-%m-%d %H:%M:%S')}] 启动码视野 IoT 官网全流程自造血更新", flush=True)
     print("=" * 60, flush=True)
 
-    # 1. 更新解决方案（每小时）
-    update_solutions_hourly()
+    # 1. 更新垂直行业解决方案（一天 1 篇 / 24 小时周期）
+    update_solutions_daily()
 
-    # 2. 更新项目案例（每 2 天周期判定）
+    # 2. 更新落地交付案例（每 2 天 1 篇 / 48 小时周期）
     update_cases_every_two_days()
 
-    # 3. 更新技术博文（每小时）
-    update_blog_hourly()
+    # 3. 更新技术深度博文（一天 6 篇 / 每 4 小时周期）
+    update_blog_daily_six()
 
     # 4. 全量编译与部署
     compile_and_deploy()
 
-    print("\n🎉 全部自造血流水线执行成功！", flush=True)
+    print("\n🎉 全部自造血流水线执行完毕！", flush=True)
 
 
 if __name__ == '__main__':

@@ -51,16 +51,17 @@
 <!-- ===== 顶部导航 ===== -->
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-    <a href="/" class="flex items-center gap-2 font-bold text-brand-700 text-lg">
-      <span class="text-2xl">🔗</span>
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
       <span>码视野</span>
       <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Software Lab</span>
     </a>
     <!-- PC 导航 -->
     <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-      <a href="/" class="text-brand-600 border-b-2 border-brand-500 pb-0.5">官网首页</a>
-      <a href="#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">官网首页</a>
+      <a href="solutions.html" class="hover:text-brand-600 transition-colors font-medium">行业解决方案</a>
       <a href="#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="#services" class="hover:text-brand-600 transition-colors">服务能力</a>
       <a href="#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
       <a href="blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
       <a href="contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors">免费咨询</a>
@@ -73,9 +74,10 @@
   <!-- 移动端展开菜单 -->
   <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
     <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
-      <a href="/" class="text-brand-600">官网首页</a>
-      <a href="#services" class="text-slate-600">服务能力</a>
+      <a href="/" class="text-brand-600 font-bold">官网首页</a>
+      <a href="solutions.html" class="text-slate-600">行业解决方案</a>
       <a href="#cases" class="text-slate-600">项目案例</a>
+      <a href="#services" class="text-slate-600">服务能力</a>
       <a href="#tech" class="text-slate-600">技术栈</a>
       <a href="blog.html" class="text-slate-600">技术博文</a>
       <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center">免费咨询</a>
@@ -197,6 +199,29 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 精选垂直行业解决方案 ===== -->
+<section class="py-16 bg-gradient-to-b from-slate-100 to-white border-y border-slate-200/80">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          每小时持续更新 · 行业级交钥匙工程方案
+        </div>
+        <h2 class="text-3xl font-bold text-slate-900">精选行业系统解决方案</h2>
+        <p class="text-slate-500 text-sm mt-1">涵盖硬件物料清单选型、边缘控制网络拓扑、协议转换与全套数字中台实现路径</p>
+      </div>
+      <a href="solutions.html" class="inline-flex items-center gap-1.5 text-brand-600 font-bold text-sm hover:translate-x-1 transition-transform">
+        <span>浏览全部行业解决方案</span>
+        <span>→</span>
+      </a>
+    </div>
+    <div id="home-solutions-grid" class="grid sm:grid-cols-2 gap-6">
+      <!-- 动态加载最新 2 篇方案 -->
     </div>
   </div>
 </section>
@@ -461,8 +486,11 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="grid sm:grid-cols-3 gap-8 mb-8">
       <div>
-        <div class="text-white font-bold text-lg mb-3">🔗 码视野</div>
-        <p class="text-sm leading-relaxed">专注物联网软件开发 6 年，累计接入设备 86,000+ 台，落地项目 38+ 个。广东广州，全国服务。</p>
+        <div class="flex items-center gap-2 text-white font-bold text-lg mb-3">
+          <img src="images/logo.png" alt="码视野" class="w-6 h-6 rounded object-cover">
+          <span>码视野</span>
+        </div>
+        <p class="text-sm leading-relaxed">码视野是一支深耕物联网软件研发与边缘计算交付 6 年的资深技术专家团队，累计接入设备 86,000+ 台，落地项目 38+ 个。立足广东广州，辐射全国各垂直行业。</p>
       </div>
       <div>
         <div class="text-white font-semibold mb-3">服务方向</div>
@@ -549,16 +577,49 @@ async function loadBlogPreview() {
             <span class="text-xs text-slate-400">${p.read_time}</span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2">${p.title}</h3>
-          <p class="text-xs text-slate-500 line-clamp-2">${p.summary}</p>
+// 加载精选解决方案预览
+async function loadHomeSolutions() {
+  try {
+    const res = await fetch('solutions_index.json');
+    const sols = await res.json();
+    const grid = document.getElementById('home-solutions-grid');
+    if(!grid || !sols || sols.length === 0) return;
+    grid.innerHTML = sols.slice(0, 2).map(s => {
+      const fileName = s.id.startsWith('sol_') ? s.id : 'sol_' + s.id;
+      return `
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-400 transition-all flex flex-col group">
+          <div class="h-44 overflow-hidden relative">
+            <img src="${s.cover_image}" alt="${s.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute top-3 left-3 bg-brand-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-md backdrop-blur">
+              ${s.industry}
+            </div>
+            <div class="absolute bottom-3 right-3 bg-white/90 text-slate-700 text-xs px-2 py-0.5 rounded shadow-sm">
+              ⏱ ${s.deploy_cycle || '交钥匙方案'}
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="text-xs font-semibold text-brand-600 mb-1">${s.industry_tag}</div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2 leading-snug">
+              <a href="solutions/${fileName}.html">${s.title}</a>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">${s.summary}</p>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-slate-400 font-mono">${(s.protocols || []).slice(0, 2).join(' · ')}</span>
+              <a href="solutions/${fileName}.html" class="text-brand-600 font-bold text-xs sm:text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                查阅完整方案 →
+              </a>
+            </div>
+          </div>
         </div>
-      </a>
-    `).join('');
+      `;
+    }).join('');
   } catch(e) {
-    console.log('博文数据加载中');
+    console.log('方案加载中');
   }
 }
 
 loadCases();
+loadHomeSolutions();
 loadBlogPreview();
 </script>
 </body>

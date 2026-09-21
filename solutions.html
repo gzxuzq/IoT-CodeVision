@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行业解决方案 · 码视野 IoT 研发团队 | 工业/光伏储能/冷链/农业物联网平台</title>
+  <meta name="description" content="码视野物联网研发团队针对工业制造、新能源光储充微电网、智慧冷链仓储、智慧农业与智能楼宇等垂直领域，提供涵盖硬件BOM选型、网络拓扑架构、边缘自治控制与云端数字孪生的交钥匙解决方案。">
+  <meta name="keywords" content="物联网解决方案,光储充微电网EMS,工业设备远程监控方案,智慧冷链温湿度方案,智慧农业物联网,楼宇能耗管理">
+  <link rel="canonical" href="https://iot.codevision.cn/solutions.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' } } } }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif; }
+    .line-clamp-2 { display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+    .line-clamp-3 { display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- 顶部导航 -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <a href="contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors">免费咨询</a>
+    </div>
+    <button id="menu-btn" class="md:hidden p-2 text-slate-600">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="blog.html" class="text-slate-600">技术博文</a>
+      <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center">免费咨询</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 首屏标题区 -->
+<section class="pt-24 pb-12 bg-gradient-to-b from-blue-50/50 to-slate-50 border-b border-slate-100">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+    <div class="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      每小时持续更新 · 行业级交钥匙工程标准方案
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+      物联网垂直行业系统解决方案
+    </h1>
+    <p class="text-slate-600 max-w-2xl mx-auto text-base">
+      从底层传感器物料清单选型、边缘控制网关协议解析，到微服务云端中台与 3D 数字孪生看板，提供端到端严谨闭环的工程落地指南。
+    </p>
+  </div>
+</section>
+
+<!-- 解决方案展示卡片网格 -->
+<section class="py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div id="solutions-grid" class="grid sm:grid-cols-2 lg:grid-cols-2 gap-8">
+      <div class="col-span-2 text-center py-12 text-slate-400">正在加载最新行业解决方案…</div>
+    </div>
+  </div>
+</section>
+
+<!-- 底部咨询 CTA -->
+<section class="py-16 bg-brand-700 text-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3">需要量身定制针对贵司业务场景的专属解决方案？</h2>
+    <p class="text-brand-200 mb-8 text-sm sm:text-base">码视野技术团队拥有全栈交付经验，我们承诺 1 小时内响应，免费出具可行性评估报告与架构拓扑图。</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <a href="tel:19065223505" class="inline-flex items-center gap-2 bg-white text-brand-700 font-bold px-6 py-3.5 rounded-xl hover:bg-brand-50 transition-all shadow-md">
+        <span>📞 立即拨打专线：19065223505</span>
+      </a>
+      <a href="contact.html" class="inline-flex items-center gap-2 bg-brand-900/80 border border-brand-400/40 text-white font-semibold px-6 py-3.5 rounded-xl hover:bg-brand-900 transition-all">
+        <span>预约方案架构师深度交流 →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-500 py-10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center text-xs">
+    <div class="flex items-center justify-center gap-2 mb-3">
+      <img src="images/logo.png" alt="码视野" class="w-6 h-6 rounded object-cover">
+      <span class="text-slate-300 font-bold">码视野物联网软件研发团队</span>
+    </div>
+    <p class="mb-2">专注物联网行业软件开发与边缘计算交付 · 广东广州 · 电话/微信：19065223505</p>
+    <p>© 2026 码视野 · 粤ICP备XXXXXXXX号</p>
+  </div>
+</footer>
+
+<script>
+document.getElementById('menu-btn').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+
+async function loadSolutions() {
+  try {
+    const res = await fetch('solutions_index.json');
+    const solutions = await res.json();
+    const grid = document.getElementById('solutions-grid');
+    if(!solutions || solutions.length === 0) {
+      grid.innerHTML = '<div class="col-span-2 text-center py-12 text-slate-400">方案更新中…</div>';
+      return;
+    }
+    grid.innerHTML = solutions.map(s => {
+      const roiBadges = s.roi_data ? Object.entries(s.roi_data).slice(0,3).map(([k,v]) => `
+        <div class="bg-blue-50/70 border border-blue-100 rounded-lg p-2 text-center">
+          <div class="text-xs font-bold text-brand-700">${v}</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">${k}</div>
+        </div>
+      `).join('') : '';
+
+      const protocols = s.protocols ? s.protocols.slice(0,4).map(p => `
+        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded font-mono">${p}</span>
+      `).join('') : '';
+
+      return `
+        <article class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-400 transition-all duration-300 flex flex-col group">
+          <div class="h-48 overflow-hidden relative">
+            <img src="${s.cover_image}" alt="${s.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            <div class="absolute top-3 left-3 bg-brand-600/90 backdrop-blur text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+              ${s.industry}
+            </div>
+            <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-slate-700 text-xs font-medium px-2.5 py-1 rounded-md shadow-sm">
+              ⏱ ${s.deploy_cycle || '快速部署'}
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded">${s.industry_tag}</span>
+              <span class="text-xs text-slate-400 ml-auto">${s.date}</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug mb-3">
+              <a href="solutions/${s.id.startsWith('sol_') ? s.id : 'sol_' + s.id}.html">${s.title}</a>
+            </h2>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4 flex-1">
+              ${s.summary}
+            </p>
+            <!-- 核心量化指标 -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              ${roiBadges}
+            </div>
+            <!-- 协议标签与查看详情 -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                ${protocols}
+              </div>
+              <a href="solutions/${s.id.startsWith('sol_') ? s.id : 'sol_' + s.id}.html" class="text-brand-600 font-bold text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                完整方案 →
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  } catch(e) {
+    console.error(e);
+    document.getElementById('solutions-grid').innerHTML = '<div class="col-span-2 text-center py-12 text-slate-400">方案数据加载失败，请刷新重试</div>';
+  }
+}
+
+loadSolutions();
+</script>
+</body>
+</html>

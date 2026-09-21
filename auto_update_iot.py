@@ -60,7 +60,7 @@ if env_path.exists():
 
 AGNES_API_KEY = os.getenv('AGNES_API_KEY') or 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH'
 AGNES_BASE_URL = os.getenv('AGNES_BASE_URL', 'https://apihub.agnes-ai.com/v1')
-AGNES_MODEL = os.getenv('AGNES_MODEL', 'agnes-3.0-flash')
+AGNES_MODEL = os.getenv('AGNES_MODEL', 'agnes-2.5-flash')
 
 POSTS_INDEX_FILE = BASE_DIR / 'posts_index.json'
 SOLUTIONS_INDEX_FILE = BASE_DIR / 'solutions_index.json'
@@ -225,7 +225,7 @@ CASE_CANDIDATES = [
 # ==========================================
 # 3. 健壮的 Agnes AI 大模型调用封装
 # ==========================================
-def call_agnes_llm(system_prompt, user_prompt, max_tokens=2500, timeout_sec=50):
+def call_agnes_llm(system_prompt, user_prompt, max_tokens=3000, timeout_sec=90):
     if not AGNES_API_KEY:
         print("[LLM] 未配置 AGNES_API_KEY，回退本地工程模版", flush=True)
         return None
@@ -259,11 +259,13 @@ def call_agnes_llm(system_prompt, user_prompt, max_tokens=2500, timeout_sec=50):
             if choices:
                 msg = choices[0].get('message', {})
                 content = msg.get('content') or msg.get('reasoning_content', '')
-                if content and len(content) > 200:
-                    print(f"[LLM] Agnes AI 成功响应 ({time.time()-t0:.1f}s, {len(content)} 字符)", flush=True)
+                if content and len(content) > 300:
+                    print(f"[LLM] Agnes AI 成功深度响应 ({time.time()-t0:.1f}s, {len(content)} 字符)", flush=True)
                     return content
+                else:
+                    print(f"[LLM] Agnes AI 响应内容较短 ({len(content) if content else 0} 字符)，准备安全回退", flush=True)
     except Exception as e:
-        print(f"[LLM] Agnes AI 调用未完成 ({e})，立即切换高保真知识库生成", flush=True)
+        print(f"[LLM] Agnes AI 调用未完成 ({e})，准备安全回退", flush=True)
     return None
 
 
@@ -321,7 +323,7 @@ def update_solutions_daily(force=False):
     user_prompt = f"请为【{target_topic['title']}】撰写完整交钥匙方案，行业：{target_topic['industry']}，协议：{', '.join(target_topic['protocols'])}。"
 
     print(f"[Solutions] 正在筹备行业方案：《{target_topic['title']}》...", flush=True)
-    content = call_agnes_llm(system_prompt, user_prompt, max_tokens=2500, timeout_sec=40)
+    content = call_agnes_llm(system_prompt, user_prompt, max_tokens=3000, timeout_sec=90)
 
     if not content:
         # 高保真工程模板回退生成
@@ -492,9 +494,19 @@ def update_blog_daily_six(force=False):
         target = dict(base_b)
         target['title'] = f"{base_b['title']} (深度实战篇)"
 
-    system_prompt = "你是码视野物联网软件研发团队资深架构师。撰写一篇专业技术博文，包含痛点、Mermaid 架构图、Python/Go 代码示例与量化 ROI 对比表格。文末留团队电话/微信 19065223505。"
-    print(f"[Blog] 正在撰写博文：《{target['title']}》...", flush=True)
-    content = call_agnes_llm(system_prompt, f"撰写技术博文《{target['title']}》", max_tokens=2200, timeout_sec=40)
+    system_prompt = (
+        "你是码视野物联网软件研发团队的首席资深架构师（工业IoT与边缘计算深耕6年）。\n"
+        "你正在为企业技术专栏撰写一篇极具工程说服力、深度、干货满满的万字级实战技术博文（2,500~3,500字）。\n"
+        "【严禁事项】：严禁任何空洞废话套话，全篇以真实工业产线第一视角展开。\n"
+        "【必须包含完整五大部分】：\n"
+        "一、 工业现场真实硬件环境与底层痛点深度剖析（报文时序、串口反射、485总线抖动、网络断连）；\n"
+        "二、 码视野高可用边缘系统拓扑架构（必须包含一段原生标准可渲染的 Mermaid flowchart 流程拓扑图）；\n"
+        "三、 工业级生产环境完整实现代码示例（Python 或 Go 真实驱动与持久化缓存、重传逻辑，带详细中文注释）；\n"
+        "四、 关键技术指标与改造前后 ROI 性能对比表格；\n"
+        "五、 总结与技术支持咨询通道（专属技术顾问电话/微信：19065223505）。"
+    )
+    print(f"[Blog] 正在撰写深度博文：《{target['title']}》...", flush=True)
+    content = call_agnes_llm(system_prompt, f"请撰写完整技术长文《{target['title']}》", max_tokens=3500, timeout_sec=90)
 
     if not content:
         content = f"""# {target['title']}

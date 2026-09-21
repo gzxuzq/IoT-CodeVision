@@ -40,7 +40,7 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY || 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH' }}
           AGNES_BASE_URL: https://apihub.agnes-ai.com/v1
-          AGNES_MODEL: agnes-3.0-flash
+          AGNES_MODEL: agnes-2.5-flash
         run: |
           python auto_update_iot.py
 

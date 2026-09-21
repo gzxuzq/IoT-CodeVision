@@ -56,6 +56,9 @@ POST_TEMPLATE = """<!DOCTYPE html>
   <meta property="og:image" content="__COVER_IMAGE__">
   <meta property="og:type" content="article">
   <link rel="canonical" href="__CANONICAL__">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"TechArticle","headline":"__TITLE__","image":"__COVER_IMAGE__","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"__DATE__","description":"__SUMMARY__"}
   </script>

@@ -11,10 +11,10 @@ BASE_DIR = Path(__file__).parent
 today = datetime.now().strftime('%Y-%m-%d')
 
 urls = [
-    ('https://iot-showcase.vercel.app/', '1.0', today),
-    ('https://iot-showcase.vercel.app/solutions.html', '0.9', today),
-    ('https://iot-showcase.vercel.app/blog.html', '0.8', today),
-    ('https://iot-showcase.vercel.app/contact.html', '0.8', today),
+    ('https://iot-showcase.hei-ai.com/', '1.0', today),
+    ('https://iot-showcase.hei-ai.com/solutions.html', '0.9', today),
+    ('https://iot-showcase.hei-ai.com/blog.html', '0.8', today),
+    ('https://iot-showcase.hei-ai.com/contact.html', '0.8', today),
 ]
 
 # 索引博文
@@ -23,7 +23,7 @@ if posts_file.exists():
     for p in json.load(open(posts_file, encoding='utf-8')):
         pid = p['id']
         date_str = p.get('date', today).split(' ')[0]
-        urls.append((f"https://iot-showcase.vercel.app/posts/post_{pid}.html", '0.7', date_str))
+        urls.append((f"https://iot-showcase.hei-ai.com/posts/post_{pid}.html", '0.7', date_str))
 
 # 索引解决方案
 sols_file = BASE_DIR / 'solutions_index.json'
@@ -31,7 +31,7 @@ if sols_file.exists():
     for s in json.load(open(sols_file, encoding='utf-8')):
         sid = s['id'] if s['id'].startswith('sol_') else f"sol_{s['id']}"
         date_str = s.get('date', today).split(' ')[0]
-        urls.append((f"https://iot-showcase.vercel.app/solutions/{sid}.html", '0.85', date_str))
+        urls.append((f"https://iot-showcase.hei-ai.com/solutions/{sid}.html", '0.85', date_str))
 
 xml_lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',

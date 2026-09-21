@@ -83,6 +83,8 @@ POST_TEMPLATE = """<!DOCTYPE html>
   <meta property="og:title" content="__TITLE__">
   <meta property="og:image" content="__COVER_IMAGE__">
   <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
   <link rel="canonical" href="__CANONICAL__">
   <link rel="icon" type="image/png" href="/images/logo.png">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -219,14 +221,16 @@ def build_post_html(post, is_solution=False):
     html = html.replace('__COVER_IMAGE__', cover)
     
     if is_solution:
-        html = html.replace('__CANONICAL__', f"https://iot.codevision.cn/solutions/sol_{post['id']}.html")
+        sid = post['id'] if str(post['id']).startswith('sol_') else f"sol_{post['id']}"
+        html = html.replace('__CANONICAL__', f"https://iot-showcase.hei-ai.com/solutions/{sid}.html")
         html = html.replace('__BACK_LINK__', "/solutions.html")
         html = html.replace('__BACK_TEXT__', "← 返回行业解决方案")
         html = html.replace('__CATEGORY__', post.get('industry', '行业解决方案'))
         html = html.replace('__TAG__', post.get('industry_tag', '垂直架构'))
         html = html.replace('__READ_TIME__', post.get('deploy_cycle', '深度方案'))
     else:
-        html = html.replace('__CANONICAL__', f"https://iot.codevision.cn/posts/post_{post['id']}.html")
+        pid = post['id'] if str(post['id']).startswith('post_') else f"post_{post['id']}"
+        html = html.replace('__CANONICAL__', f"https://iot-showcase.hei-ai.com/posts/{pid}.html")
         html = html.replace('__BACK_LINK__', "/blog.html")
         html = html.replace('__BACK_TEXT__', "← 返回博文矩阵")
         html = html.replace('__CATEGORY__', post.get('category', '技术实战'))

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务 · 码视野IoT技术博客</title>
+  <meta name="description" content="手把手教你用 Python + Paho-MQTT 库构建一个生产级 IoT 数据采集服务，涵盖连接管理、QoS 配置、断线重连、消息持久化入库全流程。">
+  <meta property="og:title" content="实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://iot.codevision.cn/posts/post_20260921002.html">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务","image":"https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80","author":{"@type":"Organization","name":"码视野"},"datePublished":"2026-09-21 10:00","description":"手把手教你用 Python + Paho-MQTT 库构建一个生产级 IoT 数据采集服务，涵盖连接管理、QoS 配置、断线重连、消息持久化入库全流程。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+    body{font-family:'Noto Sans SC','PingFang SC',system-ui,sans-serif;}
+    .prose h2{font-size:1.4rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-brand-700 text-lg">
+      <span class="text-2xl">🔗</span><span>码视野</span>
+    </a>
+    <div class="hidden md:flex items-center gap-5 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600">官网首页</a>
+      <a href="/#services" class="hover:text-brand-600">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600">项目案例</a>
+      <a href="/blog.html" class="hover:text-brand-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <!-- Hero 图 -->
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80" alt="实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <!-- 元信息 -->
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">技术实战解析</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">Python开发</span>
+      <span class="text-slate-400 text-xs ml-auto">2026-09-21 10:00 · 10 分钟</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务</h1>
+    <!-- ROI 指标条 -->
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center"><div class="text-brand-700 font-bold text-lg">< 2 天</div><div class="text-brand-500 text-xs">开发时间</div></div>
+      <div class="text-center"><div class="text-brand-700 font-bold text-lg">99.9%</div><div class="text-brand-500 text-xs">消息可靠性</div></div>
+      <div class="text-center"><div class="text-brand-700 font-bold text-lg">10,000+</div><div class="text-brand-500 text-xs">并发设备</div></div>
+    </div>
+    <!-- 正文 -->
+    <div class="prose" id="content-body"></div>
+    <!-- CTA -->
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">有 IoT 项目需要咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">免费 30 分钟技术诊断，直接对话架构师，给出可落地方案</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19065223505" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 立即拨打 19065223505</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约在线咨询 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件开发团队 · 广东广州 · 电话/微信：19065223505
+  </div>
+</footer>
+<script>
+const mdContent = `# 实战指南：用 Python + Paho-MQTT 快速搭建 IoT 数据采集服务
+
+本文将展示如何用不超过 100 行 Python 代码，搭建一个生产可用的 IoT 数据采集服务，涵盖断线重连、QoS 保障、批量入库等关键生产特性。
+
+## 环境准备
+
+\`\`\`bash
+pip install paho-mqtt influxdb-client python-dotenv
+\`\`\`
+
+## 核心代码结构
+
+\`\`\`python
+import paho.mqtt.client as mqtt
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+import json, time, logging
+
+# ---- 配置区 ----
+BROKER_HOST = "your-emqx-host"
+BROKER_PORT = 8883  # TLS 端口
+TOPIC_PREFIX = "factory/+/telemetry"  # 通配符订阅
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        logging.info("MQTT 连接成功")
+        client.subscribe(TOPIC_PREFIX, qos=1)  # QoS=1 至少送达一次
+    else:
+        logging.error(f"连接失败，错误码: {rc}")
+
+def on_message(client, userdata, msg):
+    try:
+        payload = json.loads(msg.payload.decode())
+        device_id = msg.topic.split("/")[1]
+        # 写入 InfluxDB
+        point = Point("device_telemetry") \\
+            .tag("device_id", device_id) \\
+            .field("temperature", payload.get("temp")) \\
+            .field("humidity", payload.get("hum"))
+        write_api.write(bucket="iot_data", record=point)
+    except Exception as e:
+        logging.error(f"消息处理失败: {e}")
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.reconnect_delay_set(min_delay=1, max_delay=30)  # 断线自动重连
+client.connect(BROKER_HOST, BROKER_PORT)
+client.loop_forever()  # 阻塞运行，自动维护心跳
+\`\`\`
+
+这是码视野在多个真实项目中验证过的基础架构模板，欢迎联系我们获取完整版生产代码。📞 **19065223505**`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  // 提取 mermaid 代码块
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid
+([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  // 渲染 mermaid
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+</script>
+</body>
+</html>

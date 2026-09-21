@@ -23,13 +23,24 @@ NAV_HTML = """
       <span>码视野</span>
       <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Lab</span>
     </a>
-    <div class="hidden md:flex items-center gap-5 text-sm font-medium text-slate-600">
+    <div class="hidden md:flex items-center gap-4 text-sm font-medium text-slate-600">
       <a href="/" class="hover:text-brand-600">官网首页</a>
       <a href="/solutions.html" class="hover:text-brand-600">行业解决方案</a>
       <a href="/#cases" class="hover:text-brand-600">项目案例</a>
       <a href="/blog.html" class="hover:text-brand-600">技术博文</a>
-      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700">免费咨询</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19065223505" class="inline-flex items-center gap-1 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200" title="点击拨打，微信同号">
+        <span class="text-brand-600">📞</span>
+        <span>19065223505</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-3.5 py-1.5 rounded-full hover:bg-brand-700">免费咨询</a>
     </div>
+    <!-- 移动端右上角直拨电话 -->
+    <a href="tel:19065223505" class="md:hidden inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+      <span>📞</span>
+      <span>19065223505</span>
+    </a>
   </div>
 </nav>
 """.strip()

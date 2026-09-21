@@ -1,5 +1,56 @@
 [
   {
+    "title": "华东某特种金属精密压铸厂 · 40 台数控冲压设备状态监测与模具寿命预测系统",
+    "industry": "industrial",
+    "industry_label": "工业制造",
+    "client_desc": "华东某高精密压铸上市公司核心制造基地",
+    "cover_image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80",
+    "duration_days": 42,
+    "devices_count": 160,
+    "core_protocols": [
+      "Modbus TCP",
+      "OPC-UA",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Python",
+      "EMQX",
+      "TimescaleDB",
+      "Vue3",
+      "ECharts"
+    ],
+    "pain_points": [
+      "高温高压环境下模具隐性磨损不可见，突发崩模造成整线报废损失逾百万元",
+      "现场各品牌压铸机 PLC 接口老旧封闭，无法统一采集合模力与行程时序",
+      "传统人工点检流于形式，无法实现设备预测性维护"
+    ],
+    "solution_summary": "布设微型外贴式应变与振动高频传感器，通过 Modbus TCP 与 OPC-UA 采集网关汇入 EMQX，结合 Python 边缘异常波形聚类算法实时比对模具磨损特征，突发异常 100ms 紧急切断下发。",
+    "architecture_mermaid": "flowchart TD\n    A[\"冲压机合模力/振动探头\"] -->|\"高频采样 1kHz\"| B[\"边缘振动采集卡\"]\n    B -->|\"Modbus TCP\"| C[\"工业网关 (Linux)\"]\n    C -->|\"特征值提取\"| D[\"EMQX 消息总线\"]\n    D --> E[\"Python 模具寿命推演模型\"]\n    E --> F[\"大屏 3D 设备台账看板\"]\n    E --> G[\"PLC 停机联锁信号下发\"]",
+    "delivery_highlights": [
+      {
+        "metric": "崩模停产事故",
+        "before": "年均 4~6 起",
+        "after": "上线后 0 起",
+        "improvement": "避免直接损失 240万+"
+      },
+      {
+        "metric": "模具综合寿命",
+        "before": "固定 5 万次强制更换",
+        "after": "动态评测至 7.2 万次",
+        "improvement": "模具利用率提升 44%"
+      },
+      {
+        "metric": "工单处理时效",
+        "before": "停机后报修（2小时）",
+        "after": "临界阈值自动派单",
+        "improvement": "响应时效提升 80%"
+      }
+    ],
+    "client_quote": "码视野技术团队在重工业现场非常有经验，短短 40 多天不仅打通了我们所有不同年份的老机床，更通过算法帮我们彻底根绝了昂贵的模具非计划损坏！",
+    "id": "case_20260921182615",
+    "created_at": "2026-09-21"
+  },
+  {
     "id": "case_001",
     "title": "某汽车零部件制造厂 · 生产线多设备实时监控平台",
     "industry": "industrial",
@@ -8,8 +59,18 @@
     "cover_image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
     "duration_days": 52,
     "devices_count": 320,
-    "core_protocols": ["Modbus TCP", "OPC-UA", "MQTT"],
-    "tech_stack": ["Python", "EMQX", "InfluxDB", "Grafana", "Vue3"],
+    "core_protocols": [
+      "Modbus TCP",
+      "OPC-UA",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Python",
+      "EMQX",
+      "InfluxDB",
+      "Grafana",
+      "Vue3"
+    ],
     "pain_points": [
       "16 条生产线设备来自不同厂商，协议各异，数据孤岛严重",
       "设备故障只能靠工人巡检发现，平均响应时间超过 40 分钟",
@@ -18,13 +79,39 @@
     "solution_summary": "搭建统一的多协议工业数据采集层（Modbus+OPC-UA 协议适配），通过 EMQX 消息队列汇聚至 InfluxDB 时序数据库，配合 Grafana 自研监控大屏实现全厂设备实时可视化。集成 AI 异常检测模型，提前预警设备故障。",
     "architecture_mermaid": "flowchart TD\n    A[\"PLC/传感器\"] -->|\"Modbus TCP\"| B[\"工业网关\"]\n    A2[\"第三方数控设备\"] -->|\"OPC-UA\"| B\n    B -->|\"MQTT over TLS\"| C[\"EMQX 集群\"]\n    C --> D[\"Python 数据处理服务\"]\n    D --> E[\"InfluxDB 时序数据库\"]\n    E --> F[\"自研监控大屏 (Grafana)\"]\n    D --> G[\"AI 异常检测引擎\"]\n    G --> H[\"钉钉/短信告警\"]",
     "delivery_highlights": [
-      {"metric": "接入设备数", "before": "0（手动统计）", "after": "320 台全量接入", "improvement": "100% 数字化覆盖"},
-      {"metric": "故障响应时间", "before": "平均 40 分钟", "after": "< 3 分钟告警送达", "improvement": "缩短 93%"},
-      {"metric": "设备OEE", "before": "71%", "after": "84%", "improvement": "提升 18.3%"},
-      {"metric": "人工巡检成本", "before": "4 名巡检员", "after": "减少至 1 名", "improvement": "人力成本降低 75%"}
+      {
+        "metric": "接入设备数",
+        "before": "0（手动统计）",
+        "after": "320 台全量接入",
+        "improvement": "100% 数字化覆盖"
+      },
+      {
+        "metric": "故障响应时间",
+        "before": "平均 40 分钟",
+        "after": "< 3 分钟告警送达",
+        "improvement": "缩短 93%"
+      },
+      {
+        "metric": "设备OEE",
+        "before": "71%",
+        "after": "84%",
+        "improvement": "提升 18.3%"
+      },
+      {
+        "metric": "人工巡检成本",
+        "before": "4 名巡检员",
+        "after": "减少至 1 名",
+        "improvement": "人力成本降低 75%"
+      }
     ],
     "client_quote": "接入平台后，我们第一次能在一个屏幕上看到所有设备的状态。上线第三天系统就提前预测了一台压铸机的轴承故障，避免了预计 40 万元的停产损失。",
-    "tags": ["Modbus", "OPC-UA", "EMQX", "InfluxDB", "工业监控"],
+    "tags": [
+      "Modbus",
+      "OPC-UA",
+      "EMQX",
+      "InfluxDB",
+      "工业监控"
+    ],
     "created_at": "2026-09-21"
   },
   {
@@ -36,8 +123,19 @@
     "cover_image": "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800&q=80",
     "duration_days": 38,
     "devices_count": 840,
-    "core_protocols": ["LoRa", "MQTT", "Modbus RTU"],
-    "tech_stack": ["Python", "Node-RED", "MQTT", "TimescaleDB", "Vue3", "小程序"],
+    "core_protocols": [
+      "LoRa",
+      "MQTT",
+      "Modbus RTU"
+    ],
+    "tech_stack": [
+      "Python",
+      "Node-RED",
+      "MQTT",
+      "TimescaleDB",
+      "Vue3",
+      "小程序"
+    ],
     "pain_points": [
       "12 个温室大棚分散，工人需人工每小时记录温湿度，漏记率高",
       "灌溉、遮阳、通风设备分属不同厂家，无法联动控制",
@@ -46,13 +144,39 @@
     "solution_summary": "部署 LoRa 低功耗传感器网络（840 个节点覆盖全部大棚），通过 MQTT 协议汇聚至云端，实现温湿度、CO₂、光照度、土壤水分的实时监测。Node-RED 编排自动化控制逻辑，支持微信小程序远程操控。",
     "architecture_mermaid": "flowchart LR\n    A[\"土壤/温湿度/光照传感器\"] -->|\"LoRa 低功耗\"| B[\"LoRa 网关\"]\n    B -->|\"MQTT\"| C[\"云端消息服务\"]\n    C --> D[\"Node-RED 控制引擎\"]\n    D -->|\"Modbus RTU\"| E[\"灌溉/遮阳/通风设备\"]\n    C --> F[\"TimescaleDB 数据库\"]\n    F --> G[\"环境监控大屏\"]\n    F --> H[\"微信小程序端\"]\n    H -->|\"远程指令\"| D",
     "delivery_highlights": [
-      {"metric": "传感器节点", "before": "手动记录", "after": "840 个自动采集", "improvement": "零漏记"},
-      {"metric": "灌溉用水量", "before": "按经验固定灌溉", "after": "按需精准灌溉", "improvement": "节水 31%"},
-      {"metric": "人工巡棚频次", "before": "每小时 1 次", "after": "异常才通知", "improvement": "人工成本降低 60%"},
-      {"metric": "产品溯源报告", "before": "无法提供", "after": "全程数字化溯源", "improvement": "顺利进入日本有机超市供应链"}
+      {
+        "metric": "传感器节点",
+        "before": "手动记录",
+        "after": "840 个自动采集",
+        "improvement": "零漏记"
+      },
+      {
+        "metric": "灌溉用水量",
+        "before": "按经验固定灌溉",
+        "after": "按需精准灌溉",
+        "improvement": "节水 31%"
+      },
+      {
+        "metric": "人工巡棚频次",
+        "before": "每小时 1 次",
+        "after": "异常才通知",
+        "improvement": "人工成本降低 60%"
+      },
+      {
+        "metric": "产品溯源报告",
+        "before": "无法提供",
+        "after": "全程数字化溯源",
+        "improvement": "顺利进入日本有机超市供应链"
+      }
     ],
     "client_quote": "小程序上随时能看到任意大棚的实时数据，出差也放心了。最重要的是现在我们的溯源报告让日本客户非常满意，出口量增加了 40%。",
-    "tags": ["LoRa", "MQTT", "Node-RED", "智慧农业", "小程序"],
+    "tags": [
+      "LoRa",
+      "MQTT",
+      "Node-RED",
+      "智慧农业",
+      "小程序"
+    ],
     "created_at": "2026-09-21"
   },
   {
@@ -64,8 +188,19 @@
     "cover_image": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80",
     "duration_days": 65,
     "devices_count": 1260,
-    "core_protocols": ["BACnet/IP", "Modbus TCP", "MQTT"],
-    "tech_stack": ["Python", "EMQX", "InfluxDB", "ECharts", "Vue3", "Docker"],
+    "core_protocols": [
+      "BACnet/IP",
+      "Modbus TCP",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Python",
+      "EMQX",
+      "InfluxDB",
+      "ECharts",
+      "Vue3",
+      "Docker"
+    ],
     "pain_points": [
       "8 栋楼宇的楼控系统（BAS）互不联通，能耗数据无法汇总统计",
       "每月需人工到各楼层抄表，数据滞后 30 天才能出报告",
@@ -74,13 +209,39 @@
     "solution_summary": "通过 BACnet/IP 和 Modbus TCP 接入各楼宇 BAS 系统，统一接入 EMQX 数据总线，InfluxDB 存储分钟级时序数据，自研能耗分析平台实现楼宇级→楼层级→设备级三层穿透分析，并集成碳排放计算引擎对接政府双碳申报系统。",
     "architecture_mermaid": "flowchart TD\n    A[\"暖通空调/电梯/照明BAS\"] -->|\"BACnet/IP\"| B[\"协议适配网关\"]\n    A2[\"配电柜/计量表具\"] -->|\"Modbus TCP\"| B\n    B -->|\"MQTT\"| C[\"EMQX 数据总线\"]\n    C --> D[\"Python 数据清洗服务\"]\n    D --> E[\"InfluxDB 时序库\"]\n    E --> F[\"能耗分析平台（Vue3+ECharts）\"]\n    F --> G[\"楼宇级/楼层级/设备级穿透分析\"]\n    D --> H[\"碳排放计算引擎\"]\n    H --> I[\"政府双碳申报接口\"]",
     "delivery_highlights": [
-      {"metric": "接入监控点位", "before": "0（各系统孤立）", "after": "1,260 个点位统一监控", "improvement": "全量覆盖"},
-      {"metric": "能耗报告时效", "before": "月度报告（滞后 30 天）", "after": "实时看板 + 日报自动推送", "improvement": "时效提升 30 倍"},
-      {"metric": "综合能耗", "before": "基准期 100%", "after": "优化后 82%", "improvement": "节能 18%，年省电费约 240 万元"},
-      {"metric": "碳排放申报", "before": "人工估算", "after": "自动计算，一键申报", "improvement": "申报工作量减少 90%"}
+      {
+        "metric": "接入监控点位",
+        "before": "0（各系统孤立）",
+        "after": "1,260 个点位统一监控",
+        "improvement": "全量覆盖"
+      },
+      {
+        "metric": "能耗报告时效",
+        "before": "月度报告（滞后 30 天）",
+        "after": "实时看板 + 日报自动推送",
+        "improvement": "时效提升 30 倍"
+      },
+      {
+        "metric": "综合能耗",
+        "before": "基准期 100%",
+        "after": "优化后 82%",
+        "improvement": "节能 18%，年省电费约 240 万元"
+      },
+      {
+        "metric": "碳排放申报",
+        "before": "人工估算",
+        "after": "自动计算，一键申报",
+        "improvement": "申报工作量减少 90%"
+      }
     ],
     "client_quote": "之前每次政府双碳核查，我们的数据部门要加班好几周整理数据。现在系统直接生成合规报告，审计人员对我们的数字化管理水平非常认可。",
-    "tags": ["BACnet", "能耗管理", "双碳", "楼宇自控", "EMQX"],
+    "tags": [
+      "BACnet",
+      "能耗管理",
+      "双碳",
+      "楼宇自控",
+      "EMQX"
+    ],
     "created_at": "2026-09-21"
   }
 ]

@@ -16,8 +16,14 @@ import sys
 import time
 import urllib.request
 import urllib.error
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+# 北京时间时区 (UTC+8)
+BEIJING_TZ = timezone(timedelta(hours=8))
+
+def get_beijing_now():
+    return datetime.now(BEIJING_TZ)
 
 # 强制禁用控制台编码异常并实时刷新
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -262,7 +268,7 @@ def update_solutions_hourly():
         target_topic = dict(base_t)
         target_topic['title'] = f"{base_t['title']} (升级迭代版)"
 
-    now = datetime.now()
+    now = get_beijing_now()
     sol_id = f"sol_{now.strftime('%Y%m%d%H%M%S')}"
 
     system_prompt = (
@@ -339,9 +345,9 @@ flowchart TD
 
 
 # ==========================================
-# 5. 自动新增落地交付案例 (每 2 天周期判定)
+# 5. 自动新增落地交付案例 (每 2 天周期判定 / 手动强制支持)
 # ==========================================
-def update_cases_every_two_days():
+def update_cases_every_two_days(force=False):
     print("\n--- [任务 2] 检查更新落地项目案例 (每两天周期) ---", flush=True)
     if not CASES_INDEX_FILE.exists():
         cases = []
@@ -349,15 +355,19 @@ def update_cases_every_two_days():
         with open(CASES_INDEX_FILE, 'r', encoding='utf-8') as f:
             cases = json.load(f)
 
+    is_manual = force or os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch' or os.getenv('FORCE_UPDATE') == 'true'
     need_update = False
-    if not cases:
+    if is_manual:
+        need_update = True
+        print("[Cases] ⚡ 检测到手动触发指令 (workflow_dispatch)，无视 48 小时周期限制，强制新增落地案例！", flush=True)
+    elif not cases:
         need_update = True
     else:
         latest_date_str = cases[0].get('created_at', '2020-01-01')
         try:
-            latest_date = datetime.strptime(latest_date_str, '%Y-%m-%d')
+            latest_date = datetime.strptime(latest_date_str, '%Y-%m-%d').replace(tzinfo=BEIJING_TZ)
             # 若距离当前时间大于等于 2 天（48 小时）
-            diff_hours = (datetime.now() - latest_date).total_seconds() / 3600
+            diff_hours = (get_beijing_now() - latest_date).total_seconds() / 3600
             if diff_hours >= 48:
                 need_update = True
                 print(f"[Cases] 上次案例创建于 {latest_date_str} (距今 {diff_hours:.1f}h >= 48h)，触发新增案例！", flush=True)
@@ -378,7 +388,7 @@ def update_cases_every_two_days():
             candidate = dict(base_c)
             candidate['title'] = f"{base_c['title']} (二期扩容工程)"
 
-        now = datetime.now()
+        now = get_beijing_now()
         case_data = dict(candidate)
         case_data['id'] = f"case_{now.strftime('%Y%m%d%H%M%S')}"
         case_data['created_at'] = now.strftime('%Y-%m-%d')
@@ -400,7 +410,7 @@ def update_blog_hourly():
         with open(POSTS_INDEX_FILE, 'r', encoding='utf-8') as f:
             posts = json.load(f)
 
-    now = datetime.now()
+    now = get_beijing_now()
     article_id = now.strftime('%Y%m%d%H%M%S')
 
     blog_topics = [
@@ -493,7 +503,7 @@ def compile_and_deploy():
 
     try:
         subprocess.run(['git', 'add', '.'], cwd=str(BASE_DIR), check=True, capture_output=True)
-        now_str = datetime.now().strftime('%m-%d %H:%M')
+        now_str = get_beijing_now().strftime('%m-%d %H:%M')
         subprocess.run(['git', 'commit', '-m', f'[auto-update] 解决方案/案例/博文定时自造血更新 ({now_str})'], cwd=str(BASE_DIR), check=True, capture_output=True)
         subprocess.run(['git', 'push', 'origin', 'main'], cwd=str(BASE_DIR), check=True, capture_output=True)
         print("[Git] ✅ 代码已成功推送到 GitHub main 分支，Vercel 自动构建中！", flush=True)
@@ -503,7 +513,7 @@ def compile_and_deploy():
 
 def main():
     print("=" * 60, flush=True)
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 启动码视野 IoT 官网全流程自造血更新", flush=True)
+    print(f"[{get_beijing_now().strftime('%Y-%m-%d %H:%M:%S')}] 启动码视野 IoT 官网全流程自造血更新", flush=True)
     print("=" * 60, flush=True)
 
     # 1. 更新解决方案（每小时）

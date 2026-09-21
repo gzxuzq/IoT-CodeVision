@@ -136,7 +136,7 @@ document.getElementById('menu-btn').addEventListener('click', () => {
 
 async function loadSolutions() {
   try {
-    const res = await fetch('solutions_index.json');
+    const res = await fetch('solutions_index.json?_t=' + Date.now());
     const solutions = await res.json();
     const grid = document.getElementById('solutions-grid');
     if(!solutions || solutions.length === 0) {

@@ -25,6 +25,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://iot-showcase.vercel.app/posts/post_20260921182615.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://iot-showcase.vercel.app/posts/post_20260921091542.html</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
@@ -65,6 +71,12 @@
     <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://iot-showcase.vercel.app/solutions/sol_20260921182538.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://iot-showcase.vercel.app/solutions/sol_20260921091502.html</loc>

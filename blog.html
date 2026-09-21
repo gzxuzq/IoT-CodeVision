@@ -129,7 +129,7 @@ let currentCat = '全部';
 
 async function loadPosts() {
   try {
-    const res = await fetch('posts_index.json');
+    const res = await fetch('posts_index.json?_t=' + Date.now());
     allPosts = await res.json();
     renderPosts();
   } catch(e) {

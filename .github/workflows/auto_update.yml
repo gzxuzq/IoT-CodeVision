@@ -35,6 +35,8 @@ jobs:
 
       - name: 执行自动化自造血更新流水线
         env:
+          TZ: 'Asia/Shanghai'
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY || 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH' }}
           AGNES_BASE_URL: https://apihub.agnes-ai.com/v1
           AGNES_MODEL: agnes-3.0-flash

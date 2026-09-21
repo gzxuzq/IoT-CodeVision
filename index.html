@@ -545,44 +545,10 @@ document.getElementById('menu-btn').addEventListener('click', () => {
   document.getElementById('mobile-menu').classList.toggle('hidden');
 });
 
-// 加载案例数据
-async function loadCases() {
-  try {
-    const res = await fetch('cases_index.json');
-    const cases = await res.json();
-    const grid = document.getElementById('cases-grid');
-    grid.innerHTML = cases.map(c => `
-      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-brand-300 transition-all group">
-        <div class="h-44 overflow-hidden">
-          <img src="${c.cover_image}" alt="${c.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="bg-brand-50 text-brand-700 text-xs font-semibold px-2 py-0.5 rounded">${c.industry_label}</span>
-            <span class="text-xs text-slate-400">${c.duration_days} 天交付</span>
-          </div>
-          <h3 class="font-bold text-slate-900 leading-snug mb-3">${c.title}</h3>
-          <div class="grid grid-cols-3 gap-2 mb-4">
-            ${c.delivery_highlights.slice(0,3).map(h => `
-              <div class="text-center bg-slate-50 rounded-lg p-2">
-                <div class="text-xs font-bold text-brand-600">${h.improvement}</div>
-                <div class="text-xs text-slate-500 mt-0.5">${h.metric}</div>
-              </div>
-            `).join('')}
-          </div>
-          <div class="text-sm text-slate-500 italic border-l-2 border-brand-200 pl-3">"${c.client_quote.slice(0,60)}…"</div>
-        </div>
-      </div>
-    `).join('');
-  } catch(e) {
-    console.log('案例数据加载中');
-  }
-}
-
 // 加载博文预览
 async function loadBlogPreview() {
   try {
-    const res = await fetch('posts_index.json');
+    const res = await fetch('posts_index.json?_t=' + Date.now());
     const posts = await res.json();
     const grid = document.getElementById('blog-preview');
     grid.innerHTML = posts.slice(0, 3).map(p => `
@@ -611,7 +577,7 @@ async function loadBlogPreview() {
 // 加载精选解决方案预览
 async function loadHomeSolutions() {
   try {
-    const res = await fetch('solutions_index.json');
+    const res = await fetch('solutions_index.json?_t=' + Date.now());
     const sols = await res.json();
     const grid = document.getElementById('home-solutions-grid');
     if(!grid || !sols || sols.length === 0) return;
@@ -649,11 +615,11 @@ async function loadHomeSolutions() {
   }
 }
 
-// 案例详情弹窗
+// 案例详情弹窗与加载
 let cachedCases = [];
 async function loadCases() {
   try {
-    const res = await fetch('cases_index.json');
+    const res = await fetch('cases_index.json?_t=' + Date.now());
     cachedCases = await res.json();
     const grid = document.getElementById('cases-grid');
     grid.innerHTML = cachedCases.map((c, idx) => `

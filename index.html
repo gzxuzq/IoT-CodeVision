@@ -591,9 +591,12 @@ async function loadBlogPreview() {
           <img src="${p.cover_image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
         </div>
         <div class="p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="bg-brand-50 text-brand-700 text-xs px-2 py-0.5 rounded">${p.category}</span>
-            <span class="text-xs text-slate-400">${p.read_time}</span>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="bg-brand-50 text-brand-700 text-xs px-2.5 py-0.5 rounded-full font-medium">${p.category}</span>
+            <span class="text-xs text-slate-400 font-mono flex items-center gap-1" title="发布时间">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span>${p.date}</span>
+            </span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2">${p.title}</h3>
           <p class="text-xs text-slate-500 line-clamp-2">${p.summary}</p>

@@ -125,7 +125,10 @@ __NAV__
       <a href="__BACK_LINK__" class="text-brand-600 hover:underline">__BACK_TEXT__</a>
       <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">__CATEGORY__</span>
       <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">__TAG__</span>
-      <span class="text-slate-400 text-xs ml-auto">__DATE__ · __READ_TIME__</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：__DATE__</span>
+      </span>
     </div>
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">__TITLE__</h1>
     <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">

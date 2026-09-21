@@ -61,12 +61,12 @@
     </a>
     <!-- PC 导航 -->
     <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-      <a href="/" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">官网首页</a>
-      <a href="solutions.html" class="hover:text-brand-600 transition-colors font-medium">行业解决方案</a>
-      <a href="#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
-      <a href="#services" class="hover:text-brand-600 transition-colors">服务能力</a>
-      <a href="#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
-      <a href="blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <a href="#hero" id="nav-home" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold transition-colors">官网首页</a>
+      <a href="solutions.html" id="nav-solutions" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">行业解决方案</a>
+      <a href="#cases" id="nav-cases" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">项目案例</a>
+      <a href="#services" id="nav-services" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">服务能力</a>
+      <a href="#tech" id="nav-tech" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">技术栈</a>
+      <a href="blog.html" id="nav-blog" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">技术博文</a>
       <!-- 顶部右上角电话（微信同号） -->
       <a href="tel:19065223505" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
         <span class="text-brand-600 text-sm">📞</span>
@@ -105,7 +105,7 @@
 </nav>
 
 <!-- ===== Hero 首屏 ===== -->
-<section class="pt-16 min-h-screen flex items-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+<section id="hero" class="scroll-mt-16 pt-16 min-h-screen flex items-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
     <!-- 左侧文案 -->
     <div>
@@ -246,7 +246,7 @@
 </section>
 
 <!-- ===== 服务能力矩阵 ===== -->
-<section id="services" class="py-20 bg-white">
+<section id="services" class="scroll-mt-16 py-20 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
       <div class="text-brand-600 text-sm font-semibold mb-2">SERVICES</div>
@@ -318,7 +318,7 @@
 </section>
 
 <!-- ===== 项目案例 ===== -->
-<section id="cases" class="py-20 bg-slate-50">
+<section id="cases" class="scroll-mt-16 py-20 bg-slate-50">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
       <div class="text-brand-600 text-sm font-semibold mb-2">CASE STUDIES</div>
@@ -332,7 +332,7 @@
 </section>
 
 <!-- ===== 技术栈 ===== -->
-<section id="tech" class="py-20 bg-white">
+<section id="tech" class="scroll-mt-16 py-20 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-12">
       <div class="text-brand-600 text-sm font-semibold mb-2">TECH STACK</div>
@@ -703,6 +703,64 @@ function showCaseModal(idx) {
 
 function closeCaseModal() {
   document.getElementById('case-modal').classList.add('hidden');
+}
+
+// 顶部导航动态高亮联动与滚动监听 (ScrollSpy)
+const navMap = {
+  home: document.getElementById('nav-home'),
+  cases: document.getElementById('nav-cases'),
+  services: document.getElementById('nav-services'),
+  tech: document.getElementById('nav-tech')
+};
+
+const activeClasses = ['text-brand-600', 'border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold'];
+const inactiveClasses = ['text-slate-600', 'font-medium'];
+
+function switchActiveNav(activeKey) {
+  Object.entries(navMap).forEach(([k, el]) => {
+    if (!el) return;
+    if (k === activeKey) {
+      el.classList.add(...activeClasses);
+      el.classList.remove('text-slate-600', 'font-medium');
+    } else {
+      el.classList.remove('border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold', 'text-brand-600');
+      el.classList.add(...inactiveClasses);
+    }
+  });
+}
+
+// 点击即时高亮
+Object.entries(navMap).forEach(([key, el]) => {
+  if (!el) return;
+  el.addEventListener('click', () => {
+    switchActiveNav(key);
+  });
+});
+
+// 页面滚动监听
+window.addEventListener('scroll', () => {
+  const curY = window.scrollY + 100;
+  const techSec = document.getElementById('tech');
+  const casesSec = document.getElementById('cases');
+  const servicesSec = document.getElementById('services');
+
+  if (techSec && curY >= techSec.offsetTop) {
+    switchActiveNav('tech');
+  } else if (casesSec && curY >= casesSec.offsetTop) {
+    switchActiveNav('cases');
+  } else if (servicesSec && curY >= servicesSec.offsetTop) {
+    switchActiveNav('services');
+  } else {
+    switchActiveNav('home');
+  }
+}, { passive: true });
+
+// 初始检查 URL Hash（从外链跳转来时）
+if (window.location.hash) {
+  const hashKey = window.location.hash.replace('#', '');
+  if (['cases', 'services', 'tech'].includes(hashKey)) {
+    switchActiveNav(hashKey);
+  }
 }
 
 loadCases();

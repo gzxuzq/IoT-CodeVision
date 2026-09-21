@@ -57,7 +57,7 @@
     <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
       <img src="images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
       <span>码视野</span>
-      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Software Lab</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
     </a>
     <!-- PC 导航 -->
     <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
@@ -617,7 +617,7 @@ async function loadHomeSolutions() {
       return `
         <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-400 transition-all flex flex-col group">
           <div class="h-44 overflow-hidden relative">
-            <img src="${s.cover_image}" alt="${s.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <img src="${s.cover_image}" alt="${s.title}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
             <div class="absolute top-3 left-3 bg-brand-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-md backdrop-blur">
               ${s.industry}
             </div>

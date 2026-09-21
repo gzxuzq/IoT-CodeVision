@@ -48,7 +48,7 @@ SOLUTION_TOPICS = [
         "industry": "新能源与储能",
         "industry_tag": "光储充一体化",
         "deploy_cycle": "15~25 天快速上线",
-        "cover_image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&q=80",
+        "cover_image": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&q=80",
         "protocols": ["Modbus TCP", "IEC 61850", "MQTT over TLS", "CANopen"],
         "keywords": ["微电网EMS", "工商业储能", "削峰填谷", "光伏并网"]
     },

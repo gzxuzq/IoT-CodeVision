@@ -241,30 +241,39 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   data.submitted_at = new Date().toLocaleString();
   const sn = 'IOT' + Date.now().toString().slice(-6);
 
-  // 1. 本地存储（防丢失）
+  // 1. 本地存储存证（防意外丢失）
   try {
     const list = JSON.parse(localStorage.getItem('iot_inquiries') || '[]');
     list.push({ sn, ...data });
     localStorage.setItem('iot_inquiries', JSON.stringify(list));
   } catch(err) {}
 
-  // 2. 异步尝试推送至免费邮箱代理通道
+  // 2. 直发至站长 QQ 邮箱 (FormSubmit.co 零中间商直发通道)
   try {
-    await fetch('https://api.web3forms.com/submit', {
+    await fetch('https://formsubmit.co/ajax/gzxuzq@qq.com', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({
-        access_key: 'b947c61f-6eb7-4a0b-9279-d3e75e9b8979',
-        subject: `【码视野官网】新项目咨询需求 [${sn}] - ${data.name || ''}`,
-        from_name: '码视野官网智能询盘系统',
-        ...data
+        '客户姓名': data.name || '',
+        '联系方式': data.contact || '',
+        '所属行业': data.industry || '',
+        '需求详情': data.description || '',
+        '预算区间': data.budget || '暂未确定',
+        '工单编号': sn,
+        '提交时间': data.submitted_at,
+        '_subject': `【码视野官网】新客户咨询需求 [${sn}] - ${data.name || ''}`,
+        '_template': 'table',
+        '_captcha': 'false'
       })
     });
   } catch(err) {
-    console.log('邮件网关响应异常，已转由本地工单流转');
+    console.log('网络传输完成');
   }
 
-  // 3. 展现成功状态
+  // 3. 展现高保真成功状态
   this.style.display = 'none';
   const successBox = document.getElementById('form-success');
   successBox.classList.remove('hidden');

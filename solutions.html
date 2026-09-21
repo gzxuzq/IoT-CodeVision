@@ -36,8 +36,8 @@
     <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
       <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
       <a href="solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
-      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
       <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
       <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
       <a href="blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
       <!-- 顶部右上角电话（微信同号） -->
@@ -54,7 +54,7 @@
         <span>📞</span>
         <span>19065223505</span>
       </a>
-      <button id="menu-btn" class="p-2 text-slate-600">
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
@@ -67,11 +67,11 @@
       </a>
       <a href="/" class="text-slate-600">官网首页</a>
       <a href="solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
-      <a href="/#cases" class="text-slate-600">项目案例</a>
       <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
       <a href="/#tech" class="text-slate-600">技术栈</a>
       <a href="blog.html" class="text-slate-600">技术博文</a>
-      <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center">免费咨询</a>
+      <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
     </div>
   </div>
 </nav>
@@ -198,6 +198,20 @@ async function loadSolutions() {
     console.error(e);
     document.getElementById('solutions-grid').innerHTML = '<div class="col-span-2 text-center py-12 text-slate-400">方案数据加载失败，请刷新重试</div>';
   }
+}
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
 }
 
 loadSolutions();

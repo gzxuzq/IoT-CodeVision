@@ -61,12 +61,12 @@
     </a>
     <!-- PC 导航 -->
     <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-      <a href="#hero" id="nav-home" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold transition-colors">官网首页</a>
-      <a href="solutions.html" id="nav-solutions" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">行业解决方案</a>
-      <a href="#cases" id="nav-cases" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">项目案例</a>
-      <a href="#services" id="nav-services" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">服务能力</a>
-      <a href="#tech" id="nav-tech" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">技术栈</a>
-      <a href="blog.html" id="nav-blog" class="text-slate-600 hover:text-brand-600 transition-colors font-medium">技术博文</a>
+      <a href="#hero" id="nav-home" class="nav-link text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold transition-colors">官网首页</a>
+      <a href="solutions.html" id="nav-solutions" class="nav-link text-slate-600 hover:text-brand-600 transition-colors font-medium">行业解决方案</a>
+      <a href="#services" id="nav-services" class="nav-link text-slate-600 hover:text-brand-600 transition-colors font-medium">服务能力</a>
+      <a href="#cases" id="nav-cases" class="nav-link text-slate-600 hover:text-brand-600 transition-colors font-medium">项目案例</a>
+      <a href="#tech" id="nav-tech" class="nav-link text-slate-600 hover:text-brand-600 transition-colors font-medium">技术栈</a>
+      <a href="blog.html" id="nav-blog" class="nav-link text-slate-600 hover:text-brand-600 transition-colors font-medium">技术博文</a>
       <!-- 顶部右上角电话（微信同号） -->
       <a href="tel:19065223505" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
         <span class="text-brand-600 text-sm">📞</span>
@@ -81,7 +81,7 @@
         <span>📞</span>
         <span>19065223505</span>
       </a>
-      <button id="menu-btn" class="p-2 text-slate-600">
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
@@ -93,13 +93,13 @@
         <span>📞 19065223505（微信同号）</span>
         <span>点击一键拨打 →</span>
       </a>
-      <a href="/" class="text-brand-600 font-bold">官网首页</a>
-      <a href="solutions.html" class="text-slate-600">行业解决方案</a>
-      <a href="#cases" class="text-slate-600">项目案例</a>
-      <a href="#services" class="text-slate-600">服务能力</a>
-      <a href="#tech" class="text-slate-600">技术栈</a>
-      <a href="blog.html" class="text-slate-600">技术博文</a>
-      <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center">免费咨询</a>
+      <a href="#hero" id="m-nav-home" class="mobile-nav-link text-brand-600 font-bold">官网首页</a>
+      <a href="solutions.html" id="m-nav-solutions" class="mobile-nav-link text-slate-600">行业解决方案</a>
+      <a href="#services" id="m-nav-services" class="mobile-nav-link text-slate-600">服务能力</a>
+      <a href="#cases" id="m-nav-cases" class="mobile-nav-link text-slate-600">项目案例</a>
+      <a href="#tech" id="m-nav-tech" class="mobile-nav-link text-slate-600">技术栈</a>
+      <a href="blog.html" id="m-nav-blog" class="mobile-nav-link text-slate-600">技术博文</a>
+      <a href="contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
     </div>
   </div>
 </nav>
@@ -707,61 +707,125 @@ function closeCaseModal() {
 
 // 顶部导航动态高亮联动与滚动监听 (ScrollSpy)
 const navMap = {
-  home: document.getElementById('nav-home'),
-  cases: document.getElementById('nav-cases'),
-  services: document.getElementById('nav-services'),
-  tech: document.getElementById('nav-tech')
+  home: { pc: document.getElementById('nav-home'), m: document.getElementById('m-nav-home') },
+  services: { pc: document.getElementById('nav-services'), m: document.getElementById('m-nav-services') },
+  cases: { pc: document.getElementById('nav-cases'), m: document.getElementById('m-nav-cases') },
+  tech: { pc: document.getElementById('nav-tech'), m: document.getElementById('m-nav-tech') }
 };
 
-const activeClasses = ['text-brand-600', 'border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold'];
-const inactiveClasses = ['text-slate-600', 'font-medium'];
+const pcActiveClasses = ['text-brand-600', 'border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold'];
+const pcInactiveClasses = ['text-slate-600', 'font-medium'];
+
+const mActiveClasses = ['text-brand-600', 'font-bold'];
+const mInactiveClasses = ['text-slate-600'];
 
 function switchActiveNav(activeKey) {
-  Object.entries(navMap).forEach(([k, el]) => {
-    if (!el) return;
-    if (k === activeKey) {
-      el.classList.add(...activeClasses);
-      el.classList.remove('text-slate-600', 'font-medium');
-    } else {
-      el.classList.remove('border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold', 'text-brand-600');
-      el.classList.add(...inactiveClasses);
+  Object.entries(navMap).forEach(([k, item]) => {
+    // PC 导航更新
+    if (item.pc) {
+      if (k === activeKey) {
+        item.pc.classList.add(...pcActiveClasses);
+        item.pc.classList.remove('text-slate-600', 'font-medium');
+      } else {
+        item.pc.classList.remove('border-b-2', 'border-brand-500', 'pb-0.5', 'font-bold', 'text-brand-600');
+        item.pc.classList.add(...pcInactiveClasses);
+      }
+    }
+    // 移动端导航更新
+    if (item.m) {
+      if (k === activeKey) {
+        item.m.classList.add(...mActiveClasses);
+        item.m.classList.remove(...mInactiveClasses);
+      } else {
+        item.m.classList.remove(...mActiveClasses);
+        item.m.classList.add(...mInactiveClasses);
+      }
     }
   });
 }
 
-// 点击即时高亮
-Object.entries(navMap).forEach(([key, el]) => {
-  if (!el) return;
-  el.addEventListener('click', () => {
-    switchActiveNav(key);
+// 点击防抖与滚动锁定（确保用户点击时立即高亮，平滑滚动期间禁止 scroll 监听篡改）
+let isNavClicking = false;
+let navClickTimer = null;
+
+function handleNavClick(key) {
+  isNavClicking = true;
+  switchActiveNav(key);
+  clearTimeout(navClickTimer);
+  // 平滑滚动耗时通常在 600~900ms，在完全滚停前锁定选中状态
+  navClickTimer = setTimeout(() => {
+    isNavClicking = false;
+  }, 950);
+}
+
+// 绑定 PC 与移动端点击
+Object.entries(navMap).forEach(([key, item]) => {
+  if (item.pc) {
+    item.pc.addEventListener('click', () => {
+      handleNavClick(key);
+    });
+  }
+  if (item.m) {
+    item.m.addEventListener('click', () => {
+      handleNavClick(key);
+      const mMenu = document.getElementById('mobile-menu');
+      if (mMenu) mMenu.classList.add('hidden');
+    });
+  }
+});
+
+// 移动端其余外链点击也自动关闭折叠菜单
+document.querySelectorAll('#mobile-menu a').forEach(a => {
+  a.addEventListener('click', () => {
+    const mMenu = document.getElementById('mobile-menu');
+    if (mMenu) mMenu.classList.add('hidden');
   });
 });
 
-// 页面滚动监听
-window.addEventListener('scroll', () => {
-  const curY = window.scrollY + 100;
-  const techSec = document.getElementById('tech');
-  const casesSec = document.getElementById('cases');
+// 精准视口滚动监听
+function onScrollSpy() {
+  if (isNavClicking) return; // 点击跳转锁定中，不被滚动事件干扰
+
+  const curY = window.scrollY;
+  // 顶部导航高度 64px，设定视口探测基准线
+  const triggerY = curY + 140;
+
   const servicesSec = document.getElementById('services');
+  const casesSec = document.getElementById('cases');
+  const techSec = document.getElementById('tech');
 
-  if (techSec && curY >= techSec.offsetTop) {
-    switchActiveNav('tech');
-  } else if (casesSec && curY >= casesSec.offsetTop) {
-    switchActiveNav('cases');
-  } else if (servicesSec && curY >= servicesSec.offsetTop) {
-    switchActiveNav('services');
-  } else {
+  const servicesTop = servicesSec ? servicesSec.offsetTop : 999999;
+  const casesTop = casesSec ? casesSec.offsetTop : 999999;
+  const techTop = techSec ? techSec.offsetTop : 999999;
+  const techBottom = techSec ? techTop + techSec.offsetHeight : 999999;
+
+  if (curY < 320) {
     switchActiveNav('home');
-  }
-}, { passive: true });
-
-// 初始检查 URL Hash（从外链跳转来时）
-if (window.location.hash) {
-  const hashKey = window.location.hash.replace('#', '');
-  if (['cases', 'services', 'tech'].includes(hashKey)) {
-    switchActiveNav(hashKey);
+  } else if (triggerY >= servicesTop && triggerY < casesTop) {
+    switchActiveNav('services');
+  } else if (triggerY >= casesTop && triggerY < techTop) {
+    switchActiveNav('cases');
+  } else if (triggerY >= techTop && triggerY < techBottom) {
+    switchActiveNav('tech');
+  } else if (triggerY >= techBottom) {
+    // 已经滚过了技术栈（进入下方通用业务流程、常见问题、表单等区域），取消锚点选中，避免死锁在技术栈
+    switchActiveNav(null);
   }
 }
+
+window.addEventListener('scroll', onScrollSpy, { passive: true });
+
+// 初始检查 URL Hash（外链跳转时触发）
+function checkInitialHash() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash && ['home', 'hero', 'services', 'cases', 'tech'].includes(hash)) {
+    const targetKey = hash === 'hero' ? 'home' : hash;
+    handleNavClick(targetKey);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', checkInitialHash);
+window.addEventListener('hashchange', checkInitialHash);
 
 loadCases();
 loadHomeSolutions();

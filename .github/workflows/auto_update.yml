@@ -1,0 +1,54 @@
+name: 码视野 IoT 官网全自动自造血更新
+
+on:
+  schedule:
+    # 国际标准时间每小时第 0 分钟执行一次 (对应北京时间每小时整点)
+    - cron: '0 * * * *'
+  workflow_dispatch: # 支持在 GitHub 网页上手动随时一键点击触发
+
+# 赋予 GitHub Actions 仓库写入与代码推送权限
+permissions:
+  contents: write
+
+jobs:
+  auto_update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置 Python 运行环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 配置 Git 提交身份
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 拉取远程最新提交（防并发冲突）
+        run: |
+          git pull origin main --rebase || true
+
+      - name: 执行自动化自造血更新流水线
+        env:
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY || 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH' }}
+          AGNES_BASE_URL: https://apihub.agnes-ai.com/v1
+          AGNES_MODEL: agnes-3.0-flash
+        run: |
+          python auto_update_iot.py
+
+      - name: 检查并提交新生成的内容与编译产物
+        run: |
+          git status
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "[auto-update] 云端定时自造血：更新行业解决方案/案例/技术博文与静态落地页"
+            git push origin main
+            echo "✅ 新内容已成功推送到 main 分支，Vercel 正在自动构建上线！"
+          else
+            echo "ℹ️ 本次没有新增未提交的文件，已保持最新。"
+          fi

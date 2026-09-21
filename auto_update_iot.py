@@ -31,7 +31,7 @@ if env_path.exists():
             k, v = line.split('=', 1)
             os.environ.setdefault(k.strip(), v.strip())
 
-AGNES_API_KEY = os.getenv('AGNES_API_KEY', '')
+AGNES_API_KEY = os.getenv('AGNES_API_KEY') or 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH'
 AGNES_BASE_URL = os.getenv('AGNES_BASE_URL', 'https://apihub.agnes-ai.com/v1')
 AGNES_MODEL = os.getenv('AGNES_MODEL', 'agnes-3.0-flash')
 

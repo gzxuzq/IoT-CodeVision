@@ -2,9 +2,10 @@ name: 码视野 IoT 官网全自动自造血更新
 
 on:
   schedule:
-    # 国际标准时间每小时第 0 分钟执行一次 (对应北京时间每小时整点)
+    # 国际标准时间每小时第 0 分钟执行一次探测 (北京时间每小时整点)
+    # 业务排期规则：行业解决方案 一天1篇 (24h)；技术博文 一天6篇 (4h)；项目案例 每2天1篇 (48h)
     - cron: '0 * * * *'
-  workflow_dispatch: # 支持在 GitHub 网页上手动随时一键点击触发
+  workflow_dispatch: # 支持在 GitHub 网页 Actions 界面随时一键点击手动触发 (强制穿透更新)
 
 # 赋予 GitHub Actions 仓库写入与代码推送权限
 permissions:

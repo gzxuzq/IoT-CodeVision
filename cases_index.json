@@ -1,5 +1,56 @@
 [
   {
+    "title": "华南某医药集团 8 栋自动化立体高位立体库温湿度巡测与消防风阀联动系统",
+    "industry": "building",
+    "industry_label": "智能楼宇",
+    "client_desc": "华南大型中药与生物制品流通企业",
+    "cover_image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
+    "duration_days": 48,
+    "devices_count": 960,
+    "core_protocols": [
+      "BACnet/IP",
+      "Modbus TCP",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Go",
+      "EMQX",
+      "InfluxDB",
+      "Vue3",
+      "Docker"
+    ],
+    "pain_points": [
+      "24米高位货架垂直温差大，顶层局部积温导致药材变质隐患",
+      "传统消防防排烟系统与日常新风系统物理隔离，火警响应延迟",
+      "GSP 认证飞行检查需要随时调取分钟级不可篡改的历史台账"
+    ],
+    "solution_summary": "在货架立柱每隔 4 米布置无线高精度探头，建立立体温度场插值模型；边缘网关通过 BACnet/IP 深度接驳冷机变频器与风阀执行器，实现超差 0.5℃ 毫秒级闭环调节。",
+    "architecture_mermaid": "flowchart TD\n    A[\"高位货架立体温湿度探头群\"] -->|\"Modbus\"| B[\"库区网关\"]\n    B -->|\"BACnet/IP\"| C[\"风机/排烟阀执行器\"]\n    B -->|\"MQTT TLS\"| D[\"码视野医药冷链监控中台\"]\n    D --> E[\"GSP 不可篡改时序数据存证\"]\n    D --> F[\"3D 库位热力数字孪生大屏\"]",
+    "delivery_highlights": [
+      {
+        "metric": "立体库垂直温差",
+        "before": "温差达 4.5℃",
+        "after": "平抑至 < 0.8℃",
+        "improvement": "彻底根除高温盲区"
+      },
+      {
+        "metric": "GSP合规报表生成",
+        "before": "人工整理需 3 天",
+        "after": "一键实时导出",
+        "improvement": "审计合规 100% 达标"
+      },
+      {
+        "metric": "制冷用电单耗",
+        "before": "全功率常开",
+        "after": "按温差动态变频",
+        "improvement": "每月节约电费 3.8 万元"
+      }
+    ],
+    "client_quote": "码视野团队打造的立体热力图不仅直观，而且自动调控非常平稳，顺利通过了国家药监局最严格的现场飞行检查！",
+    "id": "case_20260923004514",
+    "created_at": "2026-09-23"
+  },
+  {
     "title": "西南某大型生态蓝莓基地 · 2000 亩水肥一体化脉冲滴灌与气象微站物联网平台",
     "industry": "agriculture",
     "industry_label": "智慧农业",

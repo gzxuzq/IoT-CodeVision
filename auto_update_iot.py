@@ -318,7 +318,7 @@ def update_solutions_daily(force=False):
         "你是码视野物联网软件研发团队的资深解决方案总架构师（深耕工业IoT与边缘计算6年）。\n"
         "请为指定垂直行业撰写一份极度详尽、专业、包含硬件选型清单BOM、Mermaid系统拓扑架构图与量化ROI表格的交钥匙解决方案Markdown全文。\n"
         "【严控红线】：严禁出现个人开发者或一个人字样，全篇以'码视野研发团队'对外呈现。\n"
-        "文末自然嵌入联系方式：电话/微信 19065223505。"
+        "文末自然嵌入联系方式：电话/微信 19168817431。"
     )
     user_prompt = f"请为【{target_topic['title']}】撰写完整交钥匙方案，行业：{target_topic['industry']}，协议：{', '.join(target_topic['protocols'])}。"
 
@@ -359,8 +359,8 @@ flowchart TD
 
 ## 五、 咨询与落地合作
 码视野技术团队承诺工作日 1 小时内响应需求，免费出具针对贵司场站的可行性评估与架构图。
-- **技术总监专线/微信**：`19065223505`
-- **咨询邮箱**：`contact@codevision-iot.com`
+- **技术总监专线/微信**：`19168817431`
+- **咨询邮箱**：`4601134@qq.com`
 """
 
     new_solution = {
@@ -503,7 +503,7 @@ def update_blog_daily_six(force=False):
         "二、 码视野高可用边缘系统拓扑架构（必须包含一段原生标准可渲染的 Mermaid flowchart 流程拓扑图）；\n"
         "三、 工业级生产环境完整实现代码示例（Python 或 Go 真实驱动与持久化缓存、重传逻辑，带详细中文注释）；\n"
         "四、 关键技术指标与改造前后 ROI 性能对比表格；\n"
-        "五、 总结与技术支持咨询通道（专属技术顾问电话/微信：19065223505）。"
+        "五、 总结与技术支持咨询通道（专属技术顾问电话/微信：19168817431）。"
     )
     print(f"[Blog] 正在撰写深度博文：《{target['title']}》...", flush=True)
     content = call_agnes_llm(system_prompt, f"请撰写完整技术长文《{target['title']}》", max_tokens=3500, timeout_sec=90)
@@ -542,8 +542,8 @@ client.loop_forever()
 
 ## 四、 总结与技术支持通道
 码视野研发团队致力于为企业提供高水准、高可靠的 IoT 软件系统。
-- 电话/微信：**19065223505**（备注技术咨询）
-- 邮箱：contact@codevision-iot.com
+- 电话/微信：**19168817431**（备注技术咨询）
+- 邮箱：4601134@qq.com
 """
 
     new_post = {

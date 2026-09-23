@@ -71,7 +71,7 @@ for h in HTML_FILES:
             report['errors'].append(f"[{rel}] 资源引用 404: {src}")
 
     # 5. 用户体验 (UX) 建议
-    if '19065223505' not in text:
+    if '19168817431' not in text:
         report['suggestions'].append(f"[{rel}] 缺少客服电话或联系方式曝光")
 
 # 检查 JSON 数据完整性

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案 · 码视野IoT研发团队</title>
+  <meta name="description" content="面向智能建筑与碳排垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持BACnet/IP · Modbus TCP · MQTT等主流通信标准。">
+  <meta property="og:title" content="高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20260923225051.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案","image":"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-09-23 22:50","description":"面向智能建筑与碳排垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持BACnet/IP · Modbus TCP · MQTT等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+    body{font-family:'Noto Sans SC','PingFang SC',system-ui,sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80" alt="高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">智能建筑与碳排</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">暖通AI自适应节能</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-09-23 22:50</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 高层商业综合体中央空调冷水机组智能变频群控与碳足迹核查方案
+
+**版本：** V2.0  
+**编制单位：** 码视野研发团队  
+**发布日期：** 2026年7月  
+**方案类型：** 交钥匙工程（Turnkey）
+
+---
+
+## 一、项目背景与行业痛点
+
+### 1.1 行业现状
+
+高层商业综合体中央空调系统通常占建筑总能耗的 **40%~55%**，其中冷水机组及其冷冻/冷却水泵系统为核心耗能单元。传统群控策略依赖人工经验或固定逻辑，存在以下结构性缺陷：
+
+| 痛点维度 | 具体表现 | 能耗损失估算 |
+|----------|----------|-------------|
+| 负荷预测失准 | 无气象+人流+历史数据融合预测，响应滞后 | 15%~25% |
+| 机组台数匹配粗放 | 启停逻辑简单阈值触发，部分负载下效率骤降 | 10%~18% |
+| 变频控制割裂 | 变频器频率设定与主机COP脱耦，存在能量浪费 | 8%~15% |
+| 碳排核算缺失 | 无实时碳足迹追踪，难以满足ESG披露要求 | — |
+| 设备老化预警弱 | 换热效率衰减、制冷剂泄漏无感知 | 6%~12% |
+
+### 1.2 政策驱动力
+
+- **《"十四五"节能减排综合工作方案》**：公共建筑单位面积能耗下降 **13%**
+- **GB/T 51366-2019**：建筑碳排放计算标准（强制实施）
+- **国家发改委《绿色低碳转型产业指导目录》**：智能建筑能效管理系统纳入重点支持
+- **沪深交易所ESG信息披露指引**：2026年起要求披露范围二碳排放数据
+
+---
+
+## 二、总体架构设计
+
+### 2.1 系统分层架构
+
+\`\`\`
+┌─────────────────────────────────────────────────────────────────────┐
+│                        云平台/数据中心层                              │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────────────────┐  │
+│  │ 碳足迹核算引擎│  │ 数字孪生大屏 │  │ 多维度报表与ESG报告中心   │  │
+│  │ (LCA模型)    │  │ (实时可视化) │  │ (月度/季度/年度)          │  │
+│  └──────┬──────┘  └──────────────┘  └───────────────────────────┘  │
+│         └──────────────────┬────────────────────────────────────────┘
+│                            ▼  MQTT / HTTPS
+┌─────────────────────────────────────────────────────────────────────┐
+│                        边缘计算网关层                                │
+│  ┌──────────────┐  ┌──────────────┐  ┌───────────────────────────┐  │
+│  │ 边缘AI推理盒 │  │ 多协议汇聚网关 │  │ 本地历史数据库(TimescaleDB)│  │
+│  │ (负荷预测)    │  │ (协议转换)    │  │ (30天热数据/5年冷存储)     │  │
+│  └──────┬───────┘  └──────┬───────┘  └───────────────────────────┘  │
+│         └────────────────┼──────────────────────────────────────────┘
+│                          ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      现场控制层（DCS+PLC）                            │
+│  ┌──────────────┐  ┌──────────────┐  ┌───────────────────────────┐  │
+│  │ 智能群控主站  │  │ VFD变频驱动层 │  │ 环境感知与末端调控层       │  │
+│  │ (COP优化调度) │  │ (冷水泵/冷却泵)│  │ (温湿度/CO₂/人流)        │  │
+│  └──────┬───────┘  └──────┬───────┘  └───────────────────────────┘  │
+│         └────────────────┼──────────────────────────────────────────┘
+│                          ▼  BACnet/IP + Modbus TCP
+┌─────────────────────────────────────────────────────────────────────┐
+│                      设备接入层                                      │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │冷水机组  │ │冷冻水泵  │ │冷却水泵  │ │冷却塔    │ │末端风机  │  │
+│  │(含变频器)│ │(变频型)  │ │(变频型)  │ │(变频型)  │ │盘管VAV  │  │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                              │
+│  │电表/水表 │ │碳排监测  │ │气象站    │                              │
+│  │(智能计量)│ │传感器    │ │          │                              │
+│  └──────────┘ └──────────┘ └──────────┘                              │
+└─────────────────────────────────────────────────────────────────────┘
+\`\`\`
+
+### 2.2 Mermaid 系统拓扑架构图
+
+\`\`\`mermaid
+graph TB
+    subgraph CloudLayer["☁️ 云端应用层（可选私有化/混合云部署）"]
+        C1["碳足迹核算引擎\\nLCA生命周期评估 + GB/T 51366"]
+        C2["数字孪生3D可视化\\nBIM模型 + 实时数据叠加"]
+        C3["ESG报告中心\\n自动导出合规报表"]
+        C4["AI预测服务\\nLSTM负荷预测 + 强化学习调度"]
+    end
+
+    subgraph EdgeLayer["🖥️ 边缘计算层"]
+        E1["工业边缘网关\\n多协议汇聚 + 断网续传"]
+        E2["边缘AI推理盒\\nONNX模型推理\\n推理延迟 < 100ms"]
+        E3["本地时序数据库\\nInfluxDB / TimescaleDB\\n热数据30天 + 冷数据5年"]
+        E4["安全隔离区\\n工业防火墙 + VPN隧道"]
+    end
+
+    subgraph ControlLayer["⚙️ 现场控制层"]
+        K1["群控主站 PLC\\nSiemens S7-1500F / 冗余CPU"]
+        K2["VFD变频驱动集群\\n冷水泵 × N / 冷却泵 × M"]
+        K3["冷却塔群控系统\\n风机变频 + 风机盘管VAV"]
+        K4["环境感知阵列\\n温湿度 / CO₂ / 人流密度"]
+    end
+
+    subgraph DeviceLayer["🏭 设备接入层"]
+        D1["冷水机组 #1\\n载冷剂: R134a / COP ≥ 6.0"]
+        D2["冷水机组 #2\\n同型号冗余配置"]
+        D3["冷水机组 #3\\n同型号冗余配置"]
+        D4["冷冻水系统\\n供回水温度/流量/压差"]
+        D5["冷却水系统\\n冷却塔 + 冷凝侧换热"]
+        D6["智能电力计量\\nIEC 62053-22 1级精度"]
+        D7["碳排监测节点\\nCO₂浓度 + 电网碳因子动态更新"]
+    end
+
+    subgraph EnterpriseSystem["🏢 企业系统集成层"]
+        ES1["BA楼宇自控系统\\n现有BACnet/IP网络"]
+        ES2["能源管理平台EMS\\nModbus TCP对接"]
+        ES3["OA/ERP系统\\nAPI数据同步"]
+        ES4["运维工单系统\\n工单自动派发"]
+    end
+
+    %% 连接关系
+    CloudLayer ==>|"MQTT over TLS 1.3<br/>QoS1 消息持久化"| EdgeLayer
+    EdgeLayer ==>|"BACnet/IP 路由转发"| ControlLayer
+    EdgeLayer ==>|"Modbus TCP 数据采集"| DeviceLayer
+    EdgeLayer ==>|"SNMP Trap 接收"| DeviceLayer
+    
+    ControlLayer ==>|"BACnet MS/TP (低速链路)"| D4
+    ControlLayer ==>|"Modbus TCP"| D5
+    ControlLayer ==>|"硬接线 + Modbus"| K2
+    ControlLayer ==>|"硬接线"| K3
+    ControlLayer ==>|"BACnet IP"| D6
+    ControlLayer ==>|"硬接线 + I2C"| D7
+
+    DeviceLayer ==>|"BACnet/IP"| ES1
+    DeviceLayer ==>|"Modbus TCP"| ES2
+    CloudLayer ==>|"RESTful API / OAuth2"| ES3
+    CloudLayer ==>|"Webhook"| ES4
+
+    style CloudLayer fill:#e8f4fd,stroke:#2196F3,stroke-width:2px
+    style EdgeLayer fill:#fff3e0,stroke:#FF9800,stroke-width:2px
+    style ControlLayer fill:#e8f5e9,stroke:#4CAF50,stroke-width:2px
+    style DeviceLayer fill:#fce4ec,stroke:#E91E63,stroke-width:2px
+    style EnterpriseSystem fill:#f3e5f5,stroke:#9C27B0,stroke-width:2px
+\`\`\`
+
+---
+
+## 三、核心功能模块详解
+
+### 3.1 智能变频群控系统（Core Controller）
+
+#### 3.1.1 多目标优化调度算法
+
+码视野研发团队采用 **深度强化学习（DRL）+ 模型预测控制（MPC）** 的混合架构，以全局COP最大化为核心目标，同时约束舒适性（室内温度偏差±0.5℃）和设备安全边界。
+
+\`\`\`mermaid
+graph LR
+    A["实时负荷需求<br/>Q_load kW"] --> B["LSTM预测模型<br/>T+1~T+4h预测"]
+    C["气象数据<br/>外参湿球温度"] --> D["冷却水最优设定<br/>Temp_set °C"]
+    E["电网碳因子<br/>实时 gCO₂/kWh"] --> F["低碳调度偏好"]
+    G["机组COP曲线库<br/>满载→30%部分负荷"] --> H["机组启停序列优化"]
+    B --> I["MPC优化求解器<br/>QP凸优化问题"]
+    D --> I
+    F --> I
+    G --> I
+    I --> J["最优调度指令集<br/>机组启停 + VFD频率设定"]
+    J --> K["PLC执行层<br/>安全联锁校验"]
+    K --> L["冷水机组群<br/>冷冻泵群<br/>冷却泵群<br/>冷却塔群"]
+    
+    style I fill:#FF5722,color:white
+    style J fill:#4CAF50,color:white
+\`\`\`
+
+#### 3.1.2 群控策略矩阵
+
+| 负荷区间 | 机组启停策略 | 冷冻水泵频率 | 冷却水泵频率 | 冷却塔风机 | 预期COP提升 |
+|----------|-------------|-------------|-------------|-----------|------------|
+| 90%~100% | 全部运行 | 95%~100% | 90%~100% | 高转速 | 基准 |
+| 70%~90%  | N-1运行 | 80%~95% | 75%~90% | 中高转速 | +8%~12% |
+| 50%~70%  | N-2运行 | 60%~80% | 55%~75% | 中速 | +15%~22% |
+| 30%~50%  | 单台+变频 | 40%~60% | 35%~55% | 低转速 | +25%~35% |
+| <30%     | 最小维持 | 最低防喘振 | 最低保压 | 间歇运行 | +30%~40% |
+
+#### 3.1.3 关键安全联锁逻辑
+
+\`\`\`mermaid
+flowchart TD
+    START(["群控指令下发"]) --> A{"压差设定值偏差?"}
+    A -- "ΔP > 20%" --> B["报警: 管路堵塞/阀门故障"]
+    A -- "ΔP < -15%" --> C["报警: 流量不足/过滤器堵塞"]
+    A -- "正常" --> D{"主机吸气压力?"}
+    D -- "< 蒸发压力下限" --> E["保护: 降频/停机防喘振"]
+    D -- "正常" --> F`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

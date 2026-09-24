@@ -1,5 +1,56 @@
 [
   {
+    "title": "华东某特种金属精密压铸厂 · 40 台数控冲压设备状态监测与模具寿命预测系统 (二期扩容工程)",
+    "industry": "industrial",
+    "industry_label": "工业制造",
+    "client_desc": "华东某高精密压铸上市公司核心制造基地",
+    "cover_image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80",
+    "duration_days": 42,
+    "devices_count": 160,
+    "core_protocols": [
+      "Modbus TCP",
+      "OPC-UA",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Python",
+      "EMQX",
+      "TimescaleDB",
+      "Vue3",
+      "ECharts"
+    ],
+    "pain_points": [
+      "高温高压环境下模具隐性磨损不可见，突发崩模造成整线报废损失逾百万元",
+      "现场各品牌压铸机 PLC 接口老旧封闭，无法统一采集合模力与行程时序",
+      "传统人工点检流于形式，无法实现设备预测性维护"
+    ],
+    "solution_summary": "布设微型外贴式应变与振动高频传感器，通过 Modbus TCP 与 OPC-UA 采集网关汇入 EMQX，结合 Python 边缘异常波形聚类算法实时比对模具磨损特征，突发异常 100ms 紧急切断下发。",
+    "architecture_mermaid": "flowchart TD\n    A[\"冲压机合模力/振动探头\"] -->|\"高频采样 1kHz\"| B[\"边缘振动采集卡\"]\n    B -->|\"Modbus TCP\"| C[\"工业网关 (Linux)\"]\n    C -->|\"特征值提取\"| D[\"EMQX 消息总线\"]\n    D --> E[\"Python 模具寿命推演模型\"]\n    E --> F[\"大屏 3D 设备台账看板\"]\n    E --> G[\"PLC 停机联锁信号下发\"]",
+    "delivery_highlights": [
+      {
+        "metric": "崩模停产事故",
+        "before": "年均 4~6 起",
+        "after": "上线后 0 起",
+        "improvement": "避免直接损失 240万+"
+      },
+      {
+        "metric": "模具综合寿命",
+        "before": "固定 5 万次强制更换",
+        "after": "动态评测至 7.2 万次",
+        "improvement": "模具利用率提升 44%"
+      },
+      {
+        "metric": "工单处理时效",
+        "before": "停机后报修（2小时）",
+        "after": "临界阈值自动派单",
+        "improvement": "响应时效提升 80%"
+      }
+    ],
+    "client_quote": "码视野技术团队在重工业现场非常有经验，短短 40 多天不仅打通了我们所有不同年份的老机床，更通过算法帮我们彻底根绝了昂贵的模具非计划损坏！",
+    "id": "case_20260925022234",
+    "created_at": "2026-09-25"
+  },
+  {
     "title": "华南某医药集团 8 栋自动化立体高位立体库温湿度巡测与消防风阀联动系统",
     "industry": "building",
     "industry_label": "智能楼宇",

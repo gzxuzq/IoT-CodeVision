@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向智慧港口与物流垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持5G专网 · MQTT 5.0 · WebSocket等主流通信标准。">
+  <meta property="og:title" content="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20260926022648.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-09-26 02:26","description":"面向智慧港口与物流垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持5G专网 · MQTT 5.0 · WebSocket等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+    body{font-family:'Noto Sans SC','PingFang SC',system-ui,sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80" alt="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">智慧港口与物流</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">车路协同低延时</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-09-26 02:26</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 现代化港口与大型电商立体仓无人AGV车队高并发通信与调度方案（升级迭代版）
+
+**编制单位：** 码视野研发团队  
+**版本：** V3.0  
+**日期：** 2026年7月  
+**适用场景：** 智慧港口集装箱转运 / 大型电商立体仓储中心  
+
+---
+
+## 一、项目背景与挑战分析
+
+### 1.1 行业痛点
+
+| 痛点维度 | 具体表现 |
+|---------|---------|
+| **高并发通信** | 单节点AGV数量超过500台时，传统TCP长连接出现连接抖动、消息丢失 |
+| **调度延迟** | 多车交叉路径冲突检测平均响应时间＞800ms，影响整体吞吐效率 |
+| **协议异构** | 港口设备（PLC/SCADA）与电商仓储（WMS/WCS）系统协议不统一 |
+| **网络覆盖** | 堆垛机上方、金属货架密集区存在信号盲区，导致AGV频繁断连 |
+| **运维复杂度** | 500+节点 fleet 的OTA升级、故障诊断、日志聚合缺乏统一平台 |
+
+### 1.2 设计目标量化指标
+
+| 指标项 | 目标值 |
+|-------|-------|
+| AGV最大并发连接数 | ≥1,200台/集群 |
+| 单消息端到端延迟 | ≤50ms（P99） |
+| 路径冲突检测响应时间 | ≤200ms |
+| 消息可靠交付率 | ≥99.999% |
+| 系统可用性 | ≥99.95%（SLA） |
+| OTA批量升级成功率 | ≥99.5% |
+
+---
+
+## 二、总体架构设计
+
+\`\`\`mermaid
+graph TB
+    subgraph 边缘层["🏭 边缘计算层 — 5G MEC Edge Cloud"]
+        EG[MEC边缘网关集群]
+        EDGE[边缘调度引擎 x3]
+        LOCAL_DB[(本地时序数据库<br/>InfluxDB Cluster)]
+        LOCAL_CACHE[(本地缓存<br/>Redis Sentinel)]
+        
+        EG --> EDGE
+        EDGE --> LOCAL_DB
+        EDGE --> LOCAL_CACHE
+    end
+    
+    subgraph 网络层["📡 5G专网 + 工业以太网"]
+        5G_BS[5G专网基站<br/>n78频段 3.5GHz]
+        CPE_AGV[AGV车载5G CPE]
+        WI-FI6_AP[Wi-Fi 6 AP<br/>补盲覆盖层]
+        
+        5G_BS <--> WI-FI6_AP
+        5G_BS -->|μmimo| CPE_AGV
+    end
+    
+    subgraph 设备层["🚗 AGV车队 + 周边设备"]
+        AGV1[AGV-型 A<br/>潜伏顶升式]
+        AGV2[AGV-型 B<br/>叉车式]
+        AGV3[AGV-型 C<br/>料箱拣选式]
+        STK[立体仓库堆垛机]
+        CON[ conveyor 输送线 PLC]
+        RC[机器人分拣臂]
+        
+        CPE_AGV --> AGV1 & AGV2 & AGV3
+        WI-FI6_AP --> STK & CON & RC
+    end
+    
+    subgraph 平台层["☁️ 云端调度与数据平台"]
+        BROKER[mqtt-broker集群<br/>EMQX Enterprise x4]
+        DISPATCH[调度中枢服务<br/>gRPC + 遗传算法]
+        PATH_ENGINE[路径规划引擎<br/>A* + Hybrid A*]
+        MONITOR[实时监控大屏]
+        ANALYTICS[数据分析平台<br/>ClickHouse]
+        ALERT[告警中心<br/>Prometheus + Grafana]
+        
+        BROKER <--> DISPATCH
+        DISPATCH <--> PATH_ENGINE
+        DISPATCH <--> ANALYTICS
+        BROKER <--> MONITOR
+        BROKER <--> ALERT
+    end
+    
+    subgraph 业务集成层["🔗 业务系统集成"]
+        WMS[WMS仓储管理系统]
+        TOS[TOS港口操作系统]
+        ERP[ERP企业资源计划]
+        WCS[WCS设备控制系统]
+        MES[MES制造执行系统]
+        
+        DISPATCH <--REST/gRPC--> WMS
+        DISPATCH <--REST/gRPC--> TOS
+        WMS <--WebSocket--> WCS
+        TOS <--gRPC--> MES
+    end
+    
+    AGV1 & AGV2 & AGV3 -->|MQTT 5.0 TLS1.3| BROKER
+    STK & CON & RC -->|MQTT 5.0| BROKER
+    EDGE <-->|gRPC| BROKER
+    BROKER <--> DISPATCH
+\`\`\`
+
+---
+
+## 三、详细技术架构说明
+
+### 3.1 边缘计算层设计
+
+\`\`\`mermaid
+graph LR
+    subgraph EdgeArchitecture["边缘节点内部架构"]
+        direction TB
+        ETH0[边缘网关<br/>工控机 x86] --> CPU_LOAD[CPU负载监控<br/>阈值: 70%]
+        ETH0 --> QoS_CTRL[QoS智能调度<br/>优先级队列]
+        ETH0 --> LOCAL_DISP[本地缓存调度<br/>离线自治模式]
+        ETH0 --> FAULT_TOL[故障自愈模块]
+        
+        CPU_LOAD -.->|触发| ALERT[本地告警]
+        LOCAL_DISP -.->|云端断连时切换| OFFLINE[离线容灾模式]
+        FAULT_TOL -.->|自动重启| ETH0
+    end
+\`\`\`
+
+| 模块 | 功能描述 | 技术选型 |
+|------|---------|---------|
+| 边缘网关 | 汇聚多协议数据，执行本地缓存调度 | 研华ADAM-4000系列 + x86工控机 |
+| 离线自治模式 | 云端链路中断时维持基础调度能力 | 轻量级Dijkstra本地路径算法 |
+| 故障自愈 | AGV心跳检测（≤3s）+ 自动重调度 | Go语言守护进程 |
+| 数据预处理 | 原始传感器数据压缩后上报，带宽节约60% | Protobuf序列化 + 差分上传 |
+
+### 3.2 通信协议栈设计
+
+\`\`\`mermaid
+sequenceDiagram
+    participant AGV as AGV车载终端
+    participant CPE as 5G CPE
+    participant MEC as MEC边缘节点
+    participant MQTT as EMQX Broker
+    participant DIS as 调度服务
+    participant WMS as WMS系统
+    
+    AGV->>CPE: QoS=1 Task Request (gRPC)
+    CPE->>MEC: 加密隧道转发
+    MEC->>MQTT: Publish task/request (MQTT 5.0)
+    Note over MQTT: Session Expiry=3600s<br/>Topic: agv/fleet/{id}/task
+    MQTT->>DIS: 推送任务消息
+    DIS->>DIS: 路径规划 + 冲突检测
+    DIS->>MQTT: Publish task/result<br/>QoS=2, Payload Full Width
+    MQTT->>AGV: Subscribe ACK + 结果下发
+    AGV->>AGV: 执行任务
+    AGV->>MQTT: Publish telemetry (保留位=1)
+    Note over AGV,MQTT: Property-Based Routing<br/>按QoS等级分流
+    MQTT->>WMS: WebSocket推送状态更新
+\`\`\`
+
+### 3.3 协议分层与映射
+
+| 层级 | 协议 | 用途 | QoS保证 |
+|------|------|------|---------|
+| 控制面 | **gRPC** | 边缘网关↔调度中枢（高性能RPC） | 强一致，超时100ms |
+| 数据面 | **MQTT 5.0** | AGV↔Broker（设备遥测/指令/状态） | QoS 1/2混合，Session管理 |
+| 实时面 | **WebSocket** | 监控大屏↔后端（实时状态推送） | 双工，心跳3s |
+| 集成面 | **REST/gRPC** | 外部系统↔调度平台（WMS/TOS对接） | 标准HTTP/2 |
+
+---
+
+## 四、核心子系统详细设计
+
+### 4.1 MQTT 5.0 消息模型
+
+\`\`\`
+Topic 命名规范：
+├── agv/telemetry/{agv_id}          # 遥测数据 (QoS1)
+├── agv/control/{agv_id}            # 控制指令 (QoS2)
+├── agv/task/{agv_id}               # 任务下发 (QoS2)
+├── agv/status/{zone_id}            # 区域状态聚合 (QoS1)
+├── agv/alarm/{agv_id}              # 告警消息 (QoS2)
+├── edge/heartbeat/{gateway_id}     # 边缘心跳 (QoS1)
+└── system/config/push              # 配置OTA推送 (QoS2)
+
+MQTT 5.0 特性应用：
+├── User Property: 消息分类标签 (trace_id, tenant_id)
+├── Topic Alias: 减少带宽消耗（alias映射表）
+├── Message Expiry Interval: 任务消息过期策略(30s)
+├── Session Expiry: 会话保持策略(离线2h)
+├── Shared Subscription: 负载均衡订阅（多调度实例）
+└── Reason String: 标准化失败原因返回
+\`\`\`
+
+### 4.2 调度算法设计
+
+\`\`\`mermaid
+flowchart TD
+    A[接收任务请求] --> B{路径可行性检测}
+    B -->|可行| C[多目标优化评分]
+    B -->|不可行| D[返回拒绝+原因]
+    C --> E[遗传算法全局路径规划]
+    C --> F[Hybrid A*局部避障]
+    E --> G[冲突消解引擎]
+    F --> G
+    G --> H{是否存在死锁?}
+    H -->|否| I[下发最优调度方案]
+    H -->|是| J[Deadlock Detection & Recovery]
+    J --> K[释放阻塞AGV临时调度]
+    K --> I
+    I --> L[实时监控执行偏差]
+    L --> M{偏差 > 阈值?}
+    M -->|是| N[动态重规划]
+    M -->|否| O[继续执行]
+    N --> C
+\`\`\`
+
+**调度引擎技术规格：**
+
+| 参数 | 规格 |
+|------|------|
+| 算法 | 遗传算法(GA) + Hybrid A* + 优先队列启发式 |
+| 冲突检测窗口 | 时间窗T=5s，空间粒度Δ=0.5m |
+| 死锁检测算法 | 资源分配图(RAG) + 等待环检测 |
+| 调度周期 | 100ms刷新一次全局最优解 |
+| 并发处理能力 | 单实例支持600台AGV，横向扩展至1200台 |
+
+### 4.3 5G专网覆盖设计
+
+\`\`\`mermaid
+graph TB
+    subgraph 5GCoverage["5G专网覆盖方案"]
+        UL[UpLink MIMO<br/>64T64R] --> BS1[宏基站<br/>覆盖半径500m]
+        UL --> BS2[微基站<br/>补盲覆盖]
+        
+        BS1 --> CELL1[Cell 1: 通道A<br/>频率: 3.5GHz n78]
+        BS2 --> CELL2[Cell 2: 堆场区<br/>频率: 3.5GHz n78]
+        
+        CELL1 --> UE1[AGV终端<br/>5G CPE模组]
+        CELL2 --> UE2[固定设备<br/>工业CPE]
+        
+        BS1 -.->|IPU光纤| DWN[UPF下沉到MEC]
+        BS2 -.->|IPU光纤| DWN
+    end
+\`\`\`
+
+| 覆盖区域 | 技术方案 | 预期RSRP | 预期SINR |
+|---------|---------|---------|---------|
+| 集装箱堆场 | 64T64R宏站 | ≥-95dBm | ≥15dB |
+| 巷道作业区 | 32T32R微站 | ≥-100dBm | ≥12dB |
+| 立体仓库内部 | Wi-Fi 6 + 5G融合 | ≥-85dBm(混合) | ≥18dB |
+| 装卸平台 | mmWave小基站 | ≥-88dBm | ≥20dB |
+
+---
+
+## 五、硬件选型清单 BOM
+
+### 5.1 边缘计算与网络设备
+
+| 序号 | 设备名称 | 型号/规格 | 数量(参考) | 单价(万元) | `;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

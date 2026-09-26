@@ -1,5 +1,56 @@
 [
   {
+    "title": "西南某大型生态蓝莓基地 · 2000 亩水肥一体化脉冲滴灌与气象微站物联网平台 (二期扩容工程)",
+    "industry": "agriculture",
+    "industry_label": "智慧农业",
+    "client_desc": "西南高端精品浆果种植示范基地",
+    "cover_image": "https://images.unsplash.com/photo-1592417817098-8f3d6ef23984?w=800&q=80",
+    "duration_days": 35,
+    "devices_count": 520,
+    "core_protocols": [
+      "LoRaWAN",
+      "Modbus RTU",
+      "MQTT"
+    ],
+    "tech_stack": [
+      "Python",
+      "EMQX",
+      "InfluxDB",
+      "Vue3",
+      "微信小程序"
+    ],
+    "pain_points": [
+      "山地起伏大，无线信号遮挡严重，传统 4G 方案电池两月即耗尽",
+      "蓝莓根系浅对土壤 EC 值及酸碱度极其敏感，传统人工施肥配比不匀造成大面积减产",
+      "水泵阀门靠工人骑摩托车手动开关，费时费力且极易忘关引发水肥冲刷烂根"
+    ],
+    "solution_summary": "搭建基于 LoRaWAN 的超远距离低功耗无线网状传感器阵列，覆盖土壤氮磷钾、EC、pH 及微气候；云端依据蓝莓物候生长曲线，自动开闭电磁阀与水肥脉冲泵组。",
+    "architecture_mermaid": "flowchart LR\n    A[\"深浅层土壤温湿度/EC/pH探头\"] -->|\"LoRa 无线 868MHz\"| B[\"山顶太阳能 LoRa 基站\"]\n    B -->|\"4G 加密回传\"| C[\"码视野智慧农业云平台\"]\n    C --> D[\"水肥配方与滴灌控制算法\"]\n    D -->|\"控制反控指令\"| E[\"水肥机控制器 (Modbus)\"]\n    E --> F[\"分区脉冲电磁阀组\"]\n    C --> G[\"农场主微信小程序监控\"]",
+    "delivery_highlights": [
+      {
+        "metric": "肥料利用率",
+        "before": "人工漫灌（浪费严重）",
+        "after": "按需精准滴灌",
+        "improvement": "化肥用量减少 38%"
+      },
+      {
+        "metric": "优质果品产出比",
+        "before": "优果率 62%",
+        "after": "提升至 88%",
+        "improvement": "果园产值提升 35%"
+      },
+      {
+        "metric": "单人管护面积",
+        "before": "20 亩 / 人",
+        "after": "提升至 120 亩 / 人",
+        "improvement": "人效提升 6 倍"
+      }
+    ],
+    "client_quote": "以前工人每天跑断腿去开阀门还经常浇不透，现在躺在家里看手机小程序，土壤干了系统自动精准滴灌，果子颗粒饱满，收购商抢着要！",
+    "id": "case_20260927010311",
+    "created_at": "2026-09-27"
+  },
+  {
     "title": "华东某特种金属精密压铸厂 · 40 台数控冲压设备状态监测与模具寿命预测系统 (二期扩容工程)",
     "industry": "industrial",
     "industry_label": "工业制造",

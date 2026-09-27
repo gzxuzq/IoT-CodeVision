@@ -410,6 +410,126 @@ def update_solutions_html(solutions):
     print(f"[Build Solutions Page] solutions.html 静态预渲染已生成！包含 {len(solutions)} 个方案。")
 
 
+def update_index_html(posts, solutions, cases):
+    index_file = BASE_DIR / "index.html"
+    if not index_file.exists():
+        return
+
+    content = index_file.read_text(encoding="utf-8")
+    # 1. 移除 Google Fonts
+    content = re.sub(r"@import\s+url\(['\"]https://fonts\.googleapis\.com/[^'\"]+['\"]\);\s*", "", content)
+    content = content.replace("font-family: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;", 
+                              "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;")
+
+    # 2. 预渲染精选解决方案 (取前 2 个)
+    sol_cards = []
+    for s in solutions[:2]:
+        fileName = s['id'] if str(s['id']).startswith('sol_') else 'sol_' + str(s['id'])
+        sol_cards.append(f'''
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-400 transition-all flex flex-col group">
+          <div class="h-44 overflow-hidden relative bg-slate-100">
+            <img src="{s.get('cover_image', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80')}" alt="{s.get('title', '')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            <div class="absolute top-3 left-3 bg-brand-600/90 text-white text-xs font-semibold px-2.5 py-1 rounded-md backdrop-blur">
+              {s.get('industry', '行业方案')}
+            </div>
+            <div class="absolute bottom-3 right-3 bg-white/90 text-slate-700 text-xs px-2 py-0.5 rounded shadow-sm">
+              ⏱ {s.get('deploy_cycle', '交钥匙方案')}
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="text-xs font-semibold text-brand-600 mb-1">{s.get('industry_tag', '垂直架构')}</div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2 leading-snug">
+              <a href="solutions/{fileName}.html">{s.get('title', '')}</a>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">{s.get('summary', '')}</p>
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-slate-400 font-mono">{' · '.join((s.get('protocols') or [])[:2])}</span>
+              <a href="solutions/{fileName}.html" class="text-brand-600 font-bold text-xs sm:text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                查阅完整方案 →
+              </a>
+            </div>
+          </div>
+        </div>''')
+
+    sol_cards_html = '\n'.join(sol_cards)
+    content = re.sub(r'<div id="home-solutions-grid"[^>]*>[\s\S]*?</div>\s*</div>\s*</section>',
+                     f'<div id="home-solutions-grid" class="grid sm:grid-cols-2 gap-6">\n{sol_cards_html}\n    </div>\n  </div>\n</section>',
+                     content)
+
+    # 3. 预渲染标杆项目案例
+    case_cards = []
+    for idx, c in enumerate(cases):
+        highlights = ""
+        for h in (c.get('delivery_highlights') or [])[:3]:
+            highlights += f'''
+              <div class="text-center bg-blue-50/70 border border-blue-100/60 rounded-lg p-1.5">
+                <div class="text-xs font-bold text-brand-700">{h.get('improvement', '')}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5">{h.get('metric', '')}</div>
+              </div>'''
+
+        case_cards.append(f'''
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-300 transition-all flex flex-col group">
+        <div class="h-44 overflow-hidden relative bg-slate-100">
+          <img src="{c.get('cover_image', '')}" alt="{c.get('title', '')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+          <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-white text-xs px-2.5 py-1 rounded-md font-semibold">{c.get('industry_label', '案例')}</span>
+        </div>
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="text-xs text-slate-400 mb-2 font-mono">工期：{c.get('duration_days', 30)} 天 · 接入设备：{c.get('devices_count', 100)} 台</div>
+          <h3 class="font-bold text-slate-900 leading-snug mb-3 text-base flex-1">{c.get('title', '')}</h3>
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            {highlights}
+          </div>
+          <p class="text-xs text-slate-500 italic mb-4 border-l-2 border-brand-300 pl-2">"{c.get('client_quote', '')[:50]}…"</p>
+          <button onclick="showCaseModal({idx})" class="w-full py-2 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs font-bold rounded-xl transition-colors">
+            查看案例架构与交付细节 →
+          </button>
+        </div>
+      </div>''')
+
+    case_cards_html = '\n'.join(case_cards)
+    content = re.sub(r'<div id="cases-grid"[^>]*>[\s\S]*?</div>\s*</div>\s*</section>',
+                     f'<div id="cases-grid" class="grid md:grid-cols-3 gap-6">\n{case_cards_html}\n    </div>\n  </div>\n</section>',
+                     content)
+
+    # 4. 预渲染最新 3 篇博文
+    blog_cards = []
+    for p in posts[:3]:
+        pid = p['id'] if str(p['id']).startswith('post_') else f"post_{p['id']}"
+        blog_cards.append(f'''
+      <a href="posts/{pid}.html" class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-brand-300 transition-all group block">
+        <div class="h-36 overflow-hidden bg-slate-100">
+          <img src="{p.get('cover_image', '')}" alt="{p.get('title', '')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="bg-brand-50 text-brand-700 text-xs px-2.5 py-0.5 rounded-full font-medium">{p.get('category', '技术实战')}</span>
+            <span class="text-xs text-slate-400 font-mono flex items-center gap-1" title="发布时间">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span>{p.get('date', '')}</span>
+            </span>
+          </div>
+          <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">{p.get('title', '')}</h3>
+          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{p.get('summary', '')}</p>
+        </div>
+      </a>''')
+
+    blog_cards_html = '\n'.join(blog_cards)
+    content = re.sub(r'<div id="blog-preview"[^>]*>[\s\S]*?</div>\s*</div>\s*</section>',
+                     f'<div id="blog-preview" class="grid sm:grid-cols-3 gap-6">\n{blog_cards_html}\n    </div>\n  </div>\n</section>',
+                     content)
+
+    # 5. 注入 cachedCases 并移除 3 个异步 fetch
+    cases_json_str = json.dumps(cases, ensure_ascii=False)
+    replace_script = f'''let cachedCases = {cases_json_str};
+// 静态预渲染已激活：首页核心板块（方案、案例、博文）已全部固化在 HTML 中，0ms 秒开无网络等待'''
+
+    pattern_to_remove = r'// 加载博文预览[\s\S]*?loadBlogPreview\(\);'
+    content = re.sub(pattern_to_remove, replace_script, content)
+
+    index_file.write_text(content, encoding="utf-8")
+    print(f"[Build Index Page] index.html 静态预渲染成功！包含 2 个精选方案 + {len(cases)} 个案例 + 3 篇最新博文。")
+
+
 def clean_google_fonts_global():
     for filename in ["index.html", "contact.html"]:
         fpath = BASE_DIR / filename
@@ -463,6 +583,14 @@ def main():
 
         # 同步静态预渲染 solutions.html
         update_solutions_html(solutions)
+
+    # 3. 编译首页静态预渲染 (将方案、案例、博文直接固化至 index.html)
+    cases_index_path = BASE_DIR / 'cases_index.json'
+    cases = []
+    if cases_index_path.exists():
+        with open(cases_index_path, 'r', encoding='utf-8') as f:
+            cases = json.load(f)
+    update_index_html(posts, solutions, cases)
 
     print(f"\n[Done] 编译完成: {built_posts} 篇博文，{built_solutions} 个解决方案落地页")
 

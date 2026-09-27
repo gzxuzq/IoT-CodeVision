@@ -107,8 +107,7 @@ POST_TEMPLATE = """<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
-    body{font-family:'Noto Sans SC','PingFang SC',system-ui,sans-serif;}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
     .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
     .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
     .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
@@ -254,10 +253,183 @@ def build_post_html(post, is_solution=False):
     return html
 
 
+def update_blog_html(posts):
+    blog_file = BASE_DIR / "blog.html"
+    if not blog_file.exists():
+        return
+
+    content = blog_file.read_text(encoding="utf-8")
+    # 1. 移除 Google Fonts
+    content = re.sub(r"@import\s+url\(['\"]https://fonts\.googleapis\.com/[^'\"]+['\"]\);\s*", "", content)
+    content = content.replace("font-family: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;", 
+                              "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;")
+
+    # 2. 生成静态博文卡片
+    cards = []
+    for p in posts:
+        pid = p['id'] if str(p['id']).startswith('post_') else f"post_{p['id']}"
+        roi_spans = []
+        roi_data = p.get('roi_stats') or p.get('roi_data') or {}
+        for k, v in list(roi_data.items())[:2]:
+            roi_spans.append(f'<span class="bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded">{k}: {v}</span>')
+        roi_html = ''.join(roi_spans)
+
+        cards.append(f'''
+    <a href="posts/{pid}.html" class="post-card bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-300 transition-all duration-300 group block" data-category="{p.get('category', '技术实战解析')}">
+      <div class="h-44 overflow-hidden bg-slate-100">
+        <img src="{p.get('cover_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80')}" alt="{p.get('title', '')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+      </div>
+      <div class="p-5">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <span class="bg-brand-50 text-brand-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">{p.get('category', '技术实战')}</span>
+          <span class="text-xs text-slate-400 font-mono flex items-center gap-1" title="发布时间">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>{p.get('date', '')}</span>
+          </span>
+        </div>
+        <h2 class="font-bold text-slate-900 leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">{p.get('title', '')}</h2>
+        <p class="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">{p.get('summary', '')}</p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded">{p.get('tag', 'IoT')}</span>
+          {roi_html}
+        </div>
+      </div>
+    </a>''')
+
+    cards_html = '\n'.join(cards)
+    grid_pattern = r'<div id="blog-grid"[^>]*>[\s\S]*?</div>\s*<!-- 更多链接'
+    replacement = f'<div id="blog-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">\n{cards_html}\n    </div>\n    <!-- 更多链接'
+    content = re.sub(grid_pattern, replacement, content)
+
+    # 替换 post-count
+    content = re.sub(r'<span id="post-count">\d*</span>', f'<span id="post-count">{len(posts)}</span>', content)
+    content = content.replace('<div id="load-more-wrap" class="text-center mt-10 hidden">', '<div id="load-more-wrap" class="text-center mt-10">')
+
+    # 更新前端筛选 JS：不再需要 fetch posts_index.json，直接极速过滤本地 DOM
+    old_script_pattern = r'let allPosts = \[\];[\s\S]*?loadPosts\(\);'
+    new_script = '''// 本地 DOM 极速分类筛选 (0 延迟秒开，无需跨洋 fetch JSON)
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => {
+      b.className = 'cat-btn bg-white border border-slate-200 text-slate-600 text-sm px-4 py-1.5 rounded-full hover:border-brand-400';
+    });
+    btn.className = 'cat-btn active bg-brand-600 text-white text-sm px-4 py-1.5 rounded-full';
+    const targetCat = btn.dataset.cat;
+    let visibleCount = 0;
+    document.querySelectorAll('.post-card').forEach(card => {
+      const cardCat = card.getAttribute('data-category');
+      if (targetCat === '全部' || cardCat === targetCat) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    const countEl = document.getElementById('post-count');
+    if (countEl) countEl.textContent = visibleCount;
+  });
+});'''
+    content = re.sub(old_script_pattern, new_script, content)
+
+    blog_file.write_text(content, encoding="utf-8")
+    print(f"[Build Blog Page] blog.html 静态预渲染已生成！包含 {len(posts)} 篇博文，彻底消除网络加载延迟。")
+
+
+def update_solutions_html(solutions):
+    sol_file = BASE_DIR / "solutions.html"
+    if not sol_file.exists():
+        return
+
+    content = sol_file.read_text(encoding="utf-8")
+    content = re.sub(r"@import\s+url\(['\"]https://fonts\.googleapis\.com/[^'\"]+['\"]\);\s*", "", content)
+    content = content.replace("font-family: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;", 
+                              "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;")
+
+    cards = []
+    for s in solutions:
+        sid = s['id'] if str(s['id']).startswith('sol_') else f"sol_{s['id']}"
+        roi_badges = ""
+        roi_data = s.get('roi_data') or s.get('roi_stats') or {}
+        for k, v in list(roi_data.items())[:3]:
+            roi_badges += f'''
+        <div class="bg-blue-50/70 border border-blue-100 rounded-lg p-2 text-center">
+          <div class="text-xs font-bold text-brand-700">{v}</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">{k}</div>
+        </div>'''
+
+        proto_spans = ""
+        for p in (s.get('protocols') or [])[:4]:
+            proto_spans += f'<span class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded font-mono">{p}</span>'
+
+        cover = s.get('cover_image', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80')
+
+        cards.append(f'''
+      <article class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:border-brand-400 transition-all duration-300 flex flex-col group">
+        <div class="h-48 overflow-hidden relative">
+          <img src="{cover}" alt="{s.get('title', '')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+          <div class="absolute top-3 left-3 bg-brand-600/90 backdrop-blur text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+            {s.get('industry', '行业方案')}
+          </div>
+          <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-slate-700 text-xs font-medium px-2.5 py-1 rounded-md shadow-sm">
+            ⏱ {s.get('deploy_cycle', '快速部署')}
+          </div>
+        </div>
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-3 leading-snug">
+              {s.get('title', '')}
+            </h2>
+            <p class="text-slate-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+              {s.get('summary', '')}
+            </p>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              {roi_badges}
+            </div>
+          </div>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+            <div class="flex flex-wrap gap-1.5">
+              {proto_spans}
+            </div>
+            <a href="solutions/{sid}.html" class="inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:text-brand-700 group-hover:translate-x-1 transition-all">
+              <span>查看架构</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </article>''')
+
+    cards_html = '\n'.join(cards)
+    grid_pattern = r'<div id="solutions-grid"[^>]*>[\s\S]*?</div>\s*</div>\s*</section>'
+    replacement = f'<div id="solutions-grid" class="grid sm:grid-cols-2 lg:grid-cols-2 gap-8">\n{cards_html}\n    </div>\n  </div>\n</section>'
+    content = re.sub(grid_pattern, replacement, content)
+
+    old_fetch_pattern = r'async function loadSolutions\(\)[\s\S]*?loadSolutions\(\);'
+    content = re.sub(old_fetch_pattern, '// 静态预渲染已激活，无需客户端异步 fetch', content)
+
+    sol_file.write_text(content, encoding="utf-8")
+    print(f"[Build Solutions Page] solutions.html 静态预渲染已生成！包含 {len(solutions)} 个方案。")
+
+
+def clean_google_fonts_global():
+    for filename in ["index.html", "contact.html"]:
+        fpath = BASE_DIR / filename
+        if fpath.exists():
+            c = fpath.read_text(encoding="utf-8")
+            c = re.sub(r"@import\s+url\(['\"]https://fonts\.googleapis\.com/[^'\"]+['\"]\);\s*", "", c)
+            c = c.replace("font-family: 'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;", 
+                          "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;")
+            fpath.write_text(c, encoding="utf-8")
+            print(f"[Font Clean] {filename} 已彻底移除 Google Fonts 远程阻塞！")
+
+
 def main():
+    # 0. 全局清除 Google Fonts
+    clean_google_fonts_global()
+
     # 1. 编译博文
     posts_index_path = BASE_DIR / 'posts_index.json'
     built_posts = 0
+    posts = []
     if posts_index_path.exists():
         with open(posts_index_path, 'r', encoding='utf-8') as f:
             posts = json.load(f)
@@ -269,9 +441,13 @@ def main():
             built_posts += 1
             print(f"[Build Post] {out_path.name} OK")
 
+        # 同步静态预渲染 blog.html
+        update_blog_html(posts)
+
     # 2. 编译解决方案
     solutions_index_path = BASE_DIR / 'solutions_index.json'
     built_solutions = 0
+    solutions = []
     if solutions_index_path.exists():
         with open(solutions_index_path, 'r', encoding='utf-8') as f:
             solutions = json.load(f)
@@ -285,6 +461,9 @@ def main():
             built_solutions += 1
             print(f"[Build Solution] {out_path.name} OK")
 
+        # 同步静态预渲染 solutions.html
+        update_solutions_html(solutions)
+
     print(f"\n[Done] 编译完成: {built_posts} 篇博文，{built_solutions} 个解决方案落地页")
 
     # 3. 同步刷新 sitemap.xml
@@ -292,6 +471,7 @@ def main():
         import generate_sitemap
         generate_sitemap.main() if hasattr(generate_sitemap, 'main') else None
     except Exception:
+        import sys
         os.system(f'"{sys.executable}" "{BASE_DIR / "generate_sitemap.py"}"')
 
 

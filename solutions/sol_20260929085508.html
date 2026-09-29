@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向冷链与医药垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持LoRaWAN · Modbus RTU · MQTT等主流通信标准。">
+  <meta property="og:title" content="现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20260929085508.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-09-29 08:55","description":"面向冷链与医药垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持LoRaWAN · Modbus RTU · MQTT等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80" alt="现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">冷链与医药</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">温湿度全流程溯源</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-09-29 08:55</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 现代中药与高端果品恒温恒湿冷链仓储群 IoT 监测与断链预警方案（升级迭代版）
+
+**文档版本：** V2.1  
+**适用行业：** 医药冷链 · 高端果品 · 中药材仓储  
+**编制单位：** 码视野研发团队  
+**更新日期：** 2026年7月
+
+---
+
+## 一、方案概述
+
+### 1.1 行业痛点诊断
+
+现代中药与高端果品对冷链仓储环境具有极其严苛的温湿度控制要求。码视野研发团队在长期服务医药GSP认证企业、大型中药材交易市场及高端果品供应链的过程中，深入调研发现以下核心痛点：
+
+| 痛点维度 | 具体表现 | 业务影响 |
+|---------|---------|---------|
+| **温湿度失控** | 传统点式监测盲区大，局部热点/冷点无法感知；制冷设备故障响应滞后 | 中药材有效成分降解、果品萎蔫/冻伤，直接经济损失率 3%-8% |
+| **断链不可追溯** | 多温区切换节点缺乏连续记录；运输段数据断档 | GSP合规风险，监管抽查不合格，资质吊销隐患 |
+| **能耗冗余高企** | 制冷系统靠经验启停，无预测性调控 | 电费占仓储运营成本 40%-60%，无效能耗严重 |
+| **告警响应迟滞** | 告警仅依赖声光或本地通知，无闭环处理机制 | 从故障发生到处置往往跨越数小时，损失不可控 |
+| **数据孤岛林立** | 各温区、各仓库系统独立部署，协议不统一 | 集团化管控难以落地，总部决策缺乏数据支撑 |
+
+### 1.2 方案目标
+
+码视野研发团队本方案旨在构建一套**端到端、云边协同、AI驱动**的冷链仓储群智能监测系统，实现：
+
+- **实时感知：** 仓储群全域温湿度、压差、气体浓度（乙烯/CO₂/SO₂）、设备运行状态全量采集
+- **断链预警：** 基于多维数据融合的异常检测算法，提前 30-120 分钟预测潜在断链风险
+- **合规追溯：** 自动生成符合 GSP / FDA 21 CFR Part 11 要求的不可篡改审计追踪
+- **能效优化：** AI 模型动态调控制冷负荷，降低综合能耗 15%-25%
+- **统一管控：** 多温区、多仓库、多运输节点的一站式可视化监控平台
+
+---
+
+## 二、系统总体架构
+
+### 2.1 架构设计原则
+
+码视野研发团队采用**四层五域**架构设计：
+
+- **感知层：** 多协议融合接入，覆盖 LoRaWAN 无线传感、Modbus RTU 工业设备、MQTT 云端上报
+- **边缘层：** 工业级边缘网关，支持协议转换、本地数据缓存、实时规则引擎
+- **平台层：** 云原生微服务架构，提供数据接入、存储、计算、算法服务
+- **应用层：** Web 监控大屏、移动 APP、API 开放平台、第三方系统集成
+
+### 2.2 Mermaid 系统拓扑架构图
+
+\`\`\`mermaid
+graph TB
+    %% 感知层
+    subgraph SENSORS ["感知层 — 多源数据采集"]
+        direction LR
+        S1["LoRaWAN 温湿度传感器<br/>精度 ±0.3°C / ±2%RH"]
+        S2["LoRaWAN 气体传感器<br/>乙烯 / CO₂ / SO₂"]
+        S3["LoRaWAN 压差传感器<br/>冷库门禁监测"]
+        S4["Modbus RTU 制冷机组<br/>PLC 状态采集"]
+        S5["Modbus RTU 加湿/除湿设备"]
+        S6["RFID 托盘标签<br/>货物位置追踪"]
+        S7["车载 GPS+温湿度终端<br/>运输段监测"]
+    end
+
+    %% 边缘层
+    subgraph EDGE ["边缘层 — 智能网关集群"]
+        direction TB
+        GW1["边缘网关 #1<br/>中药冷藏区"]
+        GW2["边缘网关 #2<br/>高端果品保鲜区"]
+        GW3["边缘网关 #3<br/>预冷/分拣区"]
+        GW4["边缘网关 #4<br/>运输车队"]
+        
+        GW1 --- FW1["规则引擎: 本地断链预警<br/>延迟容错缓存 72h"]
+        GW2 --- FW2["规则引擎: 本地断链预警<br/>延迟容错缓存 72h"]
+        GW3 --- FW3["规则引擎: 能效优化建议<br/>制冷机组联动控制"]
+        GW4 --- FW4["规则引擎: 运输轨迹校验<br/>断链自动记录"]
+    end
+
+    %% 网络层
+    subgraph NETWORK ["网络层 — 混合通信"]
+        direction LR
+        LR["LoRaWAN 网关 ×3<br/>覆盖半径 2-5km"]
+        4G["4G/5G 工业路由器"]
+        FIB["光纤专线（主）+ 4G备份"]
+        MQTT_B["MQTT Broker 集群<br/>QoS1 可靠投递"]
+    end
+
+    %% 平台层
+    subgraph CLOUD ["平台层 — 码视野冷链云平台"]
+        direction TB
+        subgraph INGEST ["数据接入"]
+            MQTT["MQTT 消息接入"]
+            HTTP["HTTP REST API 网关"]
+            DBR["数据批量写入"]
+        end
+        subgraph STORE ["数据存储"]
+            TSDB["时序数据库 InfluxDB<br/>温湿度原始数据"]
+            KV["KV存储 Redis<br/>实时状态缓存"]
+            RDS["关系数据库 PostgreSQL<br/>业务数据"]
+            OBJ["对象存储 MinIO<br/>审计日志/报表"]
+        end
+        subgraph COMPUTE ["计算引擎"]
+            STREAM["Flink 实时流计算<br/>断链检测 / 告警触发"]
+            AI["AI 预测模型<br/>温度异常检测 / 能耗优化"]
+            RULE["规则引擎 Drools<br/>业务规则执行"]
+        end
+        subgraph SERVICES ["微服务集群"]
+            DEV["设备管理服务"]
+            ALM["告警管理服务"]
+            AUDIT["审计追踪服务"]
+            REPORT["报表生成服务"]
+            API_OPEN["开放 API 服务"]
+        end
+    end
+
+    %% 应用层
+    subgraph APPS ["应用层 — 多端协同"]
+        direction LR
+        WEB["Web 监控大屏<br/>仓储群全域态势"]
+        MOBILE["移动 APP / 小程序<br/>现场运维 / 主管审批"]
+        WMS["WMS 接口对接"]
+        MES["MES 接口对接"]
+        GOV["政府监管平台对接<br/>GSP数据直报"]
+    end
+
+    %% 连接关系
+    S1 & S2 & S3 --> LR
+    S4 & S5 --> GW1 & GW2 & GW3
+    S6 --> GW1 & GW2
+    S7 --> GW4
+    
+    LR --> MQTT
+    GW1 & GW2 & GW3 & GW4 --> 4G
+    4G --> FIB
+    FIB --> MQTT
+    MQTT --> MQTT_B
+    MQTT_B --> INGEST
+    
+    HTTP --> INGEST
+    DBR --> INGEST
+    
+    INGEST --> STREAM
+    STREAM --> TSDB
+    STREAM --> KV
+    STREAM --> RULE
+    
+    AI -.-> TSDB
+    AI -.-> KV
+    RULE --> ALM
+    RULE --> REPORT
+    
+    SERVICES --> WEB
+    SERVICES --> MOBILE
+    SERVICES --> WMS
+    SERVICES --> MES
+    SERVICES --> GOV
+    
+    AUDIT -.-> OBJ
+    REPORT -.-> OBJ
+
+    style SENSORS fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    style EDGE fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style NETWORK fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    style CLOUD fill:#fce4ec,stroke:#e91e63,stroke-width:2px
+    style APPS fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+\`\`\`
+
+---
+
+## 三、硬件选型清单 BOM
+
+### 3.1 感知层设备选型
+
+#### 3.1.1 LoRaWAN 无线传感节点
+
+| 编号 | 设备名称 | 关键技术参数 | 推荐型号 | 数量配置<br>（每 500m²） | 单价（元） | 适用场景 |
+|-----|---------|------------|---------|---------------------|----------|---------|
+| T1 | LoRaWAN 温湿度变送器 | 量程: -30~+60°C / 0~100%RH；精度: ±0.3°C / ±2%RH；采样间隔: 1-60s可调；LoRaWAN Class A；电池寿命≥5年；IP67 | 码视野 MW-LWT-200 | 6-8 台 | 冷库主体空间监测 |
+| T2 | LoRaWAN 微环境温湿度探头 | 量程: -10~+40°C / 0~100%RH；精度: ±0.2°C / ±1.5%RH；PT1000 探头；露点计算；IP40 | 码视野 MW-LWM-110 | 2 台 | 药品托盘级微环境 |
+| T3 | LoRaWAN 气体传感器组 | 乙烯: 0-10ppm±5%；CO₂: 0-5000ppm±3%；SO₂: 0-10ppm±5%；多通道复用 | 码视野 MW-LWG-300 | 1 台 | 果品催熟/中药防虫监测 |
+| T4 | LoRaWAN 压差传感器 | 量程: 0-50Pa；精度: ±1%FS；门开关状态检测；声光报警 | 码视野 MW-LWD-050 | 1 台 | 冷库门开闭监测 |
+| T5 | LoRaWAN 门磁感应器 | 磁保持触点；工作距离≤30mm；电池供电≥3年 | 码视野 MW-LWMG-01 | 2 台 | 库房进出口门状态 |
+| T6 | LoRaWAN 冷链记录仪 | 温湿度双通道；内置 256MB Flash；GPS+北斗定位；IP68；运输途中持续记录 | 码视野 MW-LWC-500 | 每车厢 1 台 | 运输段断链追溯 |
+
+#### 3.1.2 Modbus RTU 工业设备采集
+
+| 编号 | 设备名称 | 关键技术参数 | 推荐型号 | 数量配置 | 单价（元） | 适用场景 |
+|-----|---------|------------|---------|---------|----------|---------|
+| M1 | Modbus RTU 制冷机组监控模块 | 支持 S7-200/1200、三菱 FX、西门子 S7-300 系列；8DI/4DO/2AO；工作温度 -40~+85°C | 码视野 MW-MBM-842 | 1 台/机组 | 2,800 | 冷水机组/压缩机状态采集 |
+| M2 | Modbus RTU 加湿/除湿控制器 | 支持 HumidAir、Kjellberg 等主流品牌；0-10V 输出控制；RS485 多机串联 | 码视野 MW-MBH-010 | 1 台/库 | 1,500 | 温湿度联动控制 |
+| M3 | 多路温度巡检模块 | 8通道 PT100/NTC；精度 0.1°C；Modbus RTU 输出；扫描周期≤1s | 码视野 MW-TXM-8CH | 2 台/库 | 1,200 | 多点温度验证备用 |
+
+#### 3.1.3 其他配套传感设备
+
+| 编号 | 设备名称 | 关键技术参数 | 推荐型号 | 数量配置 | 单价（元） | 适用场景 |
+|-----|---------|------------|---------|---------|----------|---------|
+| E1 | RFID UHF 读写器 | ISO18000-6C；读取距离≤10m；工业级 IP40 | 码视野 MW-RFID-U01 | 1 台/通道 | 1,800 | 货物进出库自动登记 |
+| E2 | RFID 抗金属标签 | 96MHz-960MHz；读距≤3m；耐低温 -40°C | 码`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

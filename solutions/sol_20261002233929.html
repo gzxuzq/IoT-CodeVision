@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向现代智慧养殖垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持Modbus RTU · CAN 2.0 · 4G Cat.1等主流通信标准。">
+  <meta property="og:title" content="大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20261002233929.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-02 23:39","description":"面向现代智慧养殖垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持Modbus RTU · CAN 2.0 · 4G Cat.1等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&q=80" alt="大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">现代智慧养殖</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">环境自适应调控</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-02 23:39</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 大型现代化生猪与蛋禽养殖场全自动环控与精准饲喂物联网方案（升级迭代版）
+
+**方案版本**：V3.0（2026年迭代）  
+**编制单位**：码视野物联网软件研发团队  
+**行业**：现代智慧养殖（生猪+蛋禽双模块）  
+**适用规模**：存栏量5,000–50,000头（猪）/ 20,000–200,000羽（禽）
+
+---
+
+## 一、方案概述
+
+### 1.1 背景与挑战
+
+现代规模化养殖场面临以下核心痛点：
+
+| 痛点维度 | 具体表现 |
+|---------|---------|
+| 环境控制滞后 | 温湿度、氨气、CO₂波动导致料肉比上升、蛋品合格率下降 |
+| 饲喂粗放 | 人工配餐误差大，采食不均，料蛋比/料肉比偏高 |
+| 数据孤岛 | 各子系统协议不统一（RS485/CAN/模拟量混用），无法联动 |
+| 人力成本高 | 1人需巡查3–5栋舍，夜间响应慢，漏检率高 |
+| 疫病风险 | 缺乏早期异常预警（如体温异常、采食骤降） |
+
+### 1.2 方案目标
+
+- **环控精度**：温度±0.5℃，湿度±3%RH，NH₃≤10ppm，CO₂≤2000ppm
+- **饲喂精度**：单次投料误差≤±50g，日配餐偏差≤1%
+- **人力节省**：单栋舍人员从2人降至0.3人（远程监控+自动执行）
+- **料肉比优化**：从2.85→2.55（降幅10.5%）
+- **蛋品合格率**：从91%→96.5%
+- **系统可用性**：≥99.5%，断网本地自治运行≥72h
+
+### 1.3 技术架构总览
+
+本方案采用 **"端–边–云–用"** 四层架构，支持Modbus RTU（传感器/执行器）、CAN 2.0（饲喂控制器总线）、4G Cat.1（边缘网关上行）、MQTT（云端消息总线）四种协议融合。
+
+\`\`\`mermaid
+graph TB
+    subgraph 感知层["🌡️ 感知层（Field Devices）"]
+        direction LR
+        S1["温湿度传感器<br/>Modbus RTU ×24"]
+        S2["NH₃/CO₂传感器<br/>Modbus RTU ×8"]
+        S3["光照传感器<br/>Modbus RTU ×6"]
+        S4["料位传感器<br/>CAN 2.0 ×4"]
+        S5["饮水流量传感器<br/>Modbus RTU ×4"]
+        S6["猪只耳标RFID<br/>CAN 2.0 ×N"]
+        S7["蛋禽产蛋监测<br/>红外×200"]
+    end
+
+    subgraph 执行层["⚡ 执行层（Actuators）"]
+        direction LR
+        A1["变频风机 ×12"]
+        A2["湿帘水泵 ×4"]
+        A3["地暖/热风炉 ×2"]
+        A4["卷帘电机 ×6"]
+        A5["环控电磁阀 ×8"]
+        A6["精准饲喂机 ×2"]
+        A7["灯光控制器 ×6"]
+    end
+
+    subgraph 边缘层["🖥️ 边缘层（Edge Computing）"]
+        EG["边缘智能网关<br/>码视野 MG-3000"]
+        subgraph EG内部["MG-3000 内置模块"]
+            M1["Modbus RTU ×4路<br/>RS485/RS232"]
+            M2["CAN 2.0 ×2路<br/>隔离型"]
+            M3["4G Cat.1 模组<br/>NB-IoT备用"]
+            M4["本地时序数据库<br/>TimescaleDB"]
+            M5["边缘规则引擎<br/>Drools Lite"]
+            M6["MQTT Client<br/>TLS 1.3加密"]
+        end
+        LB["本地HMI触控屏<br/>10寸工业级 ×1"]
+    end
+
+    subgraph 云平台层["☁️ 云平台层（Cloud Platform）"]
+        subgraph 码视野云平台["码视野智慧养殖云平台 V4.0"]
+            MQ["MQTT Broker集群<br/>EMQX ×3节点"]
+            TS["时序数据库<br/>InfluxDB ×2"]
+            PG["关系数据库<br/>PostgreSQL ×1"]
+            AI["AI推理引擎<br/>TensorRT + ONNX"]
+            AL["告警引擎<br/>规则+阈值+ML"]
+            API["RESTful API / gRPC"]
+        end
+        CDN["对象存储OSS<br/>视频/图片归档"]
+    end
+
+    subgraph 应用层["📱 应用层（Applications）"]
+        WEB["Web管理端<br/>多租户SaaS"]
+        APP["移动端App<br/>iOS/Android"]
+        PUSH["企业微信/钉钉推送"]
+        BI["BI数据大屏<br/>3D数字孪生"]
+    end
+
+    subgraph 外部集成["🔗 外部系统集成"]
+        ERP["ERP系统对接"]
+        疫苗["疫苗免疫记录系统"]
+        检疫["动物检疫申报系统"]
+    end
+
+    %% 连接关系
+    S1 -->|Modbus RTU RS485| EG
+    S2 -->|Modbus RTU RS485| EG
+    S3 -->|Modbus RTU RS485| EG
+    S4 -->|CAN 2.0| EG
+    S5 -->|Modbus RTU RS485| EG
+    S6 -->|CAN 2.0| EG
+    S7 -->|GPIO+CAN| EG
+    EG -->|Modbus TCP| A1
+    EG -->|CAN 2.0| A6
+    EG -->|GPIO/继电器| A2 A3 A4 A5 A7
+    EG -->|4G Cat.1 / TLS| MQ
+    MQ --> TS
+    MQ --> PG
+    MQ --> AI
+    MQ --> AL
+    TS --> BI
+    PG --> WEB
+    AI --> APP
+    AL --> PUSH
+    WEB --> API
+    API --> 外部集成
+
+    style EG fill:#1a6fb5,color:#fff
+    style 码视野云平台 fill:#c0392b,color:#fff
+    style 感知层 fill:#27ae60,color:#fff
+    style 执行层 fill:#8e44ad,color:#fff
+\`\`\`
+
+---
+
+## 二、系统拓扑详解
+
+### 2.1 单栋猪舍拓扑
+
+\`\`\`mermaid
+graph TD
+    subgraph 舍内总线["舍内现场总线"]
+        Bus485["RS485总线 A/B<br/>Modbus RTU 9600bps"]
+        BusCAN["CAN总线 H/L<br/>CAN 2.0B 500kbps"]
+    end
+
+    subgraph 传感器阵列["传感器阵列（每栋500㎡）"]
+        ST1["温湿度节点 #1–#6<br/>精度±0.3℃/±2%RH"]
+        ST2["温湿度节点 #7–#12"]
+        ST3["NH₃传感器 ×4<br/>0–100ppm"]
+        ST4["CO₂传感器 ×4<br/>0–5000ppm"]
+        ST5["光照传感器 ×4<br/>0–2000 lux"]
+        ST6["采食量监测秤 ×2<br/>精度10g"]
+        ST7["饮水流量计 ×2<br/>0–50L/min"]
+        ST8["rfid读写器 ×2<br/>每通道64天线"]
+        ST9["氨气/硫化氢复合<br/>NH₃/H₂S双声道"]
+    end
+
+    subgraph 执行机构["执行机构"]
+        Fan1["变频风机 #1–#4<br/>0–10V调速"]
+        Fan2["变频风机 #5–#8"]
+        WL["湿帘循环泵 ×2"]
+        Heater["热风锅炉 ×1<br/>燃气/生物质"]
+        Curtain["电动卷帘 ×3"]
+        Valve["环控电磁阀组 ×4"]
+        Light["LED照明 ×4组<br/>色温可调"]
+    end
+
+    subgraph 精准饲喂["精准饲喂系统"]
+        FeedStore["料塔 ×2<br/>5吨/个"]
+        Screw1["螺旋输送绞龙 ×2"]
+        FeedMachine["称重混料饲喂机 ×1<br/>含破碎机"]
+        Trough1["单列食槽 ×16"]
+        Trough2["双列食槽 ×8"]
+    end
+
+    subgraph 边缘网关["边缘智能网关 MG-3000"]
+        CPU["ARM Cortex-A53 四核<br/>1.5GHz"]
+        RAM["2GB DDR4"]
+        Flash["8GB eMMC"]
+        Port485["RS485 ×4<br/>Modbus RTU"]
+        PortCAN["CAN ×2<br/>隔离型"]
+        PortGPIO["GPIO ×16"]
+        PortDI["DI ×32"]
+        PortDO["DO ×16<br/>继电器输出"]
+        PortAO["AO ×4<br/>0–10V/4–20mA"]
+        4G["4G Cat.1模组<br/>下行10Mbps/上行5Mbps"]
+        BT["蓝牙5.0<br/>近场调试"]
+        GPS["GPS/北斗定位"]
+        UPS["内置UPS<br/>续航4h"]
+    end
+
+    subgraph 本地显示["本地HMI + 声光报警"]
+        HMI["10寸HMI触控屏<br/>IP65防护"]
+        Alarm["三色警示灯<br/>红/黄/绿"]
+        Buzzer["蜂鸣器"]
+    end
+
+    %% 连接
+    ST1 & ST2 & ST3 & ST4 & ST5 & ST9 --> Bus485
+    ST6 & ST7 & ST8 --> BusCAN
+    Bus485 --> Port485
+    BusCAN --> PortCAN
+    Port485 --> CPU
+    PortCAN --> CPU
+    CPU --> Fan1 & Fan2 & WL & Heater & Curtain & Valve & Light
+    Fan1 & Fan2 -->|0–10V PWM| PortAO
+    Curtain & Valve -->|DO| PortDO
+    FeedStore --> Screw1 --> FeedMachine --> Trough1 & Trough2
+    FeedMachine -->|CAN 2.0| PortCAN
+    CPU -->|MQTT/TLS||"4G Cat.1模组" --> Cloud["云平台"]
+    CPU --> HMI & Alarm & Buzzer
+    UPS --> CPU
+
+    style 边缘网关 fill:#2c3e50,color:#fff
+    style Cloud fill:#e74c3c,color:#fff
+    style 精准饲喂 fill:#27ae60,color:#fff
+\`\`\`
+
+### 2.2 蛋禽舍拓扑（补充差异化设计）
+
+\`\`\`mermaid
+graph LR
+    subgraph 蛋禽特化模块["蛋禽专属感知与控制模块"]
+        D1["笼位环境传感器<br/>每层1组 ×8层"]
+        D2["产蛋监测红外矩阵<br/>每笼位1对 ×N"]
+        D3["蛋重/蛋形在线分选<br/>CCD视觉"]
+        D4["清粪带变频控制<br/>步进电机"]
+        D5["自动集蛋传送链<br/>变频驱动"]
+        D6["啄癖识别摄像头<br/>AI边缘推理"]
+        D7["饮水量/水质TDS监测"]
+    end
+
+    subgraph 环控差异["与猪舍的差异点"]
+        DIFF1["更密集的温度测点<br/>竖向分层监测"]
+        DIFF2["光照程序严格调控<br/>产蛋期16h光照/8h黑暗"]
+        DIFF3["通风量按羽数精确计算<br/>最小通风0.5m³/h/羽"]
+    end
+
+    D1 & D2 & D3 & D4 & D5 & D6 & D7 -->|"混合总线"| EG["MG-3000网关"]
+    EG --> DIFF1 & DIFF2 & DIFF3
+
+    style 蛋禽特化模块 fill:#f39c12,color:#fff
+    style 环控差异 fill:#16a085,color:#fff
+\`\`\`
+
+### 2.3 云端消息流
+
+\`\`\`mermaid
+sequenceDiagram
+    participant S as 传感器/执行器
+    participant EG as MG-3000边缘网关
+    participant CLoud as 码视野云平台
+    participant AI as AI推理引擎
+    participant App as 管理端`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

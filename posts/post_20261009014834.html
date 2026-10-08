@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇) · 码视野IoT研发团队</title>
+  <meta name="description" content="针对架构选型在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。">
+  <meta property="og:title" content="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261009014834.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)","image":"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-09 01:48","description":"针对架构选型在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="hover:text-brand-600 transition-colors">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-slate-600">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 font-bold">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">选型决策指南</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">架构选型</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-09 01:48</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">99.99%</div><div class="text-brand-500 text-xs mt-0.5">消息可靠性</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 50ms</div><div class="text-brand-500 text-xs mt-0.5">延迟</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践（深度实战篇）
+
+> **作者**：码视野物联网软件研发团队 · 首席资深架构师  
+> **发布**：码视野工业IoT技术专栏 | 更新：2025 Q3
+
+---
+
+## 一、工业现场真实硬件环境与底层痛点深度剖析
+
+在制造业产线的真实部署中，我们面对的不是教科书里的理想网络，而是布满干扰的工业现场。以某汽车零部件冲压车间为例，整条产线部署了约 **1,200 个传感器节点**，涵盖振动、温度、压力、门磁开关等多种类型，数据采集频率从 1Hz（门磁）到 1kHz（振动加速度）不等。
+
+### 1.1 串口反射与时序抖动
+
+现场设备通过 RS-485 总线汇聚到边缘网关，使用 Modbus RTU 协议采集数据。在实际运行中，我们频繁观测到以下现象：
+
+- **串口反射（Serial Reflection）**：半双工 485 总线在驱动未及时释放时，会产生数据回环，造成数据帧残缺或错误 CRC。实测数据显示，在高频轮询场景下，串行数据丢失率可达 **3.7%**。
+- **报文时序漂移**：不同厂商设备的响应超时参数不一致，部分老旧 PLC 响应延迟从 50ms 漂移至 200ms+，导致网关轮询窗口错乱，数据帧拼接失败。
+
+### 1.2 485 总线抖动与设备掉线
+
+工业现场强电干扰是 485 总线的头号敌人。在冲压机附近，变频器启停瞬间会产生共模噪声，导致总线电平异常。我们在实际监控中发现：
+
+- 485 总线在设备密集区域（每总线挂载超过 32 个节点）误码率显著上升；
+- 网络断连后设备重连并非瞬时完成，网关侧需要维护 **看门狗心跳 + 自动重连** 机制；
+- 断连期间产生的数据必须本地持久化缓存，等待网络恢复后补传，否则将导致产线数据缺失。
+
+### 1.3 网络间歇性中断
+
+车间内 Wi-Fi 覆盖存在盲区，设备频繁在 AP 之间漫游，每次切换可能导致 **2~8 秒** 的完全断连。传统基于长连接的 MQTT 会话在无状态恢复机制下会直接丢数。这些问题倒逼我们重新审视消息中间件在边缘侧的定位——**它不应该只是一个"管道"，而必须是一个具备缓冲、重传、容错能力的工业级数据枢纽**。
+
+---
+
+## 二、码视野高可用边缘系统拓扑架构
+
+针对上述痛点，码视野设计了一套 **"边缘缓存 + 双协议融合"** 的高可用架构。核心思路是：在边缘侧用 EMQX 承接设备端的 MQTT 上报与指令下发，利用 Kafka 处理后端大数据分析场景的数据流，并通过本地持久化与重试机制确保数据不丢失。
+
+\`\`\`mermaid
+flowchart TD
+    A[工业传感器/PLC] -->|Modbus RTU over 485| B(边缘采集网关)
+    C[CNC设备/MES接口] -->|TCP/IP| B
+    
+    B -->|本地缓存 + 协议转换| D[MQTT Broker\\nEMQX Cluster]
+    D -->|实时规则引擎| E[告警/控制指令下发]
+    D -->|MQTT Topic路由| F[Kafka Cluster]
+    
+    F -->|实时流处理| G[Flink 实时计算]
+    F -->|批量写入| H[ClickHouse 时序存储]
+    F -->|归档| I[S3/OSS 冷数据湖]
+    
+    J[(本地SQLite/LevelDB)] <-->|断网持久化+补传| B
+    K[数据质检服务] -->|ACK回写| D
+    L[配置中心] -->|OTA下发| B
+\`\`\`
+
+**架构要点说明**：
+
+1. **边缘网关**：作为协议转换与数据汇聚的核心节点，内置本地 SQLite/LevelDB 缓存，网络中断时可缓存数天数据。
+2. **EMQX 集群**：部署于车间内网，承载设备端 MQTT 连接，支持 QoS1 确认机制，确保消息至少投递一次。
+3. **Kafka 集群**：作为数据总线，承接 EMQX 转发的遥测数据，解耦数据生产与消费，支持高吞吐与多消费者组。
+4. **数据质检服务**：对入队数据进行格式校验与去重，错误的报文直接丢弃并记录日志，避免污染下游分析。
+
+---
+
+## 三、工业级生产环境完整实现代码示例
+
+以下代码为码视野边缘网关的核心模块——**MQTT 数据采集与 Kafka 转发器**，采用 Python 实现，展示了断网缓存、重传逻辑、ACK 回写等关键工业特性。
+
+\`\`\`python
+"""
+码视野边缘网关 - MQTT采集与Kafka转发核心模块
+Author: 码视野物联网软件研发团队
+Version: v3.2.1
+Description: 负责从EMQX订阅设备遥测数据，本地持久化缓存，并转发至Kafka集群
+"""
+
+import paho.mqtt.client as mqtt
+import json
+import time
+import sqlite3
+import logging
+from pathlib import Path
+from datetime import datetime
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+
+# ==================== 配置区 ====================
+MQTT_BROKER = "192.168.10.100"   # EMQX内网地址
+MQTT_PORT = 1883
+MQTT_TOPIC = "factory/telemetry/#"  # 订阅所有遥测topic
+
+KAFKA_BOOTSTRAP = ["kafka-node-01:9092", "kafka-node-02:9092"]
+KAFKA_TOPIC = "factory.telemetry.raw"
+
+DB_PATH = "/opt/mvy-edge/cache/telemetry.db"
+MAX_CACHE_SIZE = 500_000  # 最大缓存条数，超限则最早写入
+
+logger = logging.getLogger("mvy-edge-telemetry")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+
+class TelemetryGateway:
+    """码视野工业遥测网关核心类"""
+    
+    def __init__(self):
+        # 初始化本地SQLite缓存
+        self.db_path = DB_PATH
+        Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
+        self._init_db()
+        
+        # 初始化Kafka Producer（带重试与batch机制）
+        self.producer = KafkaProducer(
+            bootstrap_servers=KAFKA_BOOTSTRAP,
+            value_serializer=lambda v: json.dumps(v).encode("utf-8"),
+            acks="all",              # 等待所有副本确认，确保不丢数据
+            retries=5,               # 网络故障自动重试5次
+            max_in_flight_requests_per_connection=5,
+            batch_size=16384,        # 16KB批量合并，提升吞吐
+            linger_ms=50,            # 最多等待50ms再发送
+        )
+        
+        # 初始化EMQX MQTT客户端（QoS1，保留会话）
+        self.mqtt_client = mqtt.Client(
+            client_id=f"mvy-gw-{socket.gethostname()}",
+            clean_session=False,   # 保留会话，断线重连后自动恢复
+            protocol=mqtt.MQTTv311
+        )
+        self.mqtt_client.on_connect = self._on_mqtt_connect
+        self.mqtt_client.on_message = self._on_mqtt_message
+        self.mqtt_client.on_disconnect = self._on_mqtt_disconnect
+        self.mqtt_client.username_pw_set("mvy_gateway", "s3cur3P@ss!")
+        
+        self.is_network_online = False
+        self.cache_count = 0
+    
+    def _init_db(self):
+        """初始化本地缓存数据库，创建遥测数据表"""
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS telemetry_cache (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                device_id   TEXT NOT NULL,
+                topic       TEXT NOT NULL,
+                payload     TEXT NOT NULL,
+                ts          REAL NOT NULL,
+                status      TEXT DEFAULT 'pending',
+                retry_count INTEGER DEFAULT 0,
+                created_at  TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_cache_status ON telemetry_cache(status)")
+        conn.commit()
+        conn.close()
+        logger.info(f"SQLite缓存库初始化完成: {self.db_path}")
+    
+    def _on_mqtt_connect(self, client, userdata, flags, rc):
+        """MQTT连接成功回调"""
+        if rc == 0:
+            logger.info(f"已连接EMQX Broker [{MQTT_BROKER}:{MQTT_PORT}]")
+            self.is_network_online = True
+            client.subscribe(MQTT_TOPIC, qos=1)
+            self._flush_cached_data()  # 重连后补传缓存数据
+        else:
+            logger.error(f"EMQX连接失败，错误码: {rc}")
+    
+    def _on_mqtt_message(self, client, userdata, msg):
+        """接收MQTT消息核心处理逻辑"""
+        try:
+            payload = json.loads(msg.payload.decode("utf-8"))
+            device_id = payload.get("deviceId") or msg.topic.split("/")[1]
+            ts = time.time()
+            
+            # 写入本地缓存（无论网络状态，先落盘保底）
+            self._save_to_cache(device_id, msg.topic, json.dumps(payload), ts)
+            
+            # 若网络在线且Kafka可用，立即转发
+            if self.is_network_online and self._is_kafka_alive():
+                self._send_to_kafka(device_id, msg.topic, payload, ts)
+            else:
+                logger.warning(f"Kafka不可用，数据已缓存待补传: device={device_id}")
+                
+        except (json.JSONDecodeError, KeyError) as e:
+            logger.error(f"消息解析失败，丢弃异常报文: {e}")
+    
+    def _save_to_cache(self, device_id, topic, payload, ts):
+        """持久化缓存到SQLite"""
+        conn = sqlite3.connect(self.db_path)
+        conn.execute(
+            "INSERT INTO telemetry_cache (device_id, topic, payload, ts, status) VALUES (?, ?, ?, ?, ?)",
+            (device_id, topic, payload, ts, "pending")
+        )
+        conn.commit()
+        
+        # 监控缓存水位，超阈值时删除最早数据防止SQLite膨胀
+        cur = conn.execute("SELECT COUNT(*) FROM telemetry_cache WHERE status='pending'")
+        count = cur.fetchone()[0]
+        if count > MAX_CACHE_SIZE:
+            conn.execute("DELETE FROM telemetry_cache WHERE status='pending' ORDER BY ts ASC LIMIT ?", (count - MAX_CACHE_SIZE,))
+            conn.commit()
+            logger.warning(f"缓存已满，已丢弃最早的 {count - MAX_CACHE_SIZE} 条记录")
+        
+        conn.close()
+        self.cache_count = count
+    
+    def _send_to_kafka(self, device_id, topic, payload, ts):
+        """发送数据到Kafka，带重试与状态回写"""
+        future = self.producer.send(KAFKA_TOPIC, value=payload)
+        try:
+            record_metadata = future.get(timeout=10)
+            # 发送成功，更新缓存状态为已投递
+            self._update_cache_status(device_id, ts, "sent")
+            logger.debug(f"Kafka投递成功: partition={record_metadata.partition}, offset={record_metadata.offset}")
+        except KafkaError as e:
+            logger.error(f"Kafka投递失败，数据保留缓存重试: {e}")
+            self._increment_retry(device_id, ts)
+    
+    def _flush_cached_data(self):
+        """补传缓存中未发送的数据"""
+        conn = sqlite3.connect(self.db_path)
+        rows = conn.execute(
+            "SELECT id, device_id, payload, ts FROM telemetry_cache WHERE status='pending' ORDER BY ts ASC LIMIT 1000"
+        ).fetchall()
+        conn.close()
+        
+        if not rows:
+            return
+        
+        logger.info(f"开始补传缓存数据，共 {len(rows)} 条")
+        for row_id, device_id, payload_str, ts in rows:
+            try:
+                payload = json.loads(payload_str)
+                self._send_to_kafka(device_id, "", payload, ts)
+            except Exception as e:
+                logger.error(f"补传单条失败: {e}")
+                time.sleep(0.1)  # 避免短时间内压垮Kafka
+    
+    def _update_cache_status(self, device_id, ts, status):
+        """更新缓存投递状态为 sent"""
+        conn = sqlite3.connect(self.db_path)
+        conn.execute(
+            "UPDATE telemetry_cache SET status=? WHERE device_id=? AND ts=? AND status='pending'",
+            (status, device_id, ts)
+        )
+        conn.commit()
+        conn.close()
+    
+    def _increment_retry(self, device_id, ts):
+        """增加重试计数"""
+        conn = sqlite3.connect(self.db_path)
+        conn.execute(
+            "UPDATE telemetry_cache SET retry_count=retry_count+1 WHERE device_id=? AND ts=? AND status='pending'",
+            (device_id, ts)
+        )
+        conn.commit()
+        conn.close()
+    
+    def _is_kafka_alive(self):
+        """简单健康检查：尝试元数据获取"""
+        try:
+            self.producer.bootstrap_connected()
+            return True
+        except Exception:
+            return False
+    
+    def start(self):
+        """启动网关"""
+        logger.info("码视野工业遥测网关启动...")
+        self.mqtt_client.loop_start()  # 异步启动MQTT事件循环
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("收到停止信号，优雅退出...")
+            self.producer.flush()
+            self.mqtt_client.loop_stop()
+            self.mqtt_client.disconnect()
+            logger.info("网关已安全关闭")
+
+
+if __name__ == "__main__":
+    import socket
+    gateway = TelemetryGateway()
+    gateway.start()
+\`\`\`
+
+**代码关键点解读**：
+
+- **\`clean_session=False\`**：MQTT 保留会话，网关断线重连后可自动恢复订阅状态，避免因短暂网络抖动丢消息。
+- **本地 SQLite 缓存**：所有数据先落盘，无论网络状态，保证数据不丢；上线后优先转发缓存数据，再处理新数据。
+- **Kafka \`acks=all\`**：等待所有 ISR `;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

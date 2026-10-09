@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向化工与危化安全垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持HART · Modbus RTU防爆 · LoRaWAN防爆等主流通信标准。">
+  <meta property="og:title" content="化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20261010075640.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-10 07:56","description":"面向化工与危化安全垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持HART · Modbus RTU防爆 · LoRaWAN防爆等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">化工与危化安全</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">防爆本质安全</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-10 07:56</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案（升级迭代版）
+
+---
+
+## 一、方案概述
+
+化工园区综合管廊承载着各类工艺介质输送管道，有毒可燃气体泄漏事件具有突发性强、扩散速度快、危害程度高等特点。传统人工巡检+定点报警模式存在响应延迟大、数据孤岛严重、联动处置滞后等痛点。
+
+**码视野研发团队**基于6年深耕工业IoT与边缘计算的技术积累，推出本套**毫秒级遥测与应急联动切断解决方案**，实现管廊区域有毒可燃气体浓度的实时感知、智能预警、毫秒级联动切断及多系统协同应急，全面符合GB/T 50493-2019《石油化工可燃气体和有毒气体检测报警设计标准》及SHT 3018-2017规范要求。
+
+---
+
+## 二、核心痛点分析
+
+| 序号 | 痛点描述 | 传统方案缺陷 | 本方案解决路径 |
+|------|----------|--------------|----------------|
+| 1 | 气体泄漏发现延迟（分钟级） | 固定点探测器布局稀疏，盲区大 | 管廊分区部署LoRaWAN防爆无线传感节点，覆盖密度提升8倍 |
+| 2 | 多源数据孤岛无法融合 | HART/Modbus/MQTT数据分散在不同系统 | 边缘网关统一协议转换，数据汇聚至统一数据中台 |
+| 3 | 应急响应联动滞后（秒~分钟级） | 报警后人工确认、流程审批、阀门操作耗时极长 | 边缘侧毫秒级决策引擎，超限即自主触发切断指令 |
+| 4 | 有毒气体定量监测缺失 | 多数管廊仅配置可燃气体探测，无H₂S/CO等有毒气体监测 | 双模传感器节点同步监测LEL+有毒气体浓度 |
+| 5 | 历史数据追溯困难 | 无完整时序数据存储与分析能力 | 云端时序数据库+智能分析引擎，全量数据可追溯 |
+| 6 | 应急预案执行效率低 | 依赖人工判断，不同场景响应策略不统一 | 数字孪生+AI推理引擎，自动匹配最优应急处置预案 |
+
+---
+
+## 三、系统总体架构
+
+\`\`\`mermaid
+graph TB
+    subgraph 感知层["🔬 感知层 — 管廊现场"]
+        subgraph 固定式["固定式探测器"]
+            G1["HART智能气体变送器<br/>（H₂S/CO/CL₂）"]
+            G2["Modbus RTU防爆型可燃气体探测器<br/>（CH₄/C₃H₈/C₂H₅OH）"]
+            G3["多参数融合型固定站<br/>（温湿度+风向+压力）"]
+        end
+        subgraph 移动式["移动式监测节点"]
+            M1["LoRaWAN防爆无线气体传感节点<br/>（LEL+H₂S双模）"]
+            M2["LoRaWAN防爆巡检机器人终端"]
+            M3["LoRaWAN防爆无人机挂载终端"]
+        end
+        subgraph 环境感知["环境与结构感知"]
+            E1["管廊视频AI分析摄像头"]
+            E2["声发射泄漏监测传感器"]
+            E3["振动与应力监测传感器"]
+        end
+    end
+
+    subgraph 边缘层["⚡ 边缘层 — 协议转换与毫秒级决策"]
+        GW1[{"边缘智能网关-核心型<br/>HART→MQTT/Modbus→MQTT<br/>内置实时决策引擎"}]
+        GW2[{"边缘智能网关-轻量型<br/>Modbus RTU→MQTT<br/>断网缓存续传"}]
+        GW3[{"边缘安全隔离网关<br/>工业防火墙+单向数据闸"}]
+        EC1[{"毫秒级联动控制器<br/>PLC兼容模块<br/>T<100ms触发切断"}]
+        EC2[{"应急联锁服务器<br/>多系统协同调度"}]
+    end
+
+    subgraph 传输层["📡 传输层 — 多协议融合网络"]
+        LR1[{"LoRaWAN防爆网关<br/>4km覆盖半径<br/>IP68防爆认证"}]
+        MB1[{"Modbus RTU总线网络<br/>RS485总线拓扑"}]
+        HA1[{"HART总线网络<br/>手操器远程诊断支持"}]
+        MT1[{"MQTT over TLS 1.3<br/>云端安全接入"}]
+        NF1[{"工业环网交换机<br/>千兆冗余"}]
+    end
+
+    subgraph 平台层["☁️ 平台层 — 云端智能中枢"]
+        DB1[{"时序数据库<br/>TDengine集群"}]
+        DB2[{"关系型数据库<br/>业务数据持久化"}]
+        AI1[{"AI推理引擎<br/>泄漏溯源+扩散预测"}]
+        DL1[{"数字孪生引擎<br/>3D可视化"}]
+        DS1[{"数据中台<br/>统一数据服务"}]
+    end
+
+    subgraph 应用层["🖥️ 应用层 — 业务应用与联动"]
+        APP1["实时监测大屏"]
+        APP2["智能报警管理"]
+        APP3["应急处置联动"]
+        APP4["设备运维管理"]
+        APP5["合规报告生成"]
+        APP6["应急演练仿真"]
+    end
+
+    subgraph 联动执行层["🔧 联动执行层"]
+        VAL1[["紧急切断阀ECV<br/>气动/液压驱动<br/>故障安全型"]]
+        VAL2[["通风风机联动控制<br/>事故排风启动"]]
+        VAL3[["消防水雾系统联动<br/>泄漏区域隔离"]]
+        VAL4[["声光报警装置<br/>现场声光提示"]]
+        VAL5[["人员定位广播<br/>疏散引导"]]
+    end
+
+    subgraph 外部集成["🔗 外部系统集成"]
+        EXT1["上级SCADA系统"]
+        EXT2["消防控制中心"]
+        EXT3["企业ERP/MES系统"]
+        EXT4["政府监管平台<br/>应急管理部联网"]
+        EXT5["气象数据服务"]
+    end
+
+    %% 连接关系
+    G1 -->|HART 4-20mA + digital| GW1
+    G2 -->|Modbus RTU RS485| GW2
+    M1 -->|LoRaWAN 470MHz| LR1
+    M2 -->|LoRaWAN 470MHz| LR1
+    M3 -->|LoRaWAN 470MHz| LR1
+    E1 -->|RTSP/ONVIF| NF1
+    E2 -->|4-20mA| GW1
+    E3 -->|Modbus RTU| GW2
+    
+    GW1 -->|MQTT over TLS| MT1
+    GW2 -->|MQTT over TLS| MT1
+    GW1 <-->|"硬线联锁<br/>低延迟触发"| EC1
+    LR1 -->|MQTT| MT1
+    MT1 -->|SSL/TLS加密| DS1
+    
+    DS1 --> DB1
+    DS1 --> DB2
+    DS1 <--> AI1
+    DS1 <--> DL1
+    DS1 <--> EXT1
+    DS1 <--> EXT2
+    
+    APP1 -.->|查询| DS1
+    APP2 -.->|告警规则| AI1
+    APP3 -.->|联动指令| EC2
+    APP4 -.->|设备档案| DB2
+    APP5 -.->|报表生成| DS1
+    
+    EC1 -->|"硬线信号<br/><100ms"| VAL1
+    EC1 -->|"硬线信号<br/><100ms"| VAL2
+    EC2 -->|"MODBUS/TCP"| VAL3
+    EC2 -->|"MODBUS/TCP"| VAL4
+    EC2 -->|"MODBUS/TCP"| VAL5
+    
+    AI1 -->|"扩散模型预测"| DL1
+    DL1 -->|"3D渲染"| APP1
+    
+    style 感知层 fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+    style 边缘层 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style 传输层 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style 平台层 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style 应用层 fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style 联动执行层 fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    style 外部集成 fill:#f5f5f5,stroke:#616161,stroke-width:2px
+    style 边缘层 stroke-dasharray: 5 5
+\`\`\`
+
+---
+
+## 四、硬件选型清单BOM
+
+### 4.1 感知层设备清单
+
+#### 4.1.1 固定式气体检测站
+
+| 序号 | 设备名称 | 型号规格 | 关键参数 | 数量(示例) | 单价(元) | 小计(元) | 供应商/品牌 | 防爆等级 |
+|------|----------|----------|----------|-----------|----------|----------|-------------|----------|
+| 1 | HART智能有毒气体变送器 | MW-HART-TGS-470 | 量程：0-100ppm H₂S / 0-50ppm CO；精度±2%FS；HART7协议；4-20mA双输出；IP68 | 20 | 18,500 | 370,000 | 码视野自有/霍尼韦尔OEM | Ex d IIC T6 Gb |
+| 2 | Modbus防爆可燃气体探测器 | MW-MB-LEL-Ex | 量程：0-100%LEL；精度±3%LEL；Modbus RTU；两线制4-20mA+数字；红外催化/电化学可选 | 40 | 8,200 | 328,000 | 码视野自有/汉威OEM | Ex d IIC T6 Gb |
+| 3 | 多参数融合固定监测站 | MW-MS-GC-8A | 集成LEL/H₂S/CO/O₂/温湿度/气压/风速七参量；LoRaWAN上报；太阳能+蓄电池供电；IP68 | 15 | 32,000 | 480,000 | 码视野自主研发 | Ex d IIC T6 Gb |
+| 4 | 管廊视频AI分析摄像头 | MW-VCA-GC30 | 400万像素；AI芯片内置；泄漏烟雾识别准确率≥98%；星光级夜视；IP69K；工作温度-40~70℃ | 30 | 6,800 | 204,000 | 码视野生态伙伴/海康OEM | IP69K（非防爆区） |
+| 5 | 声发射泄漏监测传感器 | MW-SA-GC20 | 频带：20-200kHz；灵敏度≥45dB；信噪比≥60dB；内置AI降噪算法；定位精度≤1m | 10 | 22,000 | 220,000 | 码视野生态伙伴 | Ex ib IIC T4 Gb |
+
+#### 4.1.2 移动式监测节点
+
+| 序号 | 设备名称 | 型号规格 | 关键参数 | 数量(示例) | 单价(元) | 小计(元) | 供应商/品牌 | 防爆等级 |
+|------|----------|----------|----------|-----------|----------|----------|-------------|----------|
+| 6 | LoRaWAN防爆无线气体传感节点 | MW-LW-GSN-Ex | 双模传感LEL+H₂S；LoRa 470MHz；上报周期1-60s可调；续航≥5年；IP68 | 60 | 4,800 | 288,000 | 码视野自主研发 | Ex ib IIC T6 Gb |
+| 7 | 防爆巡检机器人终端 | MW-RG-GC10 | 履带式；防爆等级Ex d IIC T6；搭载气体传感器组+热成像；自主导航；续航4h；IP67 | 4 |`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

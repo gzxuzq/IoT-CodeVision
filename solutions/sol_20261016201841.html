@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向高精洁净制造垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持BACnet IP · Modbus RTU · OPC-UA等主流通信标准。">
+  <meta property="og:title" content="半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20261016201841.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-16 20:18","description":"面向高精洁净制造垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持BACnet IP · Modbus RTU · OPC-UA等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">高精洁净制造</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">微压差精密闭环</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-16 20:18</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 半导体与生物制药洁净室微压差恒定与尘埃粒子在线智能微控方案（升级迭代版）
+
+## 交钥匙解决方案白皮书 v2.5
+
+---
+
+**编制单位**：码视野物联网软件研发团队  
+**行业领域**：高精洁净制造（Semiconductor / Bio-Pharma Cleanroom）  
+**版本日期**：2026年7月  
+**协议栈**：BACnet IP · Modbus RTU · OPC-UA · MQTT
+
+---
+
+## 目录
+
+1. [项目背景与痛点分析](#一项目背景与痛点分析)
+2. [整体架构设计](#二整体架构设计)
+3. [系统拓扑架构图](#三系统拓扑架构图)
+4. [硬件选型清单 BOM](#四硬件选型清单-bom)
+5. [软件平台架构](#五软件平台架构)
+6. [通信协议集成方案](#六通信协议集成方案)
+7. [核心算法与控制策略](#七核心算法与控制策略)
+8. [实施路径与交付里程碑](#八实施路径与交付里程碑)
+9. [ROI量化分析与投资回报](#九roi量化分析与投资回报)
+10. [售后服务与运维保障](#十售后服务与运维保障)
+11. [联系方式](#十一联系方式)
+
+---
+
+## 一、项目背景与痛点分析
+
+### 1.1 行业现状
+
+半导体晶圆制造与生物制药无菌生产对洁净室环境的微压差控制精度要求日益严苛：
+
+| 指标项 | 传统方案 | 本方案目标 |
+|--------|---------|-----------|
+| 微压差控制精度 | ±5.0 Pa | **±0.5 Pa** |
+| 尘埃粒子监测周期 | 离线手工取样（小时级） | **在线实时（秒级）** |
+| HVAC联动响应时间 | 30~120s | **< 3s** |
+| 压差失控导致产品报废率 | 2.5%~8% | **< 0.3%** |
+| 能耗浪费（无效送风） | 15%~30% | **< 8%** |
+
+### 1.2 核心痛点
+
+**痛点一：微压差波动频繁**
+- 净化空调机组（AHU）风门开度变化与回风阻力耦合，导致相邻洁净区之间压差曲线震荡
+- 传统DDC控制器仅能维持±5Pa，超出GMP附录1和SEMI F47标准要求
+
+**痛点二：尘埃粒子数据孤岛**
+- 尘埃粒子计数器（CPC）数据采集后存储于本地，无法与压差、温湿度数据联动分析
+- 洁净室认证（Certification）依赖人工记录，审计追溯困难
+
+**痛点三：能耗居高不下**
+- 压差设定值按最不利工况设计，日常运行大量"过净化"
+- 无人工智能动态调节，全年HVAC能耗超预算20%以上
+
+**痛点四：协议碎片化严重**
+- 同一项目内存在BACnet IP（进口DDC）、Modbus RTU（国产仪表）、OPC-UA（MES对接）、MQTT（云平台）多协议并存
+- 缺乏统一协议网关，数据割裂无法形成闭环控制
+
+---
+
+## 二、整体架构设计
+
+### 2.1 设计原则
+
+\`\`\`
+原则一｜边缘优先：所有核心控制逻辑在边缘侧执行，云端断联不影响现场运行
+原则二｜协议归一：多源异构数据经协议网关统一为MQTT/OPC-UA南向抽象
+原则三｜AI闭环：压差-风量-粒子三重变量联合优化，而非单变量PID
+原则四｜安全冗余：双网冗余+双控制器备份，关键点位N+1热备
+\`\`\`
+
+### 2.2 系统分层模型
+
+\`\`\`
+┌─────────────────────────────────────────────────┐
+│           L5 企业级数据中心（CodeVision Cloud）    │
+│  · AI模型训练 · 数字孪生 · 多项目群控 · 法规报表   │
+└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│           L4 区域边缘网关（CodeVision Edge-G500）  │
+│  · 协议转换 · 本地存储 · AI推理 · 断点续传        │
+└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│           L3 控制层（Edge Controller EC-200）     │
+│  · 多变量MPC算法 · 压差恒值控制 · 粒子趋势预判     │
+└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│           L2 执行层（VFD + 电动风门 + AHU）       │
+│  · 变频送/回/排风机 · 热冬/夏水阀 · 加热/加湿段   │
+└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│           L1 感知层（压差传感器 + 粒子计数器）     │
+│  · 差压变送器 · 激光散射式CPC · 温湿度复合探头    │
+└─────────────────────────────────────────────────┘
+\`\`\`
+
+---
+
+## 三、系统拓扑架构图
+
+\`\`\`mermaid
+graph TB
+    subgraph SENSOR_LAYER["L1 感知层 — 洁净室物理域"]
+        DP1["压差传感器 DP-01\\n精度 ±0.1Pa\\n通道数: 每个区域≥2路"]
+        DP2["压差传感器 DP-02\\n冗余备份"]
+        CPC1["激光尘埃粒子计数器\\nISO 21501-4\\n测量范围: 0.3~10μm"]
+        TH1["温湿度复合传感器\\n量程: -40~80℃ / 0~100%RH"]
+        airflow1["风量传感器 AF-1\\n量程: 0~5000m³/h"]
+        valve1["风门开度反馈\\n电位计式 0~10V"]
+    end
+
+    subgraph CONTROL_LAYER["L2/L3 控制层 — 边缘控制域"]
+        EC["Edge Controller EC-200\\nARM Cortex-A76 + NPU\\n内存: 8GB / 存储: 64GB eMMC\\n双千兆以太网 + 4G/5G\\n工作温度: -40~85℃ IP40"]
+        
+        subgraph PLC_SUB["本地PLC子网（隔离网络）"]
+            PLC1["BACnet IP DDC\\n西门子 PXC36 / Schneider ZWS360"]
+            PLC2["Modbus RTU PLC\\n欧姆龙 CJ2M / 信捷 XC5"]
+            RTU_GW["Modbus-RTU↔TCP 串口服务器\\n4路RS485 / 工业级"]
+        end
+        
+        PROTOCOL_GATEWAY["协议网关 PG-100\\nCodeVision Edge-G500内置\\n支持: BACnet/IP → OPC-UA/MQTT\\n支持: Modbus RTU → OPC-UA/MQTT\\n支持: OPC-UA Server → MQTT Publisher\\n转发延迟 <50ms"]
+    end
+
+    subgraph ACTUATOR_LAYER["L2 执行层 — HVAC设备域"]
+        VFD1["变频送风机 VFD-S1\\n55kW / ABB ACS880\\nBACnet MSTP接口"]
+        VFD2["变频回风机 VFD-R1\\n37kW / Danfoss VLT HVAC Drive"]
+        VFD3["变频排风机 VFD-E1\\n15kW / Yaskawa A1000"]
+        DAMPER1["电动风门 DM-OP-10\\n0~90° / 24V / 4~20mA反馈"]
+        DAMPER2["电动风门 DM-OP-11"]
+        DAMPER3["电动风门 DM-OP-12\\n新风/回风/排风三联"]
+        AHU1["组合式空气处理机组 AHU-01\\n包含: 初效/中效/HEPA段\\n表冷/加热/加湿段"]
+    end
+
+    subgraph CLOUD_LAYER["L4/L5 云/数据中心"]
+        EDGE_CLOUD["CodeVision Edge Cloud\\nK3s容器平台 / 多租户隔离"]
+        TSDB["时序数据库 TimescaleDB\\n压缩比 10:1 / 保留期: 离线3年"]
+        AI_ENGINE["AI推理引擎 ONNX Runtime\\n模型: 多变量MPC + LSTM预测\\n推理延迟 <200ms"]
+        DASHBOARD["可视化监控大屏\\nWeb / 移动端 / 4K投屏"]
+        REPORT["法规合规报表\\n符合 GMP Annex 1 / FDA 21 CFR Part 11\\n电子签名 / 审计追踪"]
+        MES["MES / ERP 对接\\nOPC-UA Client → SAP PI / Aspen InfoPlus"]
+    end
+
+    %% Sensor to Control connections
+    DP1 -->|"4~20mA / Modbus RTU"| EC
+    DP2 -->|"4~20mA / Modbus RTU"| EC
+    CPC1 -->|"Modbus RTU / RS485"*-> PROTOCOL_GATEWAY
+    TH1 -->|"BACnet MS/TP / Modbus RTU"| PLC1
+    airflow1 -->|"0~10V / 4~20mA"| PLC2
+    valve1 -->|"0~10V"| PLC2
+
+    %% PLC to Gateway
+    PLC1 -->|"BACnet IP / TCP-IP"| PROTOCOL_GATEWAY
+    PLC2 -->|"Modbus RTU / TTL转RJ45"| RTU_GW
+    RTU_GW -->|"Modbus TCP"| PROTOCOL_GATEWAY
+
+    %% Gateway to Controller
+    PROTOCOL_GATEWAY <==>"MQTT 3.1.1 / TLS 1.3" EC
+    PROTOCOL_GATEWAY <==>|"OPC-UA PubSub / H1"| EC
+
+    %% Controller to Actuators
+    EC -->|"BACnet IP / BacNet over TCP"*-> VFD1
+    EC -->|"BACnet IP"*-> VFD2
+    EC -->|"BACnet IP / Modbus TCP"*-> VFD3
+    EC -->|"4~20mA / BACnet AO"*-> DAMPER1
+    EC -->|"4~20mA / BACnet AO"*-> DAMPER2
+    EC -->|"4~20mA / BACnet AO"*-> DAMPER3
+
+    VFD1 -->|"380V 三相 / VVVF"*-> AHU1
+    VFD2 -->|"380V 三相 / VVVF"*-> AHU1
+    VFD3 -->|"380V 三相 / VVVF"*-> AHU1
+
+    %% Cloud connections
+    EC <==>|"MQTT over TLS 1.3\\nQoS=1 / 断网缓存 72h"| EDGE_CLOUD
+    EDGE_CLOUD <-->|"HTTP/REST API"| TSDB
+    EDGE_CLOUD <-->|"ONNX Runtime on GPU"| AI_ENGINE
+    EDGE_CLOUD -->|"WebSocket / MQTT Stream"| DASHBOARD
+    EDGE_CLOUD -->|"PDF/CSV 自动归档"| REPORT
+    EDGE_CLOUD -->|"OPC-UA Client (Simplified)"*-> MES
+
+    %% Annotations
+    note1["⚠ 关键设计: 压差传感器采用双冗余配置，EC-200内置表决逻辑，任一路故障自动切换，切换时间<100ms"]
+    note2["⚠ CPC粒子计数器数据经协议网关归一为MQTT，与压差数据时间戳对齐，采样间隔可配置: 1s/5s/10s"]
+    note3["⚠ 边缘控制断网自治: 本地MQTT Broker + SQLite轻量存储，断网期间维持±0.5Pa恒定控制，联网后自动补传"]
+
+    note1 -.-> EC
+    note2 -.-> PROTOCOL_GATEWAY
+    note3 -.-> EC
+\`\`\`
+
+---
+
+## 四、硬件选型清单 BOM
+
+### 4.1 感知层设备清单
+
+| 序号 | 设备名称 | 型号 | 品牌/产地 | 技术参数 | 单价(元) | 数量 | 小计(元) | 备注 |
+|------|---------|------|----------|---------|---------|------|---------|------|
+| 1 | 微压差变送器 | DPG20-EX | 科力达/中国 | 量程: ±50Pa；精度: ±0.1%FS；输出: 4~20mA + Modbus RTU；供电: 12~36VDC；防护: IP65 | 2,800 | 32 | 89,600 | 每个区域2路冗余 |
+| 2 | 激光尘埃`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

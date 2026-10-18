@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇) · 码视野IoT研发团队</title>
+  <meta name="description" content="针对架构选型在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。">
+  <meta property="og:title" content="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261019015826.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)","image":"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-19 01:58","description":"针对架构选型在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="hover:text-brand-600 transition-colors">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-slate-600">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 font-bold">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">选型决策指南</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">架构选型</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-19 01:58</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">99.99%</div><div class="text-brand-500 text-xs mt-0.5">消息可靠性</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 50ms</div><div class="text-brand-500 text-xs mt-0.5">延迟</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)
+
+---
+
+## 一、工业现场真实硬件环境与底层痛点深度剖析
+
+我是码视野物联网研发团队的首席架构师，六年深耕工业IoT与边缘计算，见过太多项目死在"理想环境"与"现场现实"之间的鸿沟里。今天这篇文章，不讲理论套话，只讲我们从产线摸爬滚打出来的血泪经验。
+
+### 1.1 工业现场的"脏数据"生态
+
+走进一家典型的机加工车间，你会看到这样的画面：
+
+**CNC数控机床**通过RS-485总线连接12个轴控制器，每个轴每50ms上报一次位置数据，单台机床日产生报文量约200万条。这些设备来自西门子、三菱、发那科等不同厂商，协议包括Modbus RTU、FANUC FOCAS、Siemens S7 Protocol，每种协议的报文长度、校验方式、时序要求各不相同。
+
+更糟糕的是，现场布线往往不规范。我们遇到过这样的真实案例：某汽车零部件厂的MES系统对接项目，现场使用的是廉价的屏蔽双绞线，长度达到80米，没有接地处理，导致485总线在伺服电机启动瞬间产生大量共模噪声，误码率飙升至10^-3级别。一个正常的状态字报文，会被噪声"复制"出多个副本，而真正有效的报文却因为CRC校验失败被丢弃。
+
+**这就是工业现场的第一个痛点：报文时序混乱与反射现象。**
+
+### 1.2 串口反射与485总线抖动
+
+在半双工的RS-485总线上，信号反射是一个真实存在的物理问题。当总线末端没有正确端接120欧姆终端电阻时，信号会在末端发生反射，反射波与原波叠加，导致波形畸变。我们曾经用一个简单的示波器抓取了某产线PLC的485总线波形，发现反射导致位宽展宽了约30%，这直接造成了相邻报文的时序粘连。
+
+更麻烦的是，当总线上挂的设备超过32个（不考虑中继器时），阻抗失配问题会指数级恶化。我们当时的解决方案是在驱动层增加**字节级超时检测**和**报文重排序逻辑**，但这只是治标。真正的治本之道，是在架构层面引入边缘缓存与乱序重组机制。
+
+### 1.3 网络断连与数据一致性困境
+
+工业现场的网络环境远比办公室恶劣。我们服务过的一家风电企业，其边缘网关部署在风机机舱内，环境温度-40℃至+85℃，电磁干扰强度远超预期。4G模组经常因为信号抖动而断连，每次断连持续数秒到数十秒不等。
+
+当网络恢复后，边缘侧积压了大量本地缓存的遥测数据。如果直接一次性上抛，不仅会触发云端消息队列的背压机制，还可能导致数据时间戳严重错乱——下游的时序数据库写入时，乱序数据会触发大量的compaction操作，严重影响写入性能。
+
+**这就是工业场景的核心矛盾：** 边缘侧的网络不可靠性与云端对数据有序性的严格要求之间的矛盾。
+
+---
+
+## 二、码视野高可用边缘系统拓扑架构
+
+针对上述痛点，我们在码视野产品中构建了分层解耦的边缘-云平台架构。核心设计思想是：**边缘做重，云端做轻**。边缘侧承担数据采集、协议解析、本地缓存、数据清洗等重量级工作，云端只负责持久化存储与实时分析。
+
+### 2.1 整体架构拓扑
+
+\`\`\`mermaid
+flowchart TB
+    subgraph 现场设备层["🏭 现场设备层"]
+        direction LR
+        PLC1[PLC #1<br/>Siemens S7]
+        PLC2[PLC #2<br/>Mitsubishi Q系列]
+        CNC[CNC机床<br/>FANUC 0i-TF]
+        Sensor[传感器组<br/>温度/振动/压力]
+    end
+    
+    subgraph 边缘计算层["⚡ 边缘计算层"]
+        direction TB
+        Gateway[工业边缘网关<br/>码视野EdgeBox Pro]
+        
+        subgraph 边缘内部["边缘网关内部"]
+            direction LR
+            Driver[多协议驱动层<br/>Modbus/OPC-UA/S7]
+            Parser[报文解析引擎]
+            Reorder[乱序重组缓冲<br/>基于时间戳窗口]
+            Cache[本地持久化缓存<br/>RocksDB LSM树]
+            Compress[数据压缩<br/>LZ4帧压缩]
+        end
+        
+        EdgeMQ[(边缘消息总线<br/>EMQX Broker<br/>本地实例)]
+    end
+    
+    subgraph 网络传输层["🌐 网络传输层"]
+        direction LR
+        EdgeMQ_Connection{网络状态检测}
+        Reconnect[断线重连策略<br/>指数退避+心跳保活]
+        TLS[TLS 1.3加密隧道]
+    end
+    
+    subgraph 云端平台层["☁️ 云端平台层"]
+        direction TB
+        CloudMQTT[(EMQX MQTT集群<br/>高可用负载均衡)]
+        Kafka[(Apache Kafka<br/>消息持久化总线)]
+        
+        subgraph 数据处理层["数据处理流水线"]
+            Direction LR
+            StreamProc[流式计算引擎<br/>Flink实时聚合]
+            RuleEngine[规则引擎<br/>报警判断]
+            TimeSeries[(时序数据库<br/>TDengine)]
+            Relational[(关系数据库<br/>PostgreSQL)]
+        end
+    end
+    
+    subgraph 应用层["📊 应用层"]
+        direction LR
+        MES[MES系统]
+        SCADA[SCADA监控]
+        DashBoard[实时大屏]
+        AlertSystem[报警推送]
+    end
+    
+    现场设备层 -->|RS-485/以太网| 边缘计算层
+    边缘计算层 -->|MQTT over TLS| 网络传输层
+    网络传输层 -->|Publish| 云端平台层
+    云端平台层 -->|Subscribe| 应用层
+    
+    style 现场设备层 fill:#ff9999,stroke:#cc0000
+    style 边缘计算层 fill:#99ccff,stroke:#0066cc
+    style 网络传输层 fill:#ffcc99,stroke:#cc6600
+    style 云端平台层 fill:#99ff99,stroke:#009900
+    style 应用层 fill:#ffccff,stroke:#990099
+\`\`\`
+
+### 2.2 架构核心设计原则
+
+**原则一：EMQX在边缘侧做"本地Broker"，Kafka在云端做"持久化总线"。**
+
+这个决策是基于两者本质特性的差异。EMQX作为MQTT Broker，天然适合处理工业设备的高频小报文，支持QoS 1/2语义，能够保证消息至少送达一次。而在边缘侧部署轻量级EMQX实例，可以实现本地设备的即插即用，设备即使暂时无法连接云端，也能通过本地MQTT网络完成数据交互。
+
+Kafka则适合处理海量数据的持久化与回放。它的分区顺序性、高吞吐写入能力，以及基于LSM树的存储引擎，使其成为工业时序数据的理想载体。
+
+**原则二：边缘侧完成数据清洗与乱序重组，云端只接收"干净"数据。**
+
+我们在边缘网关内部实现了基于时间戳窗口的乱序重组器。具体来说，每个设备上报的数据被打上采集时间戳（由边缘网关的硬件时钟源提供，PTPv2精度可达微秒级），然后在本地缓冲区内按照时间窗口进行排序。对于迟到数据，我们采用"窗口滑动+最终一致"策略，在窗口期内合并重复数据，窗口期外则追加为独立记录。
+
+**原则三：断连缓存与智能重传。**
+
+当边缘网关检测到网络连接中断时，本地RocksDB缓存会自动接管，所有采集数据写入本地持久化存储。网络恢复后，系统按照时间顺序回放缓存数据，并通过指数退避策略控制重传速率，避免一次性冲击云端Kafka集群。
+
+---
+
+## 三、工业级生产环境完整实现代码示例
+
+以下代码来自码视野边缘网关的生产级实现，采用Go语言编写（考虑到工业场景对性能与内存控制的严苛要求）。代码包含多协议驱动接入、报文解析、本地缓存、断连重传等核心逻辑。
+
+### 3.1 边缘网关核心模块架构
+
+\`\`\`go
+// main.go - 码视野边缘网关主入口
+package main
+
+import (
+    "context"
+    "flag"
+    "log"
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
+
+    "github.com/maidscope/edgebox-go/core/cache"
+    "github.com/maidscope/edgebox-go/core/mqtt"
+    "github.com/maidscope/edgebox-go/core/reorder"
+    "github.com/maidscope/edgebox-go/drivers/modbus"
+    "github.com/maidscope/edgebox-go/drivers/s7"
+)
+
+var (
+    configPath = flag.String("config", "/etc/edgebox/config.yaml", "配置文件路径")
+    deviceID   = flag.String("device-id", "", "设备唯一标识")
+)
+
+func main() {
+    flag.Parse()
+
+    // 1. 加载配置
+    cfg, err := LoadConfig(*configPath)
+    if err != nil {
+        log.Fatalf("加载配置失败: %v", err)
+    }
+
+    // 2. 初始化本地持久化缓存（RocksDB）
+    cacheDir := "/data/edgebox/cache"
+    localCache, err := cache.NewRocksDBCache(cacheDir, cache.Options{
+        MaxFileSize:  100 * 1024 * 1024, // 单文件最大100MB
+        MaxOpenFiles: 32,
+        Compression:  cache.LZ4Compression,
+    })
+    if err != nil {
+        log.Fatalf("初始化本地缓存失败: %v", err)
+    }
+    defer localCache.Close()
+
+    // 3. 初始化乱序重组器
+    reorderEngine := reorder.NewReorderEngine(reorder.Options{
+        WindowSize:  5 * time.Second, // 5秒重组窗口
+        MaxBuffer:   10000,           // 最大缓冲区容量
+        Timeout:     10 * time.Second, // 超时强制flush
+    })
+    defer reorderEngine.Stop()
+
+    // 4. 初始化MQTT客户端（连接云端EMQX集群）
+    mqttClient := mqtt.NewClient(mqtt.Config{
+        BrokerURL:  cfg.CloudBrokerURL,
+        ClientID:   *deviceID,
+        Username:   cfg.MQTTUsername,
+        Password:   cfg.MQTTPassword,
+        QoS:        1, // 至少一次送达
+        KeepAlive:  60 * time.Second,
+        CleanSession: false, // 持久化会话
+        WillTopic:  "devices/" + *deviceID + "/status",
+        WillPayload: []byte(\`{"status":"offline","reason":"unexpected_disconnect"}\`),
+        TLSConfig:  cfg.TLSConfig,
+    })
+
+    // 5. 启动断线重连协程
+    go startReconnectLoop(mqttClient, cfg.ReconnectStrategy)
+
+    // 6. 初始化协议驱动层
+    drivers := make(map[string]Driver)
+
+    // Modbus RTU驱动（RS-485总线）
+    if cfg.ModbusEnabled {
+        modbusDriver, err := modbus.NewDriver(modbus.Config{
+            Port:      cfg.ModbusPort,       // /dev/ttyUSB0
+            BaudRate:  cfg.ModbusBaudRate,   // 9600
+            DataBits:  8,
+            Parity:    "N",
+            StopBits:  1,
+            Timeout:   1000 * time.Millisecond,
+        })
+        if err != nil {
+            log.Fatalf("初始化Modbus驱动失败: %v", err)
+        }
+        drivers["modbus"] = modbusDriver
+    }
+
+    // Siemens S7驱动（以太网）
+    if cfg.S7Enabled {
+        s7Driver, err := s7.NewDriver(s7.Config{
+            RemoteIP:   cfg.S7RemoteIP,
+            Rack:       cfg.S7Rack,
+            Slot:       cfg.S7Slot,
+            PollInterval: 100 * time.Millisecond,
+        })
+        if err != nil {
+            log.Fatalf("初始化S7驱动失败: %v", err)
+        }
+        drivers["s7"] = s7Driver
+    }
+
+    // 7. 启动数据采集协程
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel()
+
+    for name, driver := range drivers {
+        go collectAndProcess(ctx, name, driver, localCache, reorderEngine, mqttClient)
+    }
+
+    // 8. 优雅关闭
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+    <-sigChan
+    log.Println("收到关闭信号，执行优雅退出...")
+    cancel()
+    time.Sleep(2 * time.Second)
+}
+
+// collectAndProcess 核心采集与处理协程
+func collectAndProcess(
+    ctx context.Context,
+    driverName string,
+    driver Driver,
+    localCache *cache.RocksDBCache,
+    reorderEngine *reorder.ReorderEngine,
+    mqttClient *mqtt.Client,
+) {
+    ticker := time.NewTicker(100 * time.Millisecond)
+    defer ticker.Stop()
+
+    for {
+        select {
+        case <-ctx.Done():
+            return
+        case <-ticker.C:
+            // 1. 从驱动读取原始报文
+            rawData, err := driver.Poll()
+            if err != nil {
+                log.Printf("[%s] 读取失败: %v", driverName, err)
+                continue
+            }
+
+            // 2. 解析报文，提取结构化数据
+            parsedData, err := ParseRawData(rawData)
+            if err != nil {
+                log.Printf("[%s] 解析失败: %v", driverName, err)
+                continue
+            }
+
+            // 3. 打上采集时间戳（硬件时钟源）
+            for i := range parsedData {
+                parsedData[i].CollectedAt = time.Now().UTC()`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

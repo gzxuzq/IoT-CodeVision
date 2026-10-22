@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案 (升级迭代版) · 码视野IoT研发团队</title>
+  <meta name="description" content="面向新能源与储能垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持Modbus TCP · IEC 61850 · MQTT over TLS等主流通信标准。">
+  <meta property="og:title" content="智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案 (升级迭代版)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20261023071143.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案 (升级迭代版)","image":"https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-23 07:11","description":"面向新能源与储能垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持Modbus TCP · IEC 61850 · MQTT over TLS等主流通信标准。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="hover:text-brand-600 transition-colors">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-brand-600 font-bold">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-slate-600">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&q=80" alt="智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案 (升级迭代版)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">新能源与储能</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">光储充一体化</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-23 07:11</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案 (升级迭代版)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">16% ~ 28%</div><div class="text-brand-500 text-xs mt-0.5">综合能耗降低</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 智慧光伏与工商业储能微电网 EMS 能量管理系统解决方案（升级迭代版）
+
+**文档版本：** V3.2  
+**发布单位：** 码视野研发团队  
+**行业：** 新能源与储能  
+**适用场景：** 工商业屋顶光伏 + 侧/家储锂电储能 + 微电网能量管理  
+
+---
+
+## 一、方案概述
+
+### 1.1 背景与挑战
+
+随着"双碳"目标深入推进，工商业分布式光伏与储能装机量呈爆发式增长。传统EMS系统存在以下核心痛点：
+
+| 痛点 | 传统系统表现 | 本方案解决方向 |
+|------|-------------|---------------|
+| 协议碎片化 | 单一协议适配，多品牌设备对接困难 | 多协议统一接入层（Modbus TCP/IEC 61850/MQTT/CANopen） |
+| 实时监控滞后 | 数据刷新周期>10s，告警延迟 | 边缘实时采集<1s，云端秒级同步 |
+| 策略固化 | 固定充放电策略，无法动态优化 | AI预测+模型预测控制（MPC）自适应调度 |
+| 运维粗放 | 人工巡检，故障发现晚 | 智能诊断+远程OTA+预测性维护 |
+| 安全性不足 | 明文传输，无多级权限 | TLS加密+国密算法+三权分立权限体系 |
+
+### 1.2 方案定位
+
+码视野研发团队基于6年工业IoT深耕经验，推出**智慧光伏与工商业储能微电网EMS能量管理系统升级迭代版**，实现：
+
+- **全栈自主可控**：从边缘网关到云平台全链路自研
+- **多源异构融合**：统一接入光伏逆变器、储能BMS、电表、充电桩等异构设备
+- **云边协同架构**：边缘实时控制 + 云端AI优化 + 平台全景可视
+- **交钥匙交付**：标准化硬件套件 + 可配置软件平台 + 一站式部署运维
+
+### 1.3 核心价值主张
+
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│                    码视野 EMS 核心价值                     │
+├──────────────┬──────────────┬──────────────┬─────────────┤
+│   降本       │   增效       │   安全       │   合规      │
+├──────────────┼──────────────┼──────────────┼─────────────┤
+│ 峰谷套利     │ 设备OEE提升  │ 多重电气保护 │ 符合国标    │
+│ 需量管理     │ 运维效率+300%│ 数据加密传输 │ 电力准入    │
+│ 减少弃光     │ 决策智能化   │ 网络安全防护 │ 双碳报告    │
+│ 延长电池寿命 │ 响应速度<1s  │ 灾备机制     │ 绿电认证    │
+└──────────────┴──────────────┴──────────────┴─────────────┘
+\`\`\`
+
+---
+
+## 二、系统总体架构
+
+### 2.1 云边端三层架构
+
+\`\`\`mermaid
+graph TB
+    subgraph 端侧设备层["🔧 端侧设备层（现场设备）"]
+        PV["光伏逆变器<br/>SUNWAYS / GoodWe / Huawei"]
+        BMS["储能电池BMS<br/>宁德时代 / 比亚迪 / Pylontech"]
+        PCS["储能变流器PCS<br/>阳光电源 / 科华数据"]
+        meter1["智能电表<br/>PZEM-100A / DLT645"]
+        meter2["关口电表<br/>高精度0.5级"]
+        charger["充电桩<br/>GB/T 27930"]
+        env["环境监测站<br/>辐照度/温度/风速"]
+        switch["智能断路器<br/>带计量功能"]
+    end
+
+    subgraph 边缘计算层["⚡ 边缘计算层（码视野 EdgeBox Pro）"]
+        EdgeGW["边缘网关 EdgeBox Pro<br/>ARM Cortex-A55 四核 1.8GHz<br/>4G + WiFi + Ethernet"]
+        EdgeRules["规则引擎<br/>阈值告警 / 硬实时控制"]
+        EdgeLocal["本地可视化<br/>7寸触摸屏 HMI"]
+        Protocol["协议转换层<br/>Modbus TCP ↔ IEC 61850<br/>MQTT over TLS ↔ CANopen"]
+        EdgeAI["轻量化推理<br/>电池SOH估算 / 负荷预测"]
+    end
+
+    subgraph 云端平台层["☁️ 云端平台层（码视野 CloudEMS SaaS）"]
+        APIGW["API 网关<br/>Kong / Nginx"]
+        RuleEngine["云端规则引擎<br/>告警策略 / 工单派发"]
+        AIModel["AI 预测模型<br/>负荷预测 / 光伏发电预测<br/>电价预测 / 电池寿命预测"]
+        OptEngine["优化调度引擎<br/>MPC 模型预测控制<br/>经济调度 / 需量优化"]
+        DigitalTwin["数字孪生引擎<br/>3D 可视化 / 实时仿真"]
+        Reports["报表中心<br/>运营分析 / 收益统计<br/>碳排放核算"]
+        SCADA["SCADA 监控<br/>全景监视 / 告警中心<br/>历史回放"]
+    end
+
+    subgraph 应用服务层["📱 应用服务层"]
+        WebPC["Web 管理端<br/>Chrome / Edge 浏览器"]
+        MobileApp["移动端 APP<br/>iOS / Android"]
+        MiniPro["微信小程序"]
+        OpenAPI["开放 API<br/>RESTful / WebSocket"]
+        ThirdParty["第三方系统集成<br/>ERP / 财务 / 碳资产管理"]
+    end
+
+    subgraph 通信网络层
+        LocalNet["厂站内网<br/>千兆工业以太网"]
+        Cellular["运营商网络<br/>4G LTE / 5G / NB-IoT"]
+        Internet["互联网"]
+    end
+
+    %% 设备到边缘连接
+    PV -->|Modbus TCP /CANopen| EdgeGW
+    BMS -->|Modbus RTU→TCP 转换| EdgeGW
+    PCS -->|Modbus TCP / IEC 61850| EdgeGW
+    meter1 -->|Modbus RTU| EdgeGW
+    meter2 -->|Modbus TCP| EdgeGW
+    charger -->|GB/T 27930| EdgeGW
+    env -->|Modbus RTU| EdgeGW
+    switch -->|Modbus TCP| EdgeGW
+
+    %% 边缘到云端
+    EdgeGW -->|MQTT over TLS| Internet
+    Internet -->|MQTT / HTTPS| APIGW
+    APIGW --> RuleEngine
+    APIGW --> AIModel
+    APIGW --> OptEngine
+    APIGW --> DigitalTwin
+    APIGW --> Reports
+    APIGW --> SCADA
+
+    %% 云端到应用
+    RuleEngine --> WebPC
+    AIModel --> MobileApp
+    OptEngine --> MiniPro
+    SCADA --> WebPC
+    Reports --> OpenAPI
+    OpenAPI --> ThirdParty
+
+    %% 边缘本地
+    EdgeGW --> EdgeRules
+    EdgeRules --> EdgeLocal
+    EdgeGW --> Protocol
+    EdgeGW --> EdgeAI
+    EdgeAI -.->|离线降级控制| EdgeRules
+
+    style EdgeGW fill:#ff6b35,stroke:#c4450a,color:#fff
+    style OptEngine fill:#1e90ff,stroke:#0066cc,color:#fff
+    style AIModel fill:#1e90ff,stroke:#0066cc,color:#fff
+    style SCADA fill:#32cd32,stroke:#228b22,color:#fff
+    style WebPC fill:#9370db,stroke:#6a0dad,color:#fff
+    style MobileApp fill:#9370db,stroke:#6a0dad,color:#fff
+\`\`\`
+
+### 2.2 数据流向设计
+
+| 数据类型 | 采集频率 | 传输方式 | 存储策略 | 用途 |
+|---------|---------|---------|---------|------|
+| 遥测数据（电压/电流/功率） | 1s | MQTT实时 | 时序数据库(TSDB) | SCADA实时显示 |
+| 电能数据（有功/无功/电量） | 15min | MQTT批量 | TSDB + 列式存储 | 计量结算/报表 |
+| 状态数据（开关位/告警码） | 事件触发 | MQTT实时 | 关系数据库 | 告警/工单 |
+| 电池数据（SOC/SOH/温度） | 1s | MQTT实时 | TSDB + 物模型 | 电池管理 |
+| 控制指令 | 按需 | MQTT QoS=1 | 操作日志 | 远程控制 |
+| 策略配置 | 事件触发 | HTTPS | 配置数据库 | 策略管理 |
+| 预测结果 | 小时级 | HTTPS | 关系数据库 | 调度决策 |
+| 日志数据 | 持续 | 文件传输 | 对象存储 | 审计追溯 |
+
+---
+
+## 三、边缘计算层详细设计
+
+### 3.1 边缘网关硬件规格（EdgeBox Pro）
+
+\`\`\`mermaid
+graph LR
+    subgraph "EdgeBox Pro 硬件架构"
+        CPU["ARM Cortex-A55<br/>四核 1.8GHz<br/>4GB DDR4 + 32GB eMMC"]
+        ETH1["千兆网口 x2<br/>Industrial Grade"]
+        ETH2["千兆网口 x1<br/>Management"]
+        RS485["RS485 x4<br/>Modbus RTU"]
+        RS232["RS232 x1<br/>Debug/Console"]
+        CAN["CAN总线 x2<br/>ISO 11898-2"]
+        GSM["4G LTE Cat.4<br/>内置GPS/北斗"]
+        WIFI["WiFi 5 AC + BT5.0"]
+        USB["USB 3.0 x2<br/>USB 2.0 x1"]
+        DIGIO["DI x8 / DO x4<br/>隔离型"]
+        AIU["ADC x4<br/>4-20mA / 0-10V"]
+        PWR["宽压DC输入<br/>9-36V / PoE"]
+        TOUCH["7寸 capacitive<br/>触摸屏 (选配)"]
+    end
+
+    CPU --- ETH1
+    CPU --- ETH2
+    CPU --- RS485
+    CPU --- RS232
+    CPU --- CAN
+    CPU --- GSM
+    CPU --- WIFI
+    CPU --- USB
+    CPU --- DIGIO
+    CPU --- AIU
+    CPU --- PWR
+    CPU -.-> TOUCH
+\`\`\`
+
+### 3.2 边缘软件栈
+
+| 层级 | 组件 | 版本/规格 | 说明 |
+|-----|------|----------|------|
+| 操作系统 | 定制嵌入式Linux | Buildroot 2024.05 | 实时内核 preempt-RT |
+| 容器运行时 | containerd | v1.7.x | 轻量级容器管理 |
+| 边缘框架 | 自研边缘中间件 | EMS-Edge v3.2 | 设备接入/协议转换/本地控制 |
+| 协议驱动 | Modbus TCP/RTU | 支持MBAP + TCP | 主/从模式，轮询+中断 |
+| 协议驱动 | IEC 61850 | MMS over TCP | GOOSE/SVT可选 |
+| 协议驱动 | CANopen | CiA DS406 | 支持EDS文件导入 |
+| 协议驱动 | MQTT | v5.0 + TLS 1.3 | QoS 0/1/2，遗嘱消息 |
+| 本地数据库 | InfluxDB | v2.7 Embedded | 时序数据存储 |
+| 规则引擎 | 自研流式计算 | CEP引擎 | 复杂事件处理 |
+| AI推理 | TensorFlow Lite | 量化模型 | 电池SOH/负荷预测 |
+
+### 3.3 边缘侧核心能力
+
+\`\`\`
+┌────────────────────────────────────────────────────────────┐
+│                    边缘侧核心能力矩阵                        │
+├────────────────────────────────────────────────────────────┤
+│ ① 多协议统一接入                                          │
+│    • 同时接入≥64台设备                                      │
+│    • 设备模型标准化（一物一模型）                            │
+│    • 协议驱动热插拔                                        │
+├────────────────────────────────────────────────────────────┤
+│ ② 硬实时本地控制                                          │
+│    • 充放电功率指令下发 < 500ms                             │
+│    • 黑启动 / 孤岛检测 / 并网切换 < 100ms                   │
+│    • 断网自治：云平台断开时边缘独立运行≥72h                  │
+├────────────────────────────────────────────────────────────┤
+│ ③ 边缘AI推理                                              │`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

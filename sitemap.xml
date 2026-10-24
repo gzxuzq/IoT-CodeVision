@@ -25,6 +25,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://iot-showcase.hei-ai.com/posts/post_20261024121711.html</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://iot-showcase.hei-ai.com/posts/post_20261024030200.html</loc>
     <lastmod>2026-10-24</lastmod>
     <changefreq>daily</changefreq>
@@ -827,6 +833,12 @@
     <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://iot-showcase.hei-ai.com/solutions/sol_20261024121648.html</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://iot-showcase.hei-ai.com/solutions/sol_20261023071143.html</loc>

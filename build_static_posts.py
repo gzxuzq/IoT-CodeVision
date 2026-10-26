@@ -4,10 +4,214 @@
 1. 将 posts_index.json 中的文章编译为 posts/post_*.html
 2. 将 solutions_index.json 中的解决方案编译为 solutions/sol_*.html
 """
+import html
 import json
-import os
 import re
+from collections import Counter
 from pathlib import Path
+
+import markdown
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
+
+ORIGIN = 'https://iot-showcase.hei-ai.com'
+
+
+class _DemoteH1(Treeprocessor):
+    def run(self, root):
+        for el in root.iter():
+            if el.tag == 'h1':
+                el.tag = 'h2'
+        return root
+
+
+class DemoteH1Extension(Extension):
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(_DemoteH1(md), 'demote_h1', 15)
+
+
+def attr(value):
+    return html.escape(value or '', quote=True)
+
+
+def text(value):
+    return html.escape(value or '', quote=False)
+
+
+def article_slug(item, is_solution):
+    raw = str(item.get('id', ''))
+    if is_solution:
+        return raw if raw.startswith('sol_') else f'sol_{raw}'
+    return raw if raw.startswith('post_') else f'post_{raw}'
+
+
+def article_path(item, is_solution):
+    slug = article_slug(item, is_solution)
+    folder = 'solutions' if is_solution else 'posts'
+    return f'/{folder}/{slug}.html'
+
+
+def iso_date(value):
+    raw = (value or '').strip()
+    day = raw.split(' ')[0]
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', day):
+        return ''
+    clock = raw.split(' ')[1] if ' ' in raw else ''
+    if re.fullmatch(r'\d{2}:\d{2}', clock):
+        return f'{day}T{clock}:00+08:00'
+    return day
+
+
+_META_LINE = re.compile(
+    r'^(版本|编制|日期|保密等级|作者|首发|方案版本|编制单位|行业|适用规模|关键词|阅读时长)\s*[:：]'
+)
+_HR_LINE = re.compile(r'^[-*_]{3,}$')
+
+
+def _clean_inline(stripped):
+    cleaned = re.sub(r'!\[[^\]]*\]\([^)]*\)', '', stripped)
+    cleaned = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', cleaned)
+    cleaned = cleaned.replace('**', '').replace('__', '').replace('`', '').replace('*', '')
+    return re.sub(r'\s+', ' ', cleaned).strip()
+
+
+def first_prose(md_text, limit=140):
+    paragraphs = []
+    buf = []
+    in_code = False
+
+    def flush():
+        if buf:
+            paragraphs.append(re.sub(r'\s+', ' ', ' '.join(buf)).strip())
+            buf.clear()
+
+    for line in (md_text or '').splitlines():
+        stripped = line.strip()
+        if stripped.startswith('```'):
+            in_code = not in_code
+            flush()
+            continue
+        if in_code:
+            continue
+        skip = (
+            not stripped
+            or stripped.startswith('#')
+            or stripped.startswith('>')
+            or stripped.startswith('|')
+            or stripped.startswith(('- ', '* '))
+            or bool(re.match(r'^\d+\.\s', stripped))
+            or bool(_HR_LINE.match(stripped))
+        )
+        if skip:
+            flush()
+            continue
+        cleaned = _clean_inline(stripped)
+        if not cleaned or _META_LINE.match(cleaned) or cleaned in {'目录'}:
+            flush()
+            continue
+        buf.append(cleaned)
+        if len(' '.join(buf)) >= limit:
+            flush()
+            break
+    flush()
+    for para in paragraphs:
+        if len(para) >= 40:
+            return para[:limit].rstrip('，。；、 ,.;') 
+    return paragraphs[0][:limit].rstrip('，。；、 ,.;') if paragraphs else ''
+
+
+def meta_description(title, summary, md_text, date, item_id, seen):
+    prose = first_prose(md_text)
+    summary = (summary or '').strip()
+    title = (title or '').strip()
+    if prose and len(prose) >= 40:
+        desc = prose
+    elif prose and title and title not in prose:
+        desc = f'{title}：{prose}'
+    elif summary and title and title not in summary and not summary.startswith('针对') and not summary.startswith('面向'):
+        desc = summary
+    else:
+        desc = title or summary or prose
+    desc = re.sub(r'\s+', ' ', desc).strip(' -—')
+    if len(desc) > 150:
+        desc = desc[:148].rstrip('，。；、 ,.;') + '…'
+    if desc in seen:
+        stamp = (date or item_id or '').strip()
+        desc = f'{desc.rstrip("…")}（{stamp}）'
+        if len(desc) > 160:
+            desc = desc[:158] + '…'
+    seen.add(desc)
+    return desc
+
+
+def document_title(title, date, item_id, title_counts, seen):
+    base = (title or '码视野物联网').strip()
+    candidate = f'{base}（{date or item_id}）' if title_counts[base] > 1 else base
+    if candidate in seen:
+        candidate = f'{base}（{item_id}）'
+    seen.add(candidate)
+    return candidate
+
+
+def render_markdown(md_text):
+    body = markdown.markdown(
+        md_text or '',
+        extensions=['fenced_code', 'tables', DemoteH1Extension()],
+        output_format='html',
+    )
+    return re.sub(
+        r'<pre><code class="language-mermaid">(.*?)</code></pre>',
+        lambda match: f'<div class="mermaid">{match.group(1)}</div>',
+        body,
+        flags=re.S,
+    )
+
+
+def related_markup(items, index, is_solution):
+    current = items[index]
+    key = 'industry' if is_solution else 'category'
+    current_key = current.get(key)
+    same = [item for i, item in enumerate(items) if i != index and item.get(key) == current_key]
+    others = [item for i, item in enumerate(items) if i != index and item.get(key) != current_key]
+    chosen = (same + others)[:3]
+    lines = []
+    for item in chosen:
+        href = article_path(item, is_solution)
+        label = text(item.get('title') or '相关内容')
+        lines.append(f'<li><a href="{attr(href)}">{label}</a></li>')
+    return '\n        '.join(lines)
+
+
+def structured_data(title, description, canonical, cover, published, crumb_name, crumb_path):
+    graph = [
+        {
+            '@type': 'TechArticle',
+            'headline': title,
+            'description': description,
+            'image': cover,
+            'author': {'@type': 'Organization', 'name': '码视野', 'url': f'{ORIGIN}/'},
+            'publisher': {
+                '@type': 'Organization',
+                'name': '码视野',
+                'url': f'{ORIGIN}/',
+                'logo': {'@type': 'ImageObject', 'url': f'{ORIGIN}/images/logo.png'},
+            },
+            'mainEntityOfPage': canonical,
+            'inLanguage': 'zh-CN',
+        },
+        {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': '首页', 'item': f'{ORIGIN}/'},
+                {'@type': 'ListItem', 'position': 2, 'name': crumb_name, 'item': f'{ORIGIN}{crumb_path}'},
+                {'@type': 'ListItem', 'position': 3, 'name': title, 'item': canonical},
+            ],
+        },
+    ]
+    if published:
+        graph[0]['datePublished'] = published
+    payload = json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False)
+    return payload.replace('<', '\\u003c')
 
 BASE_DIR = Path(__file__).parent
 POSTS_DIR = BASE_DIR / "posts"
@@ -78,14 +282,23 @@ POST_TEMPLATE = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>__TITLE__ · 码视野IoT研发团队</title>
-  <meta name="description" content="__SUMMARY__">
-  <meta property="og:title" content="__TITLE__">
-  <meta property="og:image" content="__COVER_IMAGE__">
+  <title>__DOC_TITLE__ · 码视野</title>
+  <meta name="description" content="__DESC__">
+  <link rel="canonical" href="__CANONICAL__">
   <meta property="og:type" content="article">
+  <meta property="og:site_name" content="码视野">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="__DOC_TITLE__">
+  <meta property="og:description" content="__DESC__">
+  <meta property="og:url" content="__CANONICAL__">
+  <meta property="og:image" content="__COVER_IMAGE__">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="__DOC_TITLE__">
+  <meta name="twitter:description" content="__DESC__">
+  <meta name="twitter:image" content="__COVER_IMAGE__">
+  <meta property="article:published_time" content="__PUBLISHED__">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
   <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
-  <link rel="canonical" href="__CANONICAL__">
   <!-- 百度统计 -->
   <script>
   var _hmt = _hmt || [];
@@ -100,11 +313,10 @@ POST_TEMPLATE = """<!DOCTYPE html>
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"TechArticle","headline":"__TITLE__","image":"__COVER_IMAGE__","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"__DATE__","description":"__SUMMARY__"}
+  __LD_JSON__
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
@@ -132,6 +344,11 @@ __NAV__
     <img src="__COVER_IMAGE__" alt="__TITLE__" class="w-full h-full object-cover">
   </div>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <nav class="text-sm text-slate-500 mb-4" aria-label="面包屑">
+      <a href="/" class="text-brand-600 hover:underline">首页</a>
+      <span class="mx-1" aria-hidden="true">/</span>
+      <a href="__BACK_LINK__" class="text-brand-600 hover:underline">__CRUMB__</a>
+    </nav>
     <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
       <a href="__BACK_LINK__" class="text-brand-600 hover:underline">__BACK_TEXT__</a>
       <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">__CATEGORY__</span>
@@ -145,7 +362,24 @@ __NAV__
     <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
       __ROI_BADGES__
     </div>
-    <div class="prose" id="content-body"></div>
+    <div class="prose" id="content-body">
+__CONTENT_HTML__
+    </div>
+    <aside class="mt-10 border-t border-slate-200 pt-8" aria-label="相关阅读">
+      <h2 class="text-lg font-bold text-slate-900 mb-3">相关阅读</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-brand-700">
+        __RELATED__
+      </ul>
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        <a class="text-brand-700 font-semibold hover:underline" href="/">首页</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/solutions.html">行业解决方案</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/blog.html">技术博文</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/contact.html">联系咨询</a>
+      </p>
+    </aside>
     <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
       <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
       <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
@@ -162,27 +396,25 @@ __NAV__
   </div>
 </footer>
 <script>
-const mdContent = `__CONTENT_MD__`;
 mermaid.initialize({startOnLoad:false,theme:'default'});
 async function render() {
   const container = document.getElementById('content-body');
-  const mermaidBlocks = [];
-  const processedMd = mdContent.replace(/```mermaid\\n([\\s\\S]*?)```/g, (_, code) => {
-    const id = 'mermaid-' + mermaidBlocks.length;
-    mermaidBlocks.push({id, code: code.trim()});
-    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  if (!container) return;
+  container.querySelectorAll('h1').forEach(h => {
+    const h2 = document.createElement('h2');
+    h2.innerHTML = h.innerHTML;
+    h.replaceWith(h2);
   });
-  container.innerHTML = marked.parse(processedMd);
-  for(const {id, code} of mermaidBlocks) {
-    const placeholder = container.querySelector(`[data-id="${id}"]`);
-    if(placeholder) {
-      const div = document.createElement('div');
-      div.className = 'mermaid';
-      div.textContent = code;
-      placeholder.replaceWith(div);
-    }
+  container.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = code.textContent;
+    const pre = code.closest('pre');
+    if (pre) pre.replaceWith(div);
+  });
+  if (container.querySelector('.mermaid')) {
+    await mermaid.run({querySelector:'#content-body .mermaid'});
   }
-  await mermaid.run();
 }
 render();
 
@@ -204,13 +436,6 @@ if (menuBtn && mobileMenu) {
 </html>"""
 
 
-def md_to_html_safe(content):
-    content = content.replace('\\', '\\\\')
-    content = content.replace('`', '\\`')
-    content = content.replace('${', '\\${')
-    return content
-
-
 def build_roi_badges(roi_stats):
     badges = []
     for k, v in roi_stats.items():
@@ -218,39 +443,59 @@ def build_roi_badges(roi_stats):
     return '\n      '.join(badges)
 
 
-def build_post_html(post, is_solution=False):
-    content_safe = md_to_html_safe(post.get('content_markdown', ''))
-    roi_data = post.get('roi_data') or post.get('roi_stats') or {}
-    roi_badges = build_roi_badges(roi_data)
-    cover = post.get('cover_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80')
+def build_post_html(post, is_solution=False, siblings=None, index=0, title_counts=None, seen_titles=None, seen_descs=None):
+    siblings = siblings if siblings is not None else [post]
+    title_counts = title_counts if title_counts is not None else Counter()
+    seen_titles = seen_titles if seen_titles is not None else set()
+    seen_descs = seen_descs if seen_descs is not None else set()
 
-    html = POST_TEMPLATE
-    html = html.replace('__TITLE__', post.get('title', ''))
-    html = html.replace('__SUMMARY__', post.get('summary', ''))
-    html = html.replace('__COVER_IMAGE__', cover)
-    
+    title = (post.get('title') or '').strip()
+    date = post.get('date', '')
+    item_id = article_slug(post, is_solution)
+    doc_title = document_title(title, date, item_id, title_counts, seen_titles)
+    description = meta_description(title, post.get('summary', ''), post.get('content_markdown', ''), date, item_id, seen_descs)
+    post['seo_description'] = description
+    cover = post.get('cover_image') or 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80'
+    published = iso_date(date)
+    canonical = f'{ORIGIN}{article_path(post, is_solution)}'
     if is_solution:
-        sid = post['id'] if str(post['id']).startswith('sol_') else f"sol_{post['id']}"
-        html = html.replace('__CANONICAL__', f"https://iot-showcase.hei-ai.com/solutions/{sid}.html")
-        html = html.replace('__BACK_LINK__', "/solutions.html")
-        html = html.replace('__BACK_TEXT__', "← 返回行业解决方案")
-        html = html.replace('__CATEGORY__', post.get('industry', '行业解决方案'))
-        html = html.replace('__TAG__', post.get('industry_tag', '垂直架构'))
-        html = html.replace('__READ_TIME__', post.get('deploy_cycle', '深度方案'))
+        back_link = '/solutions.html'
+        back_text = '← 返回行业解决方案'
+        crumb = '行业解决方案'
+        category = post.get('industry', '行业解决方案')
+        tag = post.get('industry_tag', '垂直架构')
     else:
-        pid = post['id'] if str(post['id']).startswith('post_') else f"post_{post['id']}"
-        html = html.replace('__CANONICAL__', f"https://iot-showcase.hei-ai.com/posts/{pid}.html")
-        html = html.replace('__BACK_LINK__', "/blog.html")
-        html = html.replace('__BACK_TEXT__', "← 返回博文矩阵")
-        html = html.replace('__CATEGORY__', post.get('category', '技术实战'))
-        html = html.replace('__TAG__', post.get('tag', 'IoT开发'))
-        html = html.replace('__READ_TIME__', post.get('read_time', '7 分钟'))
+        back_link = '/blog.html'
+        back_text = '← 返回技术博文'
+        crumb = '技术博文'
+        category = post.get('category', '技术实战')
+        tag = post.get('tag', 'IoT开发')
 
-    html = html.replace('__DATE__', post.get('date', ''))
-    html = html.replace('__ROI_BADGES__', roi_badges)
-    html = html.replace('__CONTENT_MD__', content_safe)
-    html = html.replace('__NAV__', get_nav_html(is_solution=is_solution))
-    return html
+    page = POST_TEMPLATE
+    replacements = {
+        '__DOC_TITLE__': attr(doc_title),
+        '__TITLE__': text(title),
+        '__DESC__': attr(description),
+        '__COVER_IMAGE__': attr(cover),
+        '__CANONICAL__': attr(canonical),
+        '__PUBLISHED__': attr(published),
+        '__BACK_LINK__': attr(back_link),
+        '__BACK_TEXT__': text(back_text),
+        '__CRUMB__': text(crumb),
+        '__CATEGORY__': text(category),
+        '__TAG__': text(tag),
+        '__DATE__': text(date),
+        '__ROI_BADGES__': build_roi_badges(post.get('roi_data') or post.get('roi_stats') or {}),
+        '__NAV__': get_nav_html(is_solution=is_solution),
+        '__LD_JSON__': structured_data(title, description, canonical, cover, published, crumb, back_link),
+        '__RELATED__': related_markup(siblings, index, is_solution),
+    }
+    for key, value in replacements.items():
+        page = page.replace(key, value)
+    if not published:
+        page = page.replace('  <meta property="article:published_time" content="">\n', '')
+    page = page.replace('__CONTENT_HTML__', render_markdown(post.get('content_markdown', '')))
+    return page
 
 
 def update_blog_html(posts):
@@ -288,7 +533,7 @@ def update_blog_html(posts):
           </span>
         </div>
         <h2 class="font-bold text-slate-900 leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">{p.get('title', '')}</h2>
-        <p class="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">{p.get('summary', '')}</p>
+        <p class="text-sm text-slate-500 line-clamp-2 mb-3 leading-relaxed">{text(p.get('seo_description') or p.get('summary', ''))}</p>
         <div class="flex flex-wrap gap-1.5">
           <span class="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded">{p.get('tag', 'IoT')}</span>
           {roi_html}
@@ -380,7 +625,7 @@ def update_solutions_html(solutions):
               {s.get('title', '')}
             </h2>
             <p class="text-slate-600 text-sm mb-4 line-clamp-3 leading-relaxed">
-              {s.get('summary', '')}
+              {text(s.get('seo_description') or s.get('summary', ''))}
             </p>
             <div class="grid grid-cols-3 gap-2 mb-4">
               {roi_badges}
@@ -441,7 +686,7 @@ def update_index_html(posts, solutions, cases):
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2 leading-snug">
               <a href="solutions/{fileName}.html">{s.get('title', '')}</a>
             </h3>
-            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">{s.get('summary', '')}</p>
+            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">{text(s.get('seo_description') or s.get('summary', ''))}</p>
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
               <span class="text-xs text-slate-400 font-mono">{' · '.join((s.get('protocols') or [])[:2])}</span>
               <a href="solutions/{fileName}.html" class="text-brand-600 font-bold text-xs sm:text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
@@ -509,7 +754,7 @@ def update_index_html(posts, solutions, cases):
             </span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">{p.get('title', '')}</h3>
-          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{p.get('summary', '')}</p>
+          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">{text(p.get('seo_description') or p.get('summary', ''))}</p>
         </div>
       </a>''')
 
@@ -542,46 +787,58 @@ def clean_google_fonts_global():
             print(f"[Font Clean] {filename} 已彻底移除 Google Fonts 远程阻塞！")
 
 
+def load_json(path):
+    if not path.exists():
+        return []
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
 def main():
     # 0. 全局清除 Google Fonts
     clean_google_fonts_global()
 
-    # 1. 编译博文
-    posts_index_path = BASE_DIR / 'posts_index.json'
-    built_posts = 0
-    posts = []
-    if posts_index_path.exists():
-        with open(posts_index_path, 'r', encoding='utf-8') as f:
-            posts = json.load(f)
-        for post in posts:
-            out_path = POSTS_DIR / f"post_{post['id']}.html"
-            html = build_post_html(post, is_solution=False)
-            with open(out_path, 'w', encoding='utf-8') as f:
-                f.write(html)
-            built_posts += 1
-            print(f"[Build Post] {out_path.name} OK")
+    posts = load_json(BASE_DIR / 'posts_index.json')
+    solutions = load_json(BASE_DIR / 'solutions_index.json')
+    title_counts = Counter((item.get('title') or '').strip() for item in posts)
+    title_counts.update((item.get('title') or '').strip() for item in solutions)
+    seen_titles, seen_descs = set(), set()
 
-        # 同步静态预渲染 blog.html
+    built_posts = 0
+    for index, post in enumerate(posts):
+        out_path = POSTS_DIR / f"post_{post['id']}.html"
+        page = build_post_html(
+            post,
+            is_solution=False,
+            siblings=posts,
+            index=index,
+            title_counts=title_counts,
+            seen_titles=seen_titles,
+            seen_descs=seen_descs,
+        )
+        out_path.write_text(page, encoding='utf-8')
+        built_posts += 1
+        print(f"[Build Post] {out_path.name} OK")
+    if posts:
         update_blog_html(posts)
 
-    # 2. 编译解决方案
-    solutions_index_path = BASE_DIR / 'solutions_index.json'
     built_solutions = 0
-    solutions = []
-    if solutions_index_path.exists():
-        with open(solutions_index_path, 'r', encoding='utf-8') as f:
-            solutions = json.load(f)
-        for sol in solutions:
-            sol_id = sol['id']
-            sol_name = sol_id if sol_id.startswith('sol_') else f"sol_{sol_id}"
-            out_path = SOLUTIONS_DIR / f"{sol_name}.html"
-            html = build_post_html(sol, is_solution=True)
-            with open(out_path, 'w', encoding='utf-8') as f:
-                f.write(html)
-            built_solutions += 1
-            print(f"[Build Solution] {out_path.name} OK")
-
-        # 同步静态预渲染 solutions.html
+    for index, sol in enumerate(solutions):
+        sol_name = article_slug(sol, True)
+        out_path = SOLUTIONS_DIR / f'{sol_name}.html'
+        page = build_post_html(
+            sol,
+            is_solution=True,
+            siblings=solutions,
+            index=index,
+            title_counts=title_counts,
+            seen_titles=seen_titles,
+            seen_descs=seen_descs,
+        )
+        out_path.write_text(page, encoding='utf-8')
+        built_solutions += 1
+        print(f"[Build Solution] {out_path.name} OK")
+    if solutions:
         update_solutions_html(solutions)
 
     # 3. 编译首页静态预渲染 (将方案、案例、博文直接固化至 index.html)
@@ -594,13 +851,8 @@ def main():
 
     print(f"\n[Done] 编译完成: {built_posts} 篇博文，{built_solutions} 个解决方案落地页")
 
-    # 3. 同步刷新 sitemap.xml
-    try:
-        import generate_sitemap
-        generate_sitemap.main() if hasattr(generate_sitemap, 'main') else None
-    except Exception:
-        import sys
-        os.system(f'"{sys.executable}" "{BASE_DIR / "generate_sitemap.py"}"')
+    import generate_sitemap
+    generate_sitemap.main()
 
 
 if __name__ == '__main__':

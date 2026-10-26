@@ -1,45 +1,89 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-生成符合 Google / 百度搜索引擎规范的 sitemap.xml
+"""生成 sitemap.xml。
+
+线上 Vercel 未开启 cleanUrls：/blog、/solutions、/contact 返回 404，
+对应的 .html 地址返回 200。canonical 与 sitemap 因此保留 .html。
 """
 import json
-from pathlib import Path
+import re
 from datetime import datetime
+from pathlib import Path
+from xml.sax.saxutils import escape
 
 BASE_DIR = Path(__file__).parent
-today = datetime.now().strftime('%Y-%m-%d')
+ORIGIN = 'https://iot-showcase.hei-ai.com'
+DAY = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
-urls = [
-    ('https://iot-showcase.hei-ai.com/', '1.0', today),
-    ('https://iot-showcase.hei-ai.com/solutions.html', '0.9', today),
-    ('https://iot-showcase.hei-ai.com/blog.html', '0.8', today),
-    ('https://iot-showcase.hei-ai.com/contact.html', '0.8', today),
-]
 
-# 索引博文
-posts_file = BASE_DIR / 'posts_index.json'
-if posts_file.exists():
-    for p in json.load(open(posts_file, encoding='utf-8')):
-        pid = p['id']
-        date_str = p.get('date', today).split(' ')[0]
-        urls.append((f"https://iot-showcase.hei-ai.com/posts/post_{pid}.html", '0.7', date_str))
+def day_of(value, fallback):
+    raw = (value or '').strip().split(' ')[0]
+    return raw if DAY.fullmatch(raw) else fallback
 
-# 索引解决方案
-sols_file = BASE_DIR / 'solutions_index.json'
-if sols_file.exists():
-    for s in json.load(open(sols_file, encoding='utf-8')):
-        sid = s['id'] if s['id'].startswith('sol_') else f"sol_{s['id']}"
-        date_str = s.get('date', today).split(' ')[0]
-        urls.append((f"https://iot-showcase.hei-ai.com/solutions/{sid}.html", '0.85', date_str))
 
-xml_lines = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-]
-for loc, priority, lastmod in urls:
-    xml_lines.append(f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{lastmod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>{priority}</priority>\n  </url>")
-xml_lines.append('</urlset>')
+def add(urls, loc, priority, lastmod, changefreq):
+    urls.append((loc, priority, lastmod, changefreq))
 
-(BASE_DIR / 'sitemap.xml').write_text('\n'.join(xml_lines), encoding='utf-8')
-print(f"[SEO] sitemap.xml 生成完毕，全站共收录 {len(urls)} 个核心页面！")
+
+def main():
+    today = datetime.now().strftime('%Y-%m-%d')
+    urls = []
+    add(urls, f'{ORIGIN}/', '1.0', today, 'daily')
+    add(urls, f'{ORIGIN}/solutions.html', '0.9', today, 'daily')
+    add(urls, f'{ORIGIN}/blog.html', '0.8', today, 'daily')
+    add(urls, f'{ORIGIN}/contact.html', '0.8', today, 'monthly')
+
+    posts_file = BASE_DIR / 'posts_index.json'
+    if posts_file.exists():
+        for post in json.load(open(posts_file, encoding='utf-8')):
+            pid = post['id'] if str(post['id']).startswith('post_') else f"post_{post['id']}"
+            path = BASE_DIR / 'posts' / f'{pid}.html'
+            if not path.exists():
+                continue
+            add(
+                urls,
+                f'{ORIGIN}/posts/{pid}.html',
+                '0.7',
+                day_of(post.get('date'), today),
+                'weekly',
+            )
+
+    sols_file = BASE_DIR / 'solutions_index.json'
+    if sols_file.exists():
+        for sol in json.load(open(sols_file, encoding='utf-8')):
+            sid = sol['id'] if str(sol['id']).startswith('sol_') else f"sol_{sol['id']}"
+            path = BASE_DIR / 'solutions' / f'{sid}.html'
+            if not path.exists():
+                continue
+            add(
+                urls,
+                f'{ORIGIN}/solutions/{sid}.html',
+                '0.85',
+                day_of(sol.get('date'), today),
+                'weekly',
+            )
+
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    seen = set()
+    for loc, priority, lastmod, changefreq in urls:
+        if loc in seen:
+            continue
+        seen.add(loc)
+        lines.append(
+            '  <url>\n'
+            f'    <loc>{escape(loc)}</loc>\n'
+            f'    <lastmod>{escape(lastmod)}</lastmod>\n'
+            f'    <changefreq>{changefreq}</changefreq>\n'
+            f'    <priority>{priority}</priority>\n'
+            '  </url>'
+        )
+    lines.append('</urlset>\n')
+    (BASE_DIR / 'sitemap.xml').write_text('\n'.join(lines), encoding='utf-8')
+    print(f'[SEO] sitemap.xml 已生成，收录 {len(seen)} 个可访问 URL（保留 .html，cleanUrls 未开启）')
+
+
+if __name__ == '__main__':
+    main()

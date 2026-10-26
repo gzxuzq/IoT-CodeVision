@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 · 码视野IoT研发团队</title>
-  <meta name="description" content="面向智慧港口与物流垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持5G专网 · MQTT 5.0 · WebSocket等主流通信标准。">
-  <meta property="og:title" content="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80">
+  <title>现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 · 码视野</title>
+  <meta name="description" content="码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：">
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20260922192756.html">
   <meta property="og:type" content="article">
+  <meta property="og:site_name" content="码视野">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案">
+  <meta property="og:description" content="码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：">
+  <meta property="og:url" content="https://iot-showcase.hei-ai.com/solutions/sol_20260922192756.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&amp;q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案">
+  <meta name="twitter:description" content="码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&amp;q=80">
+  <meta property="article:published_time" content="2026-09-22T19:27:00+08:00">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
   <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
-  <link rel="canonical" href="https://iot-showcase.hei-ai.com/solutions/sol_20260922192756.html">
   <!-- 百度统计 -->
   <script>
   var _hmt = _hmt || [];
@@ -25,11 +34,10 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"TechArticle","headline":"现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案","image":"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-09-22 19:27","description":"面向智慧港口与物流垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持5G专网 · MQTT 5.0 · WebSocket等主流通信标准。"}
+  {"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案", "description": "码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：", "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80", "author": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/"}, "publisher": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/", "logo": {"@type": "ImageObject", "url": "https://iot-showcase.hei-ai.com/images/logo.png"}}, "mainEntityOfPage": "https://iot-showcase.hei-ai.com/solutions/sol_20260922192756.html", "inLanguage": "zh-CN", "datePublished": "2026-09-22T19:27:00+08:00"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://iot-showcase.hei-ai.com/"}, {"@type": "ListItem", "position": 2, "name": "行业解决方案", "item": "https://iot-showcase.hei-ai.com/solutions.html"}, {"@type": "ListItem", "position": 3, "name": "现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案", "item": "https://iot-showcase.hei-ai.com/solutions/sol_20260922192756.html"}]}]}
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
@@ -102,9 +110,14 @@
 </nav>
 <article class="pt-20 pb-16">
   <div class="w-full h-64 sm:h-80 overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80" alt="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案" class="w-full h-full object-cover">
+    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&amp;q=80" alt="现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案" class="w-full h-full object-cover">
   </div>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <nav class="text-sm text-slate-500 mb-4" aria-label="面包屑">
+      <a href="/" class="text-brand-600 hover:underline">首页</a>
+      <span class="mx-1" aria-hidden="true">/</span>
+      <a href="/solutions.html" class="text-brand-600 hover:underline">行业解决方案</a>
+    </nav>
     <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
       <a href="/solutions.html" class="text-brand-600 hover:underline">← 返回行业解决方案</a>
       <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">智慧港口与物流</span>
@@ -120,67 +133,56 @@
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 3 分钟</div><div class="text-brand-500 text-xs mt-0.5">故障定位时效</div></div>
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">缩短 30%+</div><div class="text-brand-500 text-xs mt-0.5">系统综合回报期</div></div>
     </div>
-    <div class="prose" id="content-body"></div>
-    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
-      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
-      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
-        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
-      </div>
-    </div>
-  </div>
-</article>
-<footer class="bg-slate-900 text-slate-500 py-8">
-  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
-    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
-  </div>
-</footer>
-<script>
-const mdContent = `
-
-# 现代化港口与大型电商立体仓无人AGV车队高并发通信与调度方案
-
-**交付单位：码视野研发团队**  
-**方案版本：V3.2.1**  
-**发布日期：2026年5月**  
-**保密级别：公开版**
-
----
-
-## 一、项目背景与核心痛点
-
-### 1.1 行业现状
-
-码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：
-
-| 瓶颈维度 | 具体表现 | 影响评估 |
-|---------|---------|---------|
-| **通信可靠性** | 5G基站切换时延>200ms导致AGV失控 | 安全事故率上升340% |
-| **调度并发** | 千台AGV级集群时，中心调度服务器CPU占用率>95% | 任务堆积，效率下降60% |
-| **异构融合** | 港口岸桥、堆场、电商分拣线设备协议孤岛 | 整体自动化率<45% |
-
-### 1.2 建设目标
-
-码视野研发团队为本方案设定以下量化目标：
-
-- **通信时延**：P99时延≤50ms，99.99%可用性
-- **调度容量**：单机架支持≥5000台AGV并发调度
-- **存活率**：AGV任务执行成功率≥99.95%
-- **ROI回收**：投资回收期≤18个月
-
----
-
-## 二、系统架构总体设计
-
-### 2.1 架构理念
-
-码视野研发团队采用**"边缘自治+云端协同"**的分层架构，将调度控制平面与数据传输平面解耦，确保极端场景下边缘节点仍可独立运行。
-
-### 2.2 分层架构说明
-
-\`\`\`
-┌─────────────────────────────────────────────────────────────────────┐
+    <div class="prose" id="content-body">
+<h2>现代化港口与大型电商立体仓无人AGV车队高并发通信与调度方案</h2>
+<p><strong>交付单位：码视野研发团队</strong><br>
+<strong>方案版本：V3.2.1</strong><br>
+<strong>发布日期：2026年5月</strong><br>
+<strong>保密级别：公开版</strong></p>
+<hr>
+<h2>一、项目背景与核心痛点</h2>
+<h3>1.1 行业现状</h3>
+<p>码视野研发团队在深入调研国内头部港口（宁波舟山港、上海洋山港、青岛港）与大型电商仓储（京东亚洲一号、菜鸟智能物流骨干网、顺丰大湾区枢纽）后发现，无人AGV车队规模化部署正面临三大瓶颈：</p>
+<table>
+<thead>
+<tr>
+<th>瓶颈维度</th>
+<th>具体表现</th>
+<th>影响评估</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通信可靠性</strong></td>
+<td>5G基站切换时延&gt;200ms导致AGV失控</td>
+<td>安全事故率上升340%</td>
+</tr>
+<tr>
+<td><strong>调度并发</strong></td>
+<td>千台AGV级集群时，中心调度服务器CPU占用率&gt;95%</td>
+<td>任务堆积，效率下降60%</td>
+</tr>
+<tr>
+<td><strong>异构融合</strong></td>
+<td>港口岸桥、堆场、电商分拣线设备协议孤岛</td>
+<td>整体自动化率&lt;45%</td>
+</tr>
+</tbody>
+</table>
+<h3>1.2 建设目标</h3>
+<p>码视野研发团队为本方案设定以下量化目标：</p>
+<ul>
+<li><strong>通信时延</strong>：P99时延≤50ms，99.99%可用性</li>
+<li><strong>调度容量</strong>：单机架支持≥5000台AGV并发调度</li>
+<li><strong>存活率</strong>：AGV任务执行成功率≥99.95%</li>
+<li><strong>ROI回收</strong>：投资回收期≤18个月</li>
+</ul>
+<hr>
+<h2>二、系统架构总体设计</h2>
+<h3>2.1 架构理念</h3>
+<p>码视野研发团队采用<strong>"边缘自治+云端协同"</strong>的分层架构，将调度控制平面与数据传输平面解耦，确保极端场景下边缘节点仍可独立运行。</p>
+<h3>2.2 分层架构说明</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
 │                        云端管理层（可选）                             │
 │    ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
 │    │ 大数据平台   │  │ 数字孪生     │  │ 运维监控     │             │
@@ -221,27 +223,54 @@ const mdContent = `
 │    │ (集装箱)     │  │ (复杂地形)   │  │ (柔性产线)   │             │
 │    └──────────────┘  └──────────────┘  └──────────────┘             │
 └─────────────────────────────────────────────────────────────────────┘
-\`\`\`
-
----
-
-## 三、通信协议栈设计
-
-### 3.1 多协议分层架构
-
-码视野研发团队设计了四层协议栈，针对不同场景优化：
-
-| 协议层 | 协议 | 用途 | 时延要求 | 可靠性等级 |
-|-------|------|------|---------|-----------|
-| L1 实时控制 | gRPC | AGV运动指令下发 | ≤10ms | 强一致 |
-| L2 状态上报 | MQTT 5.0 | 位置、电量、告警 | ≤100ms | 最终一致 |
-| L3 任务分发 | WebSocket | 调度任务推送 | ≤50ms | 有序可靠 |
-| L4 管理交互 | HTTP/2 + REST | 设备管理、配置下发 | ≤1s | 按需可靠 |
-
-### 3.2 MQTT 5.0 高级特性应用
-
-\`\`\`
-码视野研发团队针对港口高并发场景深度定制MQTT 5.0：
+</code></pre>
+<hr>
+<h2>三、通信协议栈设计</h2>
+<h3>3.1 多协议分层架构</h3>
+<p>码视野研发团队设计了四层协议栈，针对不同场景优化：</p>
+<table>
+<thead>
+<tr>
+<th>协议层</th>
+<th>协议</th>
+<th>用途</th>
+<th>时延要求</th>
+<th>可靠性等级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 实时控制</td>
+<td>gRPC</td>
+<td>AGV运动指令下发</td>
+<td>≤10ms</td>
+<td>强一致</td>
+</tr>
+<tr>
+<td>L2 状态上报</td>
+<td>MQTT 5.0</td>
+<td>位置、电量、告警</td>
+<td>≤100ms</td>
+<td>最终一致</td>
+</tr>
+<tr>
+<td>L3 任务分发</td>
+<td>WebSocket</td>
+<td>调度任务推送</td>
+<td>≤50ms</td>
+<td>有序可靠</td>
+</tr>
+<tr>
+<td>L4 管理交互</td>
+<td>HTTP/2 + REST</td>
+<td>设备管理、配置下发</td>
+<td>≤1s</td>
+<td>按需可靠</td>
+</tr>
+</tbody>
+</table>
+<h3>3.2 MQTT 5.0 高级特性应用</h3>
+<pre><code>码视野研发团队针对港口高并发场景深度定制MQTT 5.0：
 
 ┌────────────────────────────────────────────────────────────┐
 │                    MQTT Broker 集群架构                     │
@@ -267,23 +296,20 @@ const mdContent = `
 │   ├── QoS 1: 位置上报、任务确认（至少一次）                    │
 │   └── QoS 0: 心跳、日志（最多一次）                          │
 └────────────────────────────────────────────────────────────┘
-\`\`\`
-
-### 3.3 gRPC 流式控制设计
-
-\`\`\`protobuf
-// 码视野研发团队设计的AGV控制协议定义
-syntax = "proto3";
+</code></pre>
+<h3>3.3 gRPC 流式控制设计</h3>
+<pre><code class="language-protobuf">// 码视野研发团队设计的AGV控制协议定义
+syntax = &quot;proto3&quot;;
 
 package codersight.agv.v1;
 
 service AGVControlService {
   // 双向流式控制：下行指令 + 上行状态
   rpc StreamControl (stream ControlCommand) returns (stream Telemetry);
-  
+
   // 单向任务下发
   rpc DispatchTask (TaskRequest) returns (TaskAck);
-  
+
   // 紧急停止广播
   rpc EmergencyStop (EmergencyRequest) returns (EmergencyAck);
 }
@@ -309,85 +335,114 @@ message Telemetry {
   repeated string fault_codes = 5;   // 故障码列表
   int64 timestamp_ns = 6;
 }
-\`\`\`
-
----
-
-## 四、Mermaid 系统拓扑架构
-
-### 4.1 全链路通信架构图
-
-\`\`\`mermaid
+</code></pre>
+<hr>
+<h2>四、Mermaid 系统拓扑架构</h2>
+<h3>4.1 全链路通信架构图</h3>
+<p>```mermaid
 graph TB
     subgraph Cloud["☁️ 云端管理平台"]
         UI["Web监控大屏<br/>React + ECharts"]
         APIGW["API网关<br/>Kong集群"]
         TASKS["任务编排引擎<br/>自研调度器"]
         DIGTWIN["数字孪生引擎<br/>Unity WebGL"]
-    end
-    
-    subgraph Edge["🏭 边缘计算层 MEC"]
-        K8s["K3s集群 x N节点"]
-        MQTTB["MQTT Broker集群<br/>EMQX x 3"]
-        GRPCS["gRPC服务网格<br/>Istio"]
-        REDIS["Redis Cluster<br/>分区分片"]
-        DB[(本地时序库<br/>TDengine)]
-        
-        K8s --- MQTTB
-        K8s --- GRPCS
-        K8s --- REDIS
-        REDIS --- DB
-    end
-    
-    subgraph Network["📡 5G专网承载"]
-        UPF["UPF用户面功能<br/>下沉边缘"]
-        5G_RAN["5G RAN基站 x 8<br/>4.9GHz频段"]
-        WIFI6["WiFi-6 AP x 24<br/>2.4GHz冗余"]
-    end
-    
-    subgraph AGV["🚗 AGV车队"]
-        AGV1["潜伏式AGV<br/>载重500kg"]
-        AGV2["叉车AGV<br/>载重2000kg"]
-        AGV3["AMR复合机器人<br/>柔性载具"]
-        AGV4["激光SLAM AGV<br/>精度±5mm"]
-    end
-    
-    subgraph Equipment["🏗️ 港口/仓储设备"]
-        CRANE1["岸桥/门吊 x 4"]
-        STAC[k8s["自动导引车<br/>堆场水平运输"]
-        SORTER["自动分拣线 x 6"]
-        CONVEYOR["输送线网络"]
-    end
-    
-    %% 连接关系
-    UI -->|HTTPS/WSS| APIGW
-    APIGW -->|gRPC| TASKS
-    TASKS -->|WebSocket| DIGTWIN
-    
-    APIGW -->|gRPC| K8s
-    TASKS -->|MQTT| MQTTB
-    
-    K`;
+    end</p>
+<pre><code>subgraph Edge["🏭 边缘计算层 MEC"]
+    K8s["K3s集群 x N节点"]
+    MQTTB["MQTT Broker集群&lt;br/&gt;EMQX x 3"]
+    GRPCS["gRPC服务网格&lt;br/&gt;Istio"]
+    REDIS["Redis Cluster&lt;br/&gt;分区分片"]
+    DB[(本地时序库&lt;br/&gt;TDengine)]
+
+    K8s --- MQTTB
+    K8s --- GRPCS
+    K8s --- REDIS
+    REDIS --- DB
+end
+
+subgraph Network["📡 5G专网承载"]
+    UPF["UPF用户面功能&lt;br/&gt;下沉边缘"]
+    5G_RAN["5G RAN基站 x 8&lt;br/&gt;4.9GHz频段"]
+    WIFI6["WiFi-6 AP x 24&lt;br/&gt;2.4GHz冗余"]
+end
+
+subgraph AGV["🚗 AGV车队"]
+    AGV1["潜伏式AGV&lt;br/&gt;载重500kg"]
+    AGV2["叉车AGV&lt;br/&gt;载重2000kg"]
+    AGV3["AMR复合机器人&lt;br/&gt;柔性载具"]
+    AGV4["激光SLAM AGV&lt;br/&gt;精度±5mm"]
+end
+
+subgraph Equipment["🏗️ 港口/仓储设备"]
+    CRANE1["岸桥/门吊 x 4"]
+    STAC[k8s["自动导引车&lt;br/&gt;堆场水平运输"]
+    SORTER["自动分拣线 x 6"]
+    CONVEYOR["输送线网络"]
+end
+
+%% 连接关系
+UI --&gt;|HTTPS/WSS| APIGW
+APIGW --&gt;|gRPC| TASKS
+TASKS --&gt;|WebSocket| DIGTWIN
+
+APIGW --&gt;|gRPC| K8s
+TASKS --&gt;|MQTT| MQTTB
+
+K
+</code></pre>
+    </div>
+    <aside class="mt-10 border-t border-slate-200 pt-8" aria-label="相关阅读">
+      <h2 class="text-lg font-bold text-slate-900 mb-3">相关阅读</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-brand-700">
+        <li><a href="/solutions/sol_20261014123427.html">现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)</a></li>
+        <li><a href="/solutions/sol_20261008065825.html">现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)</a></li>
+        <li><a href="/solutions/sol_20260926022648.html">现代化港口与大型电商立体仓无人 AGV 车队高并发通信与调度方案 (升级迭代版)</a></li>
+      </ul>
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        <a class="text-brand-700 font-semibold hover:underline" href="/">首页</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/solutions.html">行业解决方案</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/blog.html">技术博文</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/contact.html">联系咨询</a>
+      </p>
+    </aside>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
 mermaid.initialize({startOnLoad:false,theme:'default'});
 async function render() {
   const container = document.getElementById('content-body');
-  const mermaidBlocks = [];
-  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
-    const id = 'mermaid-' + mermaidBlocks.length;
-    mermaidBlocks.push({id, code: code.trim()});
-    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  if (!container) return;
+  container.querySelectorAll('h1').forEach(h => {
+    const h2 = document.createElement('h2');
+    h2.innerHTML = h.innerHTML;
+    h.replaceWith(h2);
   });
-  container.innerHTML = marked.parse(processedMd);
-  for(const {id, code} of mermaidBlocks) {
-    const placeholder = container.querySelector(`[data-id="${id}"]`);
-    if(placeholder) {
-      const div = document.createElement('div');
-      div.className = 'mermaid';
-      div.textContent = code;
-      placeholder.replaceWith(div);
-    }
+  container.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = code.textContent;
+    const pre = code.closest('pre');
+    if (pre) pre.replaceWith(div);
+  });
+  if (container.querySelector('.mermaid')) {
+    await mermaid.run({querySelector:'#content-body .mermaid'});
   }
-  await mermaid.run();
 }
 render();
 

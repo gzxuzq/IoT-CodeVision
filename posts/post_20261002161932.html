@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇) · 码视野IoT研发团队</title>
-  <meta name="description" content="针对边缘存储在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。">
-  <meta property="og:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80">
+  <title>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-02 16:19） · 码视野</title>
+  <meta name="description" content="2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的&quot;纸上很丰满、现场很骨感&quot;问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%">
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261002161932.html">
   <meta property="og:type" content="article">
+  <meta property="og:site_name" content="码视野">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-02 16:19）">
+  <meta property="og:description" content="2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的&quot;纸上很丰满、现场很骨感&quot;问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%">
+  <meta property="og:url" content="https://iot-showcase.hei-ai.com/posts/post_20261002161932.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-02 16:19）">
+  <meta name="twitter:description" content="2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的&quot;纸上很丰满、现场很骨感&quot;问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80">
+  <meta property="article:published_time" content="2026-10-02T16:19:00+08:00">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
   <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
-  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261002161932.html">
   <!-- 百度统计 -->
   <script>
   var _hmt = _hmt || [];
@@ -25,11 +34,10 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"TechArticle","headline":"工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)","image":"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-02 16:19","description":"针对边缘存储在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。"}
+  {"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)", "description": "2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的\"纸上很丰满、现场很骨感\"问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%", "image": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", "author": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/"}, "publisher": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/", "logo": {"@type": "ImageObject", "url": "https://iot-showcase.hei-ai.com/images/logo.png"}}, "mainEntityOfPage": "https://iot-showcase.hei-ai.com/posts/post_20261002161932.html", "inLanguage": "zh-CN", "datePublished": "2026-10-02T16:19:00+08:00"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://iot-showcase.hei-ai.com/"}, {"@type": "ListItem", "position": 2, "name": "技术博文", "item": "https://iot-showcase.hei-ai.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)", "item": "https://iot-showcase.hei-ai.com/posts/post_20261002161932.html"}]}]}
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
@@ -102,11 +110,16 @@
 </nav>
 <article class="pt-20 pb-16">
   <div class="w-full h-64 sm:h-80 overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)" class="w-full h-full object-cover">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80" alt="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)" class="w-full h-full object-cover">
   </div>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <nav class="text-sm text-slate-500 mb-4" aria-label="面包屑">
+      <a href="/" class="text-brand-600 hover:underline">首页</a>
+      <span class="mx-1" aria-hidden="true">/</span>
+      <a href="/blog.html" class="text-brand-600 hover:underline">技术博文</a>
+    </nav>
     <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
-      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回技术博文</a>
       <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">项目经验复盘</span>
       <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">边缘存储</span>
       <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
@@ -119,147 +132,107 @@
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">99.99%</div><div class="text-brand-500 text-xs mt-0.5">消息可靠性</div></div>
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 50ms</div><div class="text-brand-500 text-xs mt-0.5">延迟</div></div>
     </div>
-    <div class="prose" id="content-body"></div>
-    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
-      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
-      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
-        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
-      </div>
-    </div>
-  </div>
-</article>
-<footer class="bg-slate-900 text-slate-500 py-8">
-  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
-    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
-  </div>
-</footer>
-<script>
-const mdContent = `
-
-# 工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？(深度实战篇)
-
-> **作者**：码视野物联网首席架构师 | **场景**：江苏某汽车零部件工厂 IoT 改造 | **字数**：约 3200 字
-
----
-
-## 一、工业现场真实硬件环境与底层痛点深度剖析
-
-2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的"纸上很丰满、现场很骨感"问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%。
-
-这 22% 的断连时间，意味着每分钟都可能有几十条关键设备状态数据丢失。MES 报表直接"缺胳膊少腿"，产线主管每天盯着满是空白格子的看板，运维团队来回扯皮——网络公司说是信号问题，我们的系统说数据没收到，PLC 那边说数据一直正常发出。
-
-### 1.1 工业现场四大底层痛点
-
-**① 报文时序失序与乱序重放**
-
-产线传感器通过 RS-485 总线轮询，PLC 响应延迟 50~200ms 不等。当网络恢复瞬间，网关缓冲区积压了数百条历史报文，若按到达顺序直传，会出现"2023-11-15 10:05:00"的数据排在"10:02:00"之前，MES 时序图出现诡异跳变。
-
-**② 串口反射（Serial Echo）干扰**
-
-我们遇到的真实案例：某品牌温湿度变送器在配置不当的情况下，发出一条读取指令后，设备不仅返回响应，还将原始命令以十六进制形式回发到网关输入流。网关若不做清洗过滤，同一份数据会被解析两遍，业务层产生重复计数。
-
-**③ RS-485 总线抖动与丢帧**
-
-485 总线为半双工模式，多设备挂接时存在地址冲突。实测中发现，当同一总线上 8 个传感器同时响应时，第 3、6 号传感器的回复帧会因总线电位差被前一级节点"吃掉"，表现为周期性丢帧。
-
-**④ 网络断连后的状态机混乱**
-
-传统方案中，网关在断网期间继续接收传感器数据，缓冲区满后直接丢弃。网络恢复后，网关重连 MQTT Broker 成功，但客户端会话状态丢失，服务器端认为这是新连接，不会补发未确认消息——**数据就这样悄无声息地消失了**。
-
-> **工程结论**：断网场景下，数据丢失的根本原因不是"存不下"，而是"不知道存了哪些、何时存的、该从哪条开始续传"。解决这个问题的核心，是一个具备持久化能力、支持断点回溯的边缘网关架构。
-
----
-
-## 二、码视野高可用边缘系统拓扑架构
-
-码视野基于上述痛点，设计了分层隔离 + 本地持久化的边缘网关架构。整体分为四层：**采集适配层 → 数据治理层 → 本地缓存层 → 同步上传层**，各层职责清晰，任意一层故障不影响整体数据完整性。
-
-\`\`\`mermaid
-flowchart TD
-    subgraph sensor["🏭 工业现场设备层"]
-        plc[["PLC\\nModbus TCP/RTU"]]
-        sen[["传感器\\nRS-485 / CANbus"]]
-        cnc[["CNC 机床\\nOPC UA"]]
+    <div class="prose" id="content-body">
+<h2>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？(深度实战篇)</h2>
+<blockquote>
+<p><strong>作者</strong>：码视野物联网首席架构师 | <strong>场景</strong>：江苏某汽车零部件工厂 IoT 改造 | <strong>字数</strong>：约 3200 字</p>
+</blockquote>
+<hr>
+<h2>一、工业现场真实硬件环境与底层痛点深度剖析</h2>
+<p>2023 年深秋，我们在江苏常州一家汽车零部件制造商的产线做 PLC 数据采集接入时，遇到了一个典型的"纸上很丰满、现场很骨感"问题：MES 系统要求 OEE（设备综合效率）数据分钟级上报，但产线所在厂房为钢筋混凝土结构，4G 路由器信号时好时坏，高峰期网络可用性仅为 78%。</p>
+<p>这 22% 的断连时间，意味着每分钟都可能有几十条关键设备状态数据丢失。MES 报表直接"缺胳膊少腿"，产线主管每天盯着满是空白格子的看板，运维团队来回扯皮——网络公司说是信号问题，我们的系统说数据没收到，PLC 那边说数据一直正常发出。</p>
+<h3>1.1 工业现场四大底层痛点</h3>
+<p><strong>① 报文时序失序与乱序重放</strong></p>
+<p>产线传感器通过 RS-485 总线轮询，PLC 响应延迟 50~200ms 不等。当网络恢复瞬间，网关缓冲区积压了数百条历史报文，若按到达顺序直传，会出现"2023-11-15 10:05:00"的数据排在"10:02:00"之前，MES 时序图出现诡异跳变。</p>
+<p><strong>② 串口反射（Serial Echo）干扰</strong></p>
+<p>我们遇到的真实案例：某品牌温湿度变送器在配置不当的情况下，发出一条读取指令后，设备不仅返回响应，还将原始命令以十六进制形式回发到网关输入流。网关若不做清洗过滤，同一份数据会被解析两遍，业务层产生重复计数。</p>
+<p><strong>③ RS-485 总线抖动与丢帧</strong></p>
+<p>485 总线为半双工模式，多设备挂接时存在地址冲突。实测中发现，当同一总线上 8 个传感器同时响应时，第 3、6 号传感器的回复帧会因总线电位差被前一级节点"吃掉"，表现为周期性丢帧。</p>
+<p><strong>④ 网络断连后的状态机混乱</strong></p>
+<p>传统方案中，网关在断网期间继续接收传感器数据，缓冲区满后直接丢弃。网络恢复后，网关重连 MQTT Broker 成功，但客户端会话状态丢失，服务器端认为这是新连接，不会补发未确认消息——<strong>数据就这样悄无声息地消失了</strong>。</p>
+<blockquote>
+<p><strong>工程结论</strong>：断网场景下，数据丢失的根本原因不是"存不下"，而是"不知道存了哪些、何时存的、该从哪条开始续传"。解决这个问题的核心，是一个具备持久化能力、支持断点回溯的边缘网关架构。</p>
+</blockquote>
+<hr>
+<h2>二、码视野高可用边缘系统拓扑架构</h2>
+<p>码视野基于上述痛点，设计了分层隔离 + 本地持久化的边缘网关架构。整体分为四层：<strong>采集适配层 → 数据治理层 → 本地缓存层 → 同步上传层</strong>，各层职责清晰，任意一层故障不影响整体数据完整性。</p>
+<div class="mermaid">flowchart TD
+    subgraph sensor[&quot;🏭 工业现场设备层&quot;]
+        plc[[&quot;PLC\nModbus TCP/RTU&quot;]]
+        sen[[&quot;传感器\nRS-485 / CANbus&quot;]]
+        cnc[[&quot;CNC 机床\nOPC UA&quot;]]
     end
 
-    subgraph gateway["🔲 码视野边缘网关（ARM Cortex-A53）"]
-        subgraph layer1["① 采集适配层"]
-            driver1[["Modbus 驱动\\n轮询调度器"]]
-            driver2[["串口自适应\\n波特率/校验位检测"]]
-            driver3[["OPC UA Client\\n订阅订阅"]]
+    subgraph gateway[&quot;🔲 码视野边缘网关（ARM Cortex-A53）&quot;]
+        subgraph layer1[&quot;① 采集适配层&quot;]
+            driver1[[&quot;Modbus 驱动\n轮询调度器&quot;]]
+            driver2[[&quot;串口自适应\n波特率/校验位检测&quot;]]
+            driver3[[&quot;OPC UA Client\n订阅订阅&quot;]]
         end
 
-        subgraph layer2["② 数据治理层"]
-            echo[["串口反射清洗\\n命令/响应匹配"]]
-            sort[["时序排序\\n基于设备本地时钟戳"]]
-            dedup[["去重引擎\\n基于消息 Hash+窗口去重"]]
+        subgraph layer2[&quot;② 数据治理层&quot;]
+            echo[[&quot;串口反射清洗\n命令/响应匹配&quot;]]
+            sort[[&quot;时序排序\n基于设备本地时钟戳&quot;]]
+            dedup[[&quot;去重引擎\n基于消息 Hash+窗口去重&quot;]]
         end
 
-        subgraph layer3["③ 本地缓存层 SQLite"]
-            cache[["本地 WAL 模式数据库\\n\\\\n表: edge_telemetry\\n字段: device_id, ts, payload, seq_no, status\\n索引: idx_status_ts\\n\\\\n事务批量写入 500ms/次\\nCheckpoint 策略: 每 1000 条"]]]
+        subgraph layer3[&quot;③ 本地缓存层 SQLite&quot;]
+            cache[[&quot;本地 WAL 模式数据库\n\\n表: edge_telemetry\n字段: device_id, ts, payload, seq_no, status\n索引: idx_status_ts\n\\n事务批量写入 500ms/次\nCheckpoint 策略: 每 1000 条&quot;]]]
         end
 
-        subgraph layer4["④ 同步上传层"]
-            monitor[["网络状态监听器\\nping + DNS + 网关心跳\\n判定周期 5s"]]
-            batch[["断点续传管理器\\n计算待上传区间\\n生成补传清单"]]
-            upload[["MQTT Publisher\\nQoS=1 + 服务端确认\\n断网继续重试"]]
+        subgraph layer4[&quot;④ 同步上传层&quot;]
+            monitor[[&quot;网络状态监听器\nping + DNS + 网关心跳\n判定周期 5s&quot;]]
+            batch[[&quot;断点续传管理器\n计算待上传区间\n生成补传清单&quot;]]
+            upload[[&quot;MQTT Publisher\nQoS=1 + 服务端确认\n断网继续重试&quot;]]
         end
     end
 
-    subgraph cloud["☁️ 云边协同平台"]
-        rule[["流数据处理\\nFlink CEP 规则引擎"]]
-        db[["时序数据库\\nIoTDB / InfluxDB"]]
-        app[["MES / SCADA / 可视化"]]
+    subgraph cloud[&quot;☁️ 云边协同平台&quot;]
+        rule[[&quot;流数据处理\nFlink CEP 规则引擎&quot;]]
+        db[[&quot;时序数据库\nIoTDB / InfluxDB&quot;]]
+        app[[&quot;MES / SCADA / 可视化&quot;]]
     end
 
-    sensor -->|"Modbus/485/CAN"| layer1
-    layer1 --> layer2
-    layer2 -->|"结构化 JSON + 毫秒级时间戳"| layer3
-    layer3 -->|"状态: PENDING / SYNCED"| layer4
-    monitor -->|"网络可达?\\nYES/NO"| batch
-    batch -->|"生成补传任务"| upload
-    upload -->|"MQTT QoS1"| cloud
-    cloud -->|"确认回执"| upload
-    upload -->|"更新 status=SYNCED"| layer3
-\`\`\`
-
-**架构设计三原则：**
-
-1. **采集与缓存解耦**：传感器数据先落库，再异步上传，上传链路故障不影响采集链路。
-2. **状态可追溯**：每条数据带 \`seq_no\`（单调递增序列号），断网恢复后可精确计算缺失区间，避免全量重传。
-3. **SQLite WAL 模式**：Write-Ahead Logging 模式保证并发读写不阻塞，边写边读，上传线程不会被写入锁卡死。
-
----
-
-## 三、工业级生产环境完整实现代码示例
-
-以下代码为码视野边缘网关核心模块的真实实现（Go 语言），涵盖数据采集、SQLite 本地持久化、断网检测、重传逻辑四个关键环节。
-
-### 3.1 核心数据结构与 SQLite 初始化
-
-\`\`\`go
-package edgegateway
+    sensor --&gt;|&quot;Modbus/485/CAN&quot;| layer1
+    layer1 --&gt; layer2
+    layer2 --&gt;|&quot;结构化 JSON + 毫秒级时间戳&quot;| layer3
+    layer3 --&gt;|&quot;状态: PENDING / SYNCED&quot;| layer4
+    monitor --&gt;|&quot;网络可达?\nYES/NO&quot;| batch
+    batch --&gt;|&quot;生成补传任务&quot;| upload
+    upload --&gt;|&quot;MQTT QoS1&quot;| cloud
+    cloud --&gt;|&quot;确认回执&quot;| upload
+    upload --&gt;|&quot;更新 status=SYNCED&quot;| layer3
+</div>
+<p><strong>架构设计三原则：</strong></p>
+<ol>
+<li><strong>采集与缓存解耦</strong>：传感器数据先落库，再异步上传，上传链路故障不影响采集链路。</li>
+<li><strong>状态可追溯</strong>：每条数据带 <code>seq_no</code>（单调递增序列号），断网恢复后可精确计算缺失区间，避免全量重传。</li>
+<li><strong>SQLite WAL 模式</strong>：Write-Ahead Logging 模式保证并发读写不阻塞，边写边读，上传线程不会被写入锁卡死。</li>
+</ol>
+<hr>
+<h2>三、工业级生产环境完整实现代码示例</h2>
+<p>以下代码为码视野边缘网关核心模块的真实实现（Go 语言），涵盖数据采集、SQLite 本地持久化、断网检测、重传逻辑四个关键环节。</p>
+<h3>3.1 核心数据结构与 SQLite 初始化</h3>
+<pre><code class="language-go">package edgegateway
 
 import (
-    "database/sql"
-    "encoding/json"
-    "fmt"
-    "log"
-    "os"
-    "time"
+    &quot;database/sql&quot;
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;os&quot;
+    &quot;time&quot;
 
-    _ "github.com/mattn/go-sqlite3" // CGo 编译，支持 WAL 模式
+    _ &quot;github.com/mattn/go-sqlite3&quot; // CGo 编译，支持 WAL 模式
 )
 
 // TelemetryPoint 时序数据标准结构
 type TelemetryPoint struct {
-    DeviceID string    \`json:"device_id"\`
-    TS       time.Time \`json:"ts"\`
-    Payload  string    \`json:"payload"\` // 原始遥测数据 JSON 字符串
-    SeqNo    int64     \`json:"seq_no"\`  // 单调递增序列号，用于断点续传
-    Status   int       \`json:"status"\`  // 0=PENDING, 1=SYNCED
+    DeviceID string    `json:&quot;device_id&quot;`
+    TS       time.Time `json:&quot;ts&quot;`
+    Payload  string    `json:&quot;payload&quot;` // 原始遥测数据 JSON 字符串
+    SeqNo    int64     `json:&quot;seq_no&quot;`  // 单调递增序列号，用于断点续传
+    Status   int       `json:&quot;status&quot;`  // 0=PENDING, 1=SYNCED
 }
 
 // SQLiteStore 本地持久化存储引擎（WAL 模式）
@@ -272,9 +245,9 @@ type SQLiteStore struct {
 func NewSQLiteStore(dbPath string) (*SQLiteStore, error) {
     // WAL 模式关键配置：PRAGMA journal_mode=WAL
     // 优势：读写不互斥，上传线程可并发读取，写入性能提升 3-5 倍
-    sqlDB, err := sql.Open("sqlite3", dbPath+"?_journal_mode=WAL&_synchronous=N&_cache_size=-64000")
+    sqlDB, err := sql.Open(&quot;sqlite3&quot;, dbPath+&quot;?_journal_mode=WAL&amp;_synchronous=N&amp;_cache_size=-64000&quot;)
     if err != nil {
-        return nil, fmt.Errorf("打开本地数据库失败: %w", err)
+        return nil, fmt.Errorf(&quot;打开本地数据库失败: %w&quot;, err)
     }
 
     // 连接池配置：边缘网关并发不高，但需避免频繁建连
@@ -283,7 +256,7 @@ func NewSQLiteStore(dbPath string) (*SQLiteStore, error) {
     sqlDB.SetConnMaxLifetime(30 * time.Minute)
 
     // 创建时序数据表
-    createSQL := \`
+    createSQL := `
     CREATE TABLE IF NOT EXISTS edge_telemetry (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         device_id   TEXT NOT NULL,
@@ -293,24 +266,24 @@ func NewSQLiteStore(dbPath string) (*SQLiteStore, error) {
         status      INTEGER DEFAULT 0,         -- 0: 待上传, 1: 已同步
         created_at  INTEGER DEFAULT (strftime('%s','now')*1000)
     );
-    
+
     -- 核心索引：按状态+时间戳快速定位待上传数据区间
     CREATE INDEX IF NOT EXISTS idx_status_ts 
         ON edge_telemetry (status, ts);
-    
+
     -- 设备维度索引：用于去重检查
     CREATE INDEX IF NOT EXISTS idx_device_seq 
         ON edge_telemetry (device_id, seq_no);
-    \`
+    `
     if _, err := sqlDB.Exec(createSQL); err != nil {
-        return nil, fmt.Errorf("建表失败: %w", err)
+        return nil, fmt.Errorf(&quot;建表失败: %w&quot;, err)
     }
 
-    store := &SQLiteStore{db: sqlDB}
-    
+    store := &amp;SQLiteStore{db: sqlDB}
+
     // 进程重启时恢复全局序列号，保证单调性
     if err := store.recoverSeqNo(); err != nil {
-        log.Printf("⚠️ 序列号恢复失败，从 1 开始: %v", err)
+        log.Printf(&quot;⚠️ 序列号恢复失败，从 1 开始: %v&quot;, err)
         store.seq = 1
     }
 
@@ -320,7 +293,7 @@ func NewSQLiteStore(dbPath string) (*SQLiteStore, error) {
 // recoverSeqNo 从数据库恢复最后一条记录的序列号
 func (s *SQLiteStore) recoverSeqNo() error {
     var maxSeq sql.NullInt64
-    err := s.db.QueryRow("SELECT MAX(seq_no) FROM edge_telemetry").Scan(&maxSeq)
+    err := s.db.QueryRow(&quot;SELECT MAX(seq_no) FROM edge_telemetry&quot;).Scan(&amp;maxSeq)
     if err != nil {
         return err
     }
@@ -329,12 +302,9 @@ func (s *SQLiteStore) recoverSeqNo() error {
     }
     return nil
 }
-\`\`\`
-
-### 3.2 数据采集与本地落库（含串口反射清洗逻辑）
-
-\`\`\`go
-// StoreTelemetry 将单条时序数据持久化到本地 SQLite
+</code></pre>
+<h3>3.2 数据采集与本地落库（含串口反射清洗逻辑）</h3>
+<pre><code class="language-go">// StoreTelemetry 将单条时序数据持久化到本地 SQLite
 // 采用事务批量提交策略，降低磁盘 IO 频次
 func (s *SQLiteStore) StoreTelemetry(deviceID, payload string, tsMs int64) error {
     s.seq++
@@ -343,17 +313,17 @@ func (s *SQLiteStore) StoreTelemetry(deviceID, payload string, tsMs int64) error
     // 使用事务，500ms 内多条数据批量提交，显著提升写入吞吐
     txn, err := s.db.Begin()
     if err != nil {
-        return fmt.Errorf("开启事务失败: %w", err)
+        return fmt.Errorf(&quot;开启事务失败: %w&quot;, err)
     }
     defer txn.Rollback() // 异常时回滚，保证数据一致性
 
-    insertSQL := \`
+    insertSQL := `
         INSERT INTO edge_telemetry (device_id, ts, payload, seq_no, status)
         VALUES (?, ?, ?, ?, 0)
-    \`
+    `
     _, err = txn.Exec(insertSQL, deviceID, tsMs, payload, seq)
     if err != nil {
-        return fmt.Errorf("插入数据失败: %w", err)
+        return fmt.Errorf(&quot;插入数据失败: %w&quot;, err)
     }
 
     // ⚠️ 关键：不立即 COMMIT，由上层定时批量提交，减少 fsync 频次
@@ -374,10 +344,10 @@ func (s *SQLiteStore) BatchStoreTelemetry(points []TelemetryPoint) error {
     }
     defer txn.Rollback()
 
-    stmt, err := txn.Prepare(\`
+    stmt, err := txn.Prepare(`
         INSERT INTO edge_telemetry (device_id, ts, payload, seq_no, status)
         VALUES (?, ?, ?, ?, 0)
-    \`)
+    `)
     if err != nil {
         return err
     }
@@ -387,7 +357,7 @@ func (s *SQLiteStore) BatchStoreTelemetry(points []TelemetryPoint) error {
         s.seq++
         _, err = stmt.Exec(p.DeviceID, p.TS.UnixMilli(), p.Payload, s.seq)
         if err != nil {
-            return fmt.Errorf("批量插入第 %d 条失败: %w", len(points), err)
+            return fmt.Errorf(&quot;批量插入第 %d 条失败: %w&quot;, len(points), err)
         }
     }
 
@@ -396,13 +366,13 @@ func (s *SQLiteStore) BatchStoreTelemetry(points []TelemetryPoint) error {
 
 // GetPendingData 获取待上传数据，按时间戳升序，用于断点续传
 func (s *SQLiteStore) GetPendingData(limit int) ([]TelemetryPoint, error) {
-    rows, err := s.db.Query(\`
+    rows, err := s.db.Query(`
         SELECT device_id, ts, payload, seq_no 
         FROM edge_telemetry 
         WHERE status = 0 
         ORDER BY ts ASC 
         LIMIT ?
-    \`, limit)
+    `, limit)
     if err != nil {
         return nil, err
     }
@@ -412,7 +382,7 @@ func (s *SQLiteStore) GetPendingData(limit int) ([]TelemetryPoint, error) {
     for rows.Next() {
         var p TelemetryPoint
         var tsMs int64
-        if err := rows.Scan(&p.DeviceID, &tsMs, &p.Payload, &p.SeqNo); err != nil {
+        if err := rows.Scan(&amp;p.DeviceID, &amp;tsMs, &amp;p.Payload, &amp;p.SeqNo); err != nil {
             return nil, err
         }
         p.TS = time.UnixMilli(tsMs)
@@ -424,7 +394,7 @@ func (s *SQLiteStore) GetPendingData(limit int) ([]TelemetryPoint, error) {
 // MarkAsSynced 更新数据状态为已同步（MQTT QoS1 收到 PUBACK 后调用）
 func (s *SQLiteStore) MarkAsSynced(seqNo int64) error {
     _, err := s.db.Exec(
-        "UPDATE edge_telemetry SET status = 1 WHERE seq_no = ?",
+        &quot;UPDATE edge_telemetry SET status = 1 WHERE seq_no = ?&quot;,
         seqNo,
     )
     return err
@@ -433,55 +403,83 @@ func (s *SQLiteStore) MarkAsSynced(seqNo int64) error {
 // MarkRangeAsSynced 批量标记已同步（网络恢复后一次性更新整段区间）
 func (s *SQLiteStore) MarkRangeAsSynced(fromSeq, toSeq int64) error {
     _, err := s.db.Exec(
-        "UPDATE edge_telemetry SET status = 1 WHERE seq_no >= ? AND seq_no <= ?",
+        &quot;UPDATE edge_telemetry SET status = 1 WHERE seq_no &gt;= ? AND seq_no &lt;= ?&quot;,
         fromSeq, toSeq,
     )
     return err
 }
-\`\`\`
-
-### 3.3 断网检测与智能重传机制
-
-\`\`\`go
-package syncengine
-
-import (
+</code></pre>
+<h3>3.3 断网检测与智能重传机制</h3>
+<p>```go
+package syncengine</p>
+<p>import (
     "context"
     "encoding/json"
     "fmt"
     "log"
     "net"
     "sync"
-    "time"
-
-    "github.com/eclipse/paho.mqtt.go/v2 as mqtt"
-    "github.com/sapiensai/edge-gateway/storage"
-)
-
-// SyncEngine 断网续传引擎，协调本地缓存与云端同步
+    "time"</p>
+<pre><code>"github.com/eclipse/paho.mqtt.go/v2 as mqtt"
+"github.com/sapiensai/edge-gateway/storage"
+</code></pre>
+<p>)</p>
+<p>// SyncEngine 断网续传引擎，协调本地缓存与云端同步
 type SyncEngine struct {
-    store      *storage.SQLiteStore
-   `;
+    store      *storage.SQLiteStore</p>
+    </div>
+    <aside class="mt-10 border-t border-slate-200 pt-8" aria-label="相关阅读">
+      <h2 class="text-lg font-bold text-slate-900 mb-3">相关阅读</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-brand-700">
+        <li><a href="/posts/post_20261024215520.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+        <li><a href="/posts/post_20261024172321.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+        <li><a href="/posts/post_20261023175342.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+      </ul>
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        <a class="text-brand-700 font-semibold hover:underline" href="/">首页</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/solutions.html">行业解决方案</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/blog.html">技术博文</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/contact.html">联系咨询</a>
+      </p>
+    </aside>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
 mermaid.initialize({startOnLoad:false,theme:'default'});
 async function render() {
   const container = document.getElementById('content-body');
-  const mermaidBlocks = [];
-  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
-    const id = 'mermaid-' + mermaidBlocks.length;
-    mermaidBlocks.push({id, code: code.trim()});
-    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  if (!container) return;
+  container.querySelectorAll('h1').forEach(h => {
+    const h2 = document.createElement('h2');
+    h2.innerHTML = h.innerHTML;
+    h.replaceWith(h2);
   });
-  container.innerHTML = marked.parse(processedMd);
-  for(const {id, code} of mermaidBlocks) {
-    const placeholder = container.querySelector(`[data-id="${id}"]`);
-    if(placeholder) {
-      const div = document.createElement('div');
-      div.className = 'mermaid';
-      div.textContent = code;
-      placeholder.replaceWith(div);
-    }
+  container.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = code.textContent;
+    const pre = code.closest('pre');
+    if (pre) pre.replaceWith(div);
+  });
+  if (container.querySelector('.mermaid')) {
+    await mermaid.run({querySelector:'#content-body .mermaid'});
   }
-  await mermaid.run();
 }
 render();
 

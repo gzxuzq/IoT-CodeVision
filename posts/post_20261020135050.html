@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇) · 码视野IoT研发团队</title>
-  <meta name="description" content="针对边缘存储在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。">
-  <meta property="og:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80">
+  <title>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-20 13:50） · 码视野</title>
+  <meta name="description" content="在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：">
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261020135050.html">
   <meta property="og:type" content="article">
+  <meta property="og:site_name" content="码视野">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-20 13:50）">
+  <meta property="og:description" content="在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：">
+  <meta property="og:url" content="https://iot-showcase.hei-ai.com/posts/post_20261020135050.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)（2026-10-20 13:50）">
+  <meta name="twitter:description" content="在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80">
+  <meta property="article:published_time" content="2026-10-20T13:50:00+08:00">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
   <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
-  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261020135050.html">
   <!-- 百度统计 -->
   <script>
   var _hmt = _hmt || [];
@@ -25,11 +34,10 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"TechArticle","headline":"工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)","image":"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-20 13:50","description":"针对边缘存储在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。"}
+  {"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)", "description": "在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：", "image": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80", "author": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/"}, "publisher": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/", "logo": {"@type": "ImageObject", "url": "https://iot-showcase.hei-ai.com/images/logo.png"}}, "mainEntityOfPage": "https://iot-showcase.hei-ai.com/posts/post_20261020135050.html", "inLanguage": "zh-CN", "datePublished": "2026-10-20T13:50:00+08:00"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://iot-showcase.hei-ai.com/"}, {"@type": "ListItem", "position": 2, "name": "技术博文", "item": "https://iot-showcase.hei-ai.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)", "item": "https://iot-showcase.hei-ai.com/posts/post_20261020135050.html"}]}]}
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
@@ -102,11 +110,16 @@
 </nav>
 <article class="pt-20 pb-16">
   <div class="w-full h-64 sm:h-80 overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)" class="w-full h-full object-cover">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&amp;q=80" alt="工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)" class="w-full h-full object-cover">
   </div>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <nav class="text-sm text-slate-500 mb-4" aria-label="面包屑">
+      <a href="/" class="text-brand-600 hover:underline">首页</a>
+      <span class="mx-1" aria-hidden="true">/</span>
+      <a href="/blog.html" class="text-brand-600 hover:underline">技术博文</a>
+    </nav>
     <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
-      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回技术博文</a>
       <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">项目经验复盘</span>
       <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">边缘存储</span>
       <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
@@ -119,156 +132,128 @@
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">99.99%</div><div class="text-brand-500 text-xs mt-0.5">消息可靠性</div></div>
       <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 50ms</div><div class="text-brand-500 text-xs mt-0.5">延迟</div></div>
     </div>
-    <div class="prose" id="content-body"></div>
-    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
-      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
-      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
-        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
-      </div>
-    </div>
-  </div>
-</article>
-<footer class="bg-slate-900 text-slate-500 py-8">
-  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
-    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
-  </div>
-</footer>
-<script>
-const mdContent = `
-
-# 工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？(深度实战篇)
-
-**作者：码视野物联网软件研发团队 · 首席架构师**
-
-> 6年深耕工业IoT与边缘计算，亲历过上海某汽车主机厂PLC点位从5%丢包到0%的完整改造链路。本文无套路，只讲产线真刀真枪踩过的坑与解法。
-
----
-
-## 一、工业现场真实硬件环境与底层痛点深度剖析
-
-### 1.1 产线通信链路的"脏乱差"现实
-
-在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：
-
-\`\`\`
-SMT贴片机 → RS485多节点总线 → 工业串口服务器 → 边缘网关 → 4G/有线双链路 → 云平台
-\`\`\`
-
-每一段都存在独立的故障模式，组合起来就是典型的"复合失效率"问题。
-
-### 1.2 四大底层痛点逐一拆解
-
-#### （1）RS485总线时序抖动与从站响应漂移
-
-485总线采用半双工模式，主站轮询从站时存在固定的"请求-响应"窗口。当节点数超过16个或总线长度超过300米时，信号反射会导致有效数据窗口收窄。实际测量中，某厂PLC的Modbus RTU响应时间从标称的20ms波动到120ms，网关侧若采用固定超时（如50ms）判定失败，误判率高达34%。
-
-更隐蔽的是**空闲时间片（T3.5）**：协议规范要求帧间静默至少3.5个字符时间。但在低速波特率（9600bps）下，该间隔长达3.7ms；若从站固件在处理耗时较长时未能严格维持该间隔，主站会错误地将一条长帧识别为两条短帧，产生"粘包"或"半帧"现象。我们的网关通过动态测量帧间隔分布并自适应设置保护时间，将误判率从12%降至0.3%。
-
-#### （2）串口反射与电平转换噪声
-
-USB转RS232/485芯片（如FT232、CH340）在长距离传输时存在地电位差问题。某案例中，网关与PLC共地不良导致差分信号共模电压偏移至4V，接收端SNR（信噪比）下降6dB，CRC校验错误率在高峰生产时段飙升至8%。解决方案包括：采用隔离型串口服务器、在软件层增加三重CRC校验+重传机制、以及对异常帧进行特征匹配恢复而非直接丢弃。
-
-#### （3）网络链路切换的"空窗期"
-
-工业现场网络环境极不稳定。4G信号在金属厂房内衰减严重，有线网络又因工程维护频繁插拔而断连。实测数据显示，某厂网关在30天内发生17次网络中断，平均持续14分钟，最长一次达47分钟（主干光纤被挖掘机挖断）。每次断网期间，若网关无本地缓存能力，整段采集数据将永久丢失，直接影响MES报工准确性和OEE统计。
-
-传统方案在断网时直接丢弃数据，恢复后补传时又因时间戳错位导致时序混乱。我们的方案是：**断网即落盘，联网即排序续传**。
-
-### 1.3 痛点根因总结
-
-| 痛点 | 根因 | 传统应对 | 我们的思路 |
-|------|------|----------|------------|
-| 总线抖动 | 半双工+信号反射 | 加大超时 | 自适应时序建模 |
-| 串口反射 | 地电位差+共模噪声 | 更换线缆 | 隔离+容错解析 |
-| 网络断连 | 无线衰减+人为故障 | 丢弃数据 | 本地持久化+排队续传 |
-
----
-
-## 二、码视野高可用边缘系统拓扑架构
-
-### 2.1 整体架构设计原则
-
-我们的边缘网关架构遵循 **"采集可靠、存储本地优先、传输尽力而为"** 的设计哲学。核心思想是：无论上层网络如何波动，数据采集层与存储层保持独立运转，应用层仅在网络就绪时进行补偿性同步。
-
-### 2.2 系统拓扑流程图
-
-\`\`\`mermaid
-flowchart TB
-    subgraph 现场层["🏭 现场设备层"]
+    <div class="prose" id="content-body">
+<h2>工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？(深度实战篇)</h2>
+<p><strong>作者：码视野物联网软件研发团队 · 首席架构师</strong></p>
+<blockquote>
+<p>6年深耕工业IoT与边缘计算，亲历过上海某汽车主机厂PLC点位从5%丢包到0%的完整改造链路。本文无套路，只讲产线真刀真枪踩过的坑与解法。</p>
+</blockquote>
+<hr>
+<h2>一、工业现场真实硬件环境与底层痛点深度剖析</h2>
+<h3>1.1 产线通信链路的"脏乱差"现实</h3>
+<p>在车间一线，边缘网关面对的不是干净的实验室环境，而是一台在振动、温度波动、EMI干扰下连续运行数万小时的设备。以我们服务的长三角某3C电子组装厂为例，其MES采集链路如下：</p>
+<pre><code>SMT贴片机 → RS485多节点总线 → 工业串口服务器 → 边缘网关 → 4G/有线双链路 → 云平台
+</code></pre>
+<p>每一段都存在独立的故障模式，组合起来就是典型的"复合失效率"问题。</p>
+<h3>1.2 四大底层痛点逐一拆解</h3>
+<h4>（1）RS485总线时序抖动与从站响应漂移</h4>
+<p>485总线采用半双工模式，主站轮询从站时存在固定的"请求-响应"窗口。当节点数超过16个或总线长度超过300米时，信号反射会导致有效数据窗口收窄。实际测量中，某厂PLC的Modbus RTU响应时间从标称的20ms波动到120ms，网关侧若采用固定超时（如50ms）判定失败，误判率高达34%。</p>
+<p>更隐蔽的是<strong>空闲时间片（T3.5）</strong>：协议规范要求帧间静默至少3.5个字符时间。但在低速波特率（9600bps）下，该间隔长达3.7ms；若从站固件在处理耗时较长时未能严格维持该间隔，主站会错误地将一条长帧识别为两条短帧，产生"粘包"或"半帧"现象。我们的网关通过动态测量帧间隔分布并自适应设置保护时间，将误判率从12%降至0.3%。</p>
+<h4>（2）串口反射与电平转换噪声</h4>
+<p>USB转RS232/485芯片（如FT232、CH340）在长距离传输时存在地电位差问题。某案例中，网关与PLC共地不良导致差分信号共模电压偏移至4V，接收端SNR（信噪比）下降6dB，CRC校验错误率在高峰生产时段飙升至8%。解决方案包括：采用隔离型串口服务器、在软件层增加三重CRC校验+重传机制、以及对异常帧进行特征匹配恢复而非直接丢弃。</p>
+<h4>（3）网络链路切换的"空窗期"</h4>
+<p>工业现场网络环境极不稳定。4G信号在金属厂房内衰减严重，有线网络又因工程维护频繁插拔而断连。实测数据显示，某厂网关在30天内发生17次网络中断，平均持续14分钟，最长一次达47分钟（主干光纤被挖掘机挖断）。每次断网期间，若网关无本地缓存能力，整段采集数据将永久丢失，直接影响MES报工准确性和OEE统计。</p>
+<p>传统方案在断网时直接丢弃数据，恢复后补传时又因时间戳错位导致时序混乱。我们的方案是：<strong>断网即落盘，联网即排序续传</strong>。</p>
+<h3>1.3 痛点根因总结</h3>
+<table>
+<thead>
+<tr>
+<th>痛点</th>
+<th>根因</th>
+<th>传统应对</th>
+<th>我们的思路</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总线抖动</td>
+<td>半双工+信号反射</td>
+<td>加大超时</td>
+<td>自适应时序建模</td>
+</tr>
+<tr>
+<td>串口反射</td>
+<td>地电位差+共模噪声</td>
+<td>更换线缆</td>
+<td>隔离+容错解析</td>
+</tr>
+<tr>
+<td>网络断连</td>
+<td>无线衰减+人为故障</td>
+<td>丢弃数据</td>
+<td>本地持久化+排队续传</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>二、码视野高可用边缘系统拓扑架构</h2>
+<h3>2.1 整体架构设计原则</h3>
+<p>我们的边缘网关架构遵循 <strong>"采集可靠、存储本地优先、传输尽力而为"</strong> 的设计哲学。核心思想是：无论上层网络如何波动，数据采集层与存储层保持独立运转，应用层仅在网络就绪时进行补偿性同步。</p>
+<h3>2.2 系统拓扑流程图</h3>
+<div class="mermaid">flowchart TB
+    subgraph 现场层[&quot;🏭 现场设备层&quot;]
         PLC1[PLC / CNC / 仪表]
         PLC2[PLC / 传感器组]
         PLC3[第三方设备]
     end
 
-    subgraph 采集层["⚡ 边缘采集层"]
-        SerialDriver[多协议串口驱动\\nModbus RTU / CJ/T188 / DL/T645]
-        NetClient[网络协议客户端\\nOPC UA / MQTT / HTTP]
-        Parser[智能报文解析引擎\\n自动分帧 + CRC校验 + 重同步]
+    subgraph 采集层[&quot;⚡ 边缘采集层&quot;]
+        SerialDriver[多协议串口驱动\nModbus RTU / CJ/T188 / DL/T645]
+        NetClient[网络协议客户端\nOPC UA / MQTT / HTTP]
+        Parser[智能报文解析引擎\n自动分帧 + CRC校验 + 重同步]
     end
 
-    subgraph 边缘核心["🔧 码视野边缘核心"]
-        TSDB[(SQLite时序数据库\\n时间索引 + WAL模式)]
-        CacheQueue[待上传队列\\nPriority Queue]
-        Scheduler[调度器\\n定时采集 + 断点续传]
-        Monitor[健康监控\\nCPU/内存/磁盘/链路]
+    subgraph 边缘核心[&quot;🔧 码视野边缘核心&quot;]
+        TSDB[(SQLite时序数据库\n时间索引 + WAL模式)]
+        CacheQueue[待上传队列\nPriority Queue]
+        Scheduler[调度器\n定时采集 + 断点续传]
+        Monitor[健康监控\nCPU/内存/磁盘/链路]
     end
 
-    subgraph 传输层["🌐 传输适配层"]
+    subgraph 传输层[&quot;🌐 传输适配层&quot;]
         RetryEngine[指数退避重试引擎]
-        Compressor[数据压缩\\nLZ4/GZIP]
-        PacketBuilder[分包组包\\nTCP流式发送]
+        Compressor[数据压缩\nLZ4/GZIP]
+        PacketBuilder[分包组包\nTCP流式发送]
     end
 
-    subgraph 云端["☁️ 云端服务层"]
+    subgraph 云端[&quot;☁️ 云端服务层&quot;]
         CloudAPI[云端REST/MQTT API]
-        CloudDB[(云端时序库\\nTDengine / InfluxDB)]
+        CloudDB[(云端时序库\nTDengine / InfluxDB)]
         AlertCenter[告警中心]
     end
 
-    现场层 --> SerialDriver & NetClient
-    SerialDriver & NetClient --> Parser
-    Parser --> Scheduler
-    Scheduler --> TSDB
-    Scheduler --> Monitor
+    现场层 --&gt; SerialDriver &amp; NetClient
+    SerialDriver &amp; NetClient --&gt; Parser
+    Parser --&gt; Scheduler
+    Scheduler --&gt; TSDB
+    Scheduler --&gt; Monitor
 
-    TSDB --> CacheQueue
-    CacheQueue --> RetryEngine
-    RetryEngine --> Compressor
-    Compressor --> PacketBuilder
-    PacketBuilder --> CloudAPI
-    CloudAPI --> CloudDB & AlertCenter
+    TSDB --&gt; CacheQueue
+    CacheQueue --&gt; RetryEngine
+    RetryEngine --&gt; Compressor
+    Compressor --&gt; PacketBuilder
+    PacketBuilder --&gt; CloudAPI
+    CloudAPI --&gt; CloudDB &amp; AlertCenter
 
-    Monitor -.->|触发重新采集| Scheduler
-    Monitor -.->|网络恢复告警| RetryEngine
-\`\`\`
-
-### 2.3 架构核心模块职责说明
-
-**采集层**：支持多达16路串口与8路TCP/UDP连接，每路独立线程采集，避免单点阻塞。智能解析引擎内置状态机，能处理"帧头丢失后重新同步"的极端情况。
-
-**边缘核心**：SQLite采用WAL（Write-Ahead Logging）模式，支持读写并发，写入延迟控制在1ms以内。时间戳作为主键，配合自动生成序列，确保续传时数据顺序严格有序。
-
-**传输层**：指数退避重试策略（初始间隔1s，最大间隔60s），每次重试前检查数据完整性。网络恢复后，按时间戳升序批量推送，避免乱序。
-
----
-
-## 三、工业级生产环境完整实现代码示例
-
-以下代码来自我们某汽车主机厂项目的实际部署版本（Go语言），省略了部分边界处理以保持可读性。
-
-### 3.1 数据库初始化与写入
-
-\`\`\`go
-// edge_collector.go
+    Monitor -.-&gt;|触发重新采集| Scheduler
+    Monitor -.-&gt;|网络恢复告警| RetryEngine
+</div>
+<h3>2.3 架构核心模块职责说明</h3>
+<p><strong>采集层</strong>：支持多达16路串口与8路TCP/UDP连接，每路独立线程采集，避免单点阻塞。智能解析引擎内置状态机，能处理"帧头丢失后重新同步"的极端情况。</p>
+<p><strong>边缘核心</strong>：SQLite采用WAL（Write-Ahead Logging）模式，支持读写并发，写入延迟控制在1ms以内。时间戳作为主键，配合自动生成序列，确保续传时数据顺序严格有序。</p>
+<p><strong>传输层</strong>：指数退避重试策略（初始间隔1s，最大间隔60s），每次重试前检查数据完整性。网络恢复后，按时间戳升序批量推送，避免乱序。</p>
+<hr>
+<h2>三、工业级生产环境完整实现代码示例</h2>
+<p>以下代码来自我们某汽车主机厂项目的实际部署版本（Go语言），省略了部分边界处理以保持可读性。</p>
+<h3>3.1 数据库初始化与写入</h3>
+<pre><code class="language-go">// edge_collector.go
 package main
 
 import (
-    "database/sql"
-    "fmt"
-    "time"
-    _ "github.com/mattn/go-sqlite3" // CGO编译，支持WAL模式
+    &quot;database/sql&quot;
+    &quot;fmt&quot;
+    &quot;time&quot;
+    _ &quot;github.com/mattn/go-sqlite3&quot; // CGO编译，支持WAL模式
 )
 
 // EdgeGateway 边缘网关核心结构体
@@ -289,20 +274,20 @@ type TelemetryPoint struct {
 
 // InitEdgeDB 初始化本地SQLite数据库，启用WAL模式
 func InitEdgeDB(dbPath string) (*sql.DB, error) {
-    db, err := sql.Open("sqlite3", dbPath+"?_journal=WAL&_sync=NORMAL")
+    db, err := sql.Open(&quot;sqlite3&quot;, dbPath+&quot;?_journal=WAL&amp;_sync=NORMAL&quot;)
     if err != nil {
-        return nil, fmt.Errorf("打开数据库失败: %w", err)
+        return nil, fmt.Errorf(&quot;打开数据库失败: %w&quot;, err)
     }
 
     // 启用WAL模式，提升并发写入性能
-    db.Exec("PRAGMA journal_mode=WAL")
+    db.Exec(&quot;PRAGMA journal_mode=WAL&quot;)
     // 设置同步策略为NORMAL，平衡性能与安全
-    db.Exec("PRAGMA synchronous=NORMAL")
+    db.Exec(&quot;PRAGMA synchronous=NORMAL&quot;)
     // 调整缓存大小至4MB，减少磁盘IO
-    db.Exec("PRAGMA cache_size=-4000")
+    db.Exec(&quot;PRAGMA cache_size=-4000&quot;)
 
     // 创建时序数据表，以时间戳为主键确保有序
-    createSQL := \`
+    createSQL := `
     CREATE TABLE IF NOT EXISTS telemetry_data (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         device_id   TEXT NOT NULL,
@@ -315,38 +300,35 @@ func InitEdgeDB(dbPath string) (*sql.DB, error) {
         上传时间     DATETIME,
         设备时间戳   INTEGER  -- 原始设备时间戳，用于排序
     );
-    
+
     -- 为上传状态和设备时间戳创建索引，加速批量查询
     CREATE INDEX IF NOT EXISTS idx_upload_status ON telemetry_data(上传状态, 设备时间戳);
     CREATE INDEX IF NOT EXISTS idx_device_time   ON telemetry_data(device_id, 设备时间戳);
-    \`
+    `
     _, err = db.Exec(createSQL)
     if err != nil {
-        return nil, fmt.Errorf("建表失败: %w", err)
+        return nil, fmt.Errorf(&quot;建表失败: %w&quot;, err)
     }
 
     return db, nil
 }
-\`\`\`
-
-### 3.2 采集与持久化写入
-
-\`\`\`go
-// 数据采集与写入
+</code></pre>
+<h3>3.2 采集与持久化写入</h3>
+<pre><code class="language-go">// 数据采集与写入
 func (g *EdgeGateway) CollectAndPersist(points []TelemetryPoint) error {
     tx, err := g.db.Begin()
     if err != nil {
-        return fmt.Errorf("开启事务失败: %w", err)
+        return fmt.Errorf(&quot;开启事务失败: %w&quot;, err)
     }
 
-    stmt, err := tx.Prepare(\`
+    stmt, err := tx.Prepare(`
         INSERT INTO telemetry_data 
         (device_id, point_name, value, quality, 采集时间, 采集时刻, 设备时间戳, 上传状态)
         VALUES (?, ?, ?, ?, ?, ?, ?, 0)
-    \`)
+    `)
     if err != nil {
         tx.Rollback()
-        return fmt.Errorf("准备语句失败: %w", err)
+        return fmt.Errorf(&quot;准备语句失败: %w&quot;, err)
     }
     defer stmt.Close()
 
@@ -356,19 +338,19 @@ func (g *EdgeGateway) CollectAndPersist(points []TelemetryPoint) error {
             p.PointName,
             p.Value,
             p.Quality,
-            p.Timestamp.Format("2006-01-02 15:04:05"),
+            p.Timestamp.Format(&quot;2006-01-02 15:04:05&quot;),
             p.Timestamp.Unix(),
             p.Timestamp.UnixMilli(), // 毫秒级精度
         )
         if err != nil {
             tx.Rollback()
-            return fmt.Errorf("写入单条数据失败: %w", err)
+            return fmt.Errorf(&quot;写入单条数据失败: %w&quot;, err)
         }
     }
 
     err = tx.Commit()
     if err != nil {
-        return fmt.Errorf("提交事务失败: %w", err)
+        return fmt.Errorf(&quot;提交事务失败: %w&quot;, err)
     }
 
     // 写入成功后，将数据推入待上传队列（异步非阻塞）
@@ -380,22 +362,19 @@ func (g *EdgeGateway) CollectAndPersist(points []TelemetryPoint) error {
 func (g *EdgeGateway) enqueueUpload(points []TelemetryPoint) {
     for _, p := range points {
         select {
-        case g.uploadQueue <- &p:
+        case g.uploadQueue &lt;- &amp;p:
             // 队列未满，发送成功
         default:
             // 队列已满，记录日志但不丢弃
-            log.Printf("[WARN] 上传队列已满，跳过点 %s.%s", p.DeviceID, p.PointName)
+            log.Printf(&quot;[WARN] 上传队列已满，跳过点 %s.%s&quot;, p.DeviceID, p.PointName)
         }
     }
 }
-\`\`\`
-
-### 3.3 断网续传核心逻辑
-
-\`\`\`go
-// uploader.go — 断网续传核心实现
-
-import (
+</code></pre>
+<h3>3.3 断网续传核心逻辑</h3>
+<p>```go
+// uploader.go — 断网续传核心实现</p>
+<p>import (
     "compress/gzip"
     "encoding/json"
     "fmt"
@@ -404,93 +383,120 @@ import (
     "strings"
     "sync"
     "time"
-)
-
-// RetryConfig 重试配置
+)</p>
+<p>// RetryConfig 重试配置
 type RetryConfig struct {
     MaxRetries     int           // 最大重试次数
     InitialDelay   time.Duration // 初始退避间隔
     MaxDelay       time.Duration // 最大退避间隔
     BackoffFactor  float64       // 退避倍数
-}
-
-// BatchUploader 批量上传器
+}</p>
+<p>// BatchUploader 批量上传器
 type BatchUploader struct {
     db       *sql.DB
     config   RetryConfig
     httpClient *http.Client
     mu       sync.Mutex // 防止并发上传同批数据
-}
-
-// UploadPendingData 从SQLite取出未上传数据并尝试上传
+}</p>
+<p>// UploadPendingData 从SQLite取出未上传数据并尝试上传
 func (u *BatchUploader) UploadPendingData() error {
     // 查询未上传且设备时间戳有效的数据，按时间升序排列
-    rows, err := u.db.Query(\`
-        SELECT device_id, point_name, value, quality, 采集时刻, 设备时间戳
+    rows, err := u.db.Query(<code>SELECT device_id, point_name, value, quality, 采集时刻, 设备时间戳
         FROM telemetry_data
-        WHERE 上传状态 = 0 AND 设备时间戳 > 0
+        WHERE 上传状态 = 0 AND 设备时间戳 &gt; 0
         ORDER BY 设备时间戳 ASC
-        LIMIT 500  -- 单次最多上传500条，避免内存溢出
-    \`)
+        LIMIT 500  -- 单次最多上传500条，避免内存溢出</code>)
     if err != nil {
         return fmt.Errorf("查询未上传数据失败: %w", err)
     }
-    defer rows.Close()
-
-    var batch []map[string]interface{}
-    for rows.Next() {
-        var (
-            deviceID  string
-            pointName string
-            value     float64
-            quality   int8
-            tsMs      int64
-        )
-        err := rows.Scan(&deviceID, &pointName, &value, &quality, &tsMs, &tsMs)
-        if err != nil {
-            return fmt.Errorf("扫描数据行失败: %w", err)
-        }
-        batch = append(batch, map[string]interface{}{
-            "device_id": deviceID,
-            "point_name": pointName,
-            "value":      value,
-            "quality":    quality,
-            "timestamp":  tsMs,
-        })
+    defer rows.Close()</p>
+<pre><code>var batch []map[string]interface{}
+for rows.Next() {
+    var (
+        deviceID  string
+        pointName string
+        value     float64
+        quality   int8
+        tsMs      int64
+    )
+    err := rows.Scan(&amp;deviceID, &amp;pointName, &amp;value, &amp;quality, &amp;tsMs, &amp;tsMs)
+    if err != nil {
+        return fmt.Errorf("扫描数据行失败: %w", err)
     }
-
-    if len(batch) == 0 {
-        return nil
-    }
-
-    // 执行带指数退避的重试上传
-    return u.withRetry(func() error {
-        return u.sendBatch(batch)
+    batch = append(batch, map[string]interface{}{
+        "device_id": deviceID,
+        "point_name": pointName,
+        "value":      value,
+        "quality":    quality,
+        "timestamp":  tsMs,
     })
 }
 
-// withRetry 带指数退避的重试包装器
-func (u *BatchUploader) withRetry(fn`;
+if len(batch) == 0 {
+    return nil
+}
+
+// 执行带指数退避的重试上传
+return u.withRetry(func() error {
+    return u.sendBatch(batch)
+})
+</code></pre>
+<p>}</p>
+<p>// withRetry 带指数退避的重试包装器
+func (u *BatchUploader) withRetry(fn</p>
+    </div>
+    <aside class="mt-10 border-t border-slate-200 pt-8" aria-label="相关阅读">
+      <h2 class="text-lg font-bold text-slate-900 mb-3">相关阅读</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-brand-700">
+        <li><a href="/posts/post_20261024215520.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+        <li><a href="/posts/post_20261024172321.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+        <li><a href="/posts/post_20261023175342.html">工业物联网网关断网本地续传：如何用 SQLite 保证时序数据 100% 零丢失？ (深度实战篇)</a></li>
+      </ul>
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        <a class="text-brand-700 font-semibold hover:underline" href="/">首页</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/solutions.html">行业解决方案</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/blog.html">技术博文</a>
+        <span aria-hidden="true"> · </span>
+        <a class="text-brand-700 font-semibold hover:underline" href="/contact.html">联系咨询</a>
+      </p>
+    </aside>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
 mermaid.initialize({startOnLoad:false,theme:'default'});
 async function render() {
   const container = document.getElementById('content-body');
-  const mermaidBlocks = [];
-  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
-    const id = 'mermaid-' + mermaidBlocks.length;
-    mermaidBlocks.push({id, code: code.trim()});
-    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  if (!container) return;
+  container.querySelectorAll('h1').forEach(h => {
+    const h2 = document.createElement('h2');
+    h2.innerHTML = h.innerHTML;
+    h.replaceWith(h2);
   });
-  container.innerHTML = marked.parse(processedMd);
-  for(const {id, code} of mermaidBlocks) {
-    const placeholder = container.querySelector(`[data-id="${id}"]`);
-    if(placeholder) {
-      const div = document.createElement('div');
-      div.className = 'mermaid';
-      div.textContent = code;
-      placeholder.replaceWith(div);
-    }
+  container.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = code.textContent;
+    const pre = code.closest('pre');
+    if (pre) pre.replaceWith(div);
+  });
+  if (container.querySelector('.mermaid')) {
+    await mermaid.run({querySelector:'#content-body .mermaid'});
   }
-  await mermaid.run();
 }
 render();
 

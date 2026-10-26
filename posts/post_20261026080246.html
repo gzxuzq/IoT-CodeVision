@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇) · 码视野IoT研发团队</title>
+  <meta name="description" content="针对Modbus转MQTT在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。">
+  <meta property="og:title" content="从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80">
+  <meta property="og:type" content="article">
+  <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
+  <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
+  <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261026080246.html">
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?7f5628b9a83545683f5eb2a9df2a559c";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/images/logo.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)","image":"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80","author":{"@type":"Organization","name":"码视野物联网研发团队"},"datePublished":"2026-10-26 08:02","description":"针对Modbus转MQTT在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。"}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+    .prose h2{font-size:1.35rem;font-weight:700;margin:1.8rem 0 0.8rem;color:#1e293b;border-left:4px solid #2563eb;padding-left:12px;}
+    .prose h3{font-size:1.15rem;font-weight:600;margin:1.4rem 0 0.6rem;color:#334155;}
+    .prose p{margin:0.8rem 0;line-height:1.8;color:#475569;}
+    .prose ul,.prose ol{margin:0.8rem 0 0.8rem 1.5rem;color:#475569;}
+    .prose li{margin:0.3rem 0;line-height:1.7;}
+    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.875rem;}
+    .prose th{background:#eff6ff;color:#1e40af;padding:10px 12px;text-align:left;border:1px solid #bfdbfe;font-weight:600;}
+    .prose td{padding:9px 12px;border:1px solid #e2e8f0;color:#475569;}
+    .prose tr:hover td{background:#f8fafc;}
+    .prose code{background:#f1f5f9;color:#2563eb;padding:2px 6px;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono',monospace;}
+    .prose pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:12px;overflow-x:auto;margin:1rem 0;}
+    .prose pre code{background:none;color:inherit;padding:0;}
+    .prose strong{color:#1e293b;font-weight:600;}
+    .prose blockquote{border-left:4px solid #2563eb;padding:8px 16px;background:#eff6ff;margin:1rem 0;border-radius:0 8px 8px 0;}
+    .mermaid{text-align:center;margin:1.5rem auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2 font-bold text-slate-900 text-lg">
+      <img src="/images/logo.png" alt="码视野" class="w-8 h-8 rounded-lg shadow-sm object-cover">
+      <span>码视野</span>
+      <span class="hidden sm:inline text-xs font-normal text-slate-400 ml-1">IoT Solutions Lab</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+      <a href="/" class="hover:text-brand-600 transition-colors">官网首页</a>
+      <a href="/solutions.html" class="hover:text-brand-600 transition-colors">行业解决方案</a>
+      <a href="/#services" class="hover:text-brand-600 transition-colors">服务能力</a>
+      <a href="/#cases" class="hover:text-brand-600 transition-colors">项目案例</a>
+      <a href="/#tech" class="hover:text-brand-600 transition-colors">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 border-b-2 border-brand-500 pb-0.5 font-bold">技术博文</a>
+      <!-- 顶部右上角电话（微信同号） -->
+      <a href="tel:19168817431" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-brand-50 hover:text-brand-700 px-3 py-1.5 rounded-full transition-colors border border-slate-200 shadow-sm" title="点击一键拨号，微信同号">
+        <span class="text-brand-600 text-sm">📞</span>
+        <span class="tracking-wide">19168817431</span>
+        <span class="text-[11px] text-brand-600 font-medium">（微信同号）</span>
+      </a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-1.5 rounded-full hover:bg-brand-700 transition-colors shadow-sm">免费咨询</a>
+    </div>
+    <!-- 移动端右上角直拨电话与菜单按钮 -->
+    <div class="flex items-center gap-2 md:hidden">
+      <a href="tel:19168817431" class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 font-bold" title="微信同号">
+        <span>📞</span>
+        <span>19168817431</span>
+      </a>
+      <button id="menu-btn" class="p-2 text-slate-600" aria-label="切换菜单">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pb-4">
+    <div class="flex flex-col gap-3 pt-3 text-sm font-medium">
+      <a href="tel:19168817431" class="flex items-center justify-between bg-blue-50 border border-blue-200 text-brand-700 px-3 py-2 rounded-xl text-xs font-bold">
+        <span>📞 19168817431（微信同号）</span>
+        <span>点击一键拨打 →</span>
+      </a>
+      <a href="/" class="text-slate-600">官网首页</a>
+      <a href="/solutions.html" class="text-slate-600">行业解决方案</a>
+      <a href="/#services" class="text-slate-600">服务能力</a>
+      <a href="/#cases" class="text-slate-600">项目案例</a>
+      <a href="/#tech" class="text-slate-600">技术栈</a>
+      <a href="/blog.html" class="text-brand-600 font-bold">技术博文</a>
+      <a href="/contact.html" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-center font-bold">免费咨询</a>
+    </div>
+  </div>
+</nav>
+<article class="pt-20 pb-16">
+  <div class="w-full h-64 sm:h-80 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)" class="w-full h-full object-cover">
+  </div>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 mt-8">
+    <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
+      <a href="/blog.html" class="text-brand-600 hover:underline">← 返回博文矩阵</a>
+      <span class="bg-brand-50 text-brand-700 px-2 py-0.5 rounded text-xs font-semibold">技术实战解析</span>
+      <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">Modbus转MQTT</span>
+      <span class="text-slate-400 text-xs ml-auto font-mono flex items-center gap-1">
+        <span>🕒</span>
+        <span>发布时间：2026-10-26 08:02</span>
+      </span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-6">从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)</h1>
+    <div class="flex flex-wrap gap-3 mb-8 p-4 bg-brand-50 border border-brand-100 rounded-xl">
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">99.99%</div><div class="text-brand-500 text-xs mt-0.5">消息可靠性</div></div>
+      <div class="text-center flex-1 min-w-[100px]"><div class="text-brand-700 font-bold text-base sm:text-lg">< 50ms</div><div class="text-brand-500 text-xs mt-0.5">延迟</div></div>
+    </div>
+    <div class="prose" id="content-body"></div>
+    <div class="mt-12 bg-brand-700 text-white rounded-2xl p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">需要针对贵司场景的专业 IoT 技术咨询？</h2>
+      <p class="text-brand-200 text-sm mb-4">码视野研发团队直接对接，30 分钟电话/视频深度沟通，免费出具架构建议与可行性报告</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="tel:19168817431" class="bg-white text-brand-700 font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-50 transition-colors text-sm">📞 拨打技术专线：19168817431</a>
+        <a href="/contact.html" class="bg-brand-800 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-brand-900 transition-colors text-sm">预约方案架构师 →</a>
+      </div>
+    </div>
+  </div>
+</article>
+<footer class="bg-slate-900 text-slate-500 py-8">
+  <div class="max-w-4xl mx-auto px-4 text-center text-xs">
+    © 2026 码视野物联网软件研发团队 · 广东广州 · 电话/微信：19168817431
+  </div>
+</footer>
+<script>
+const mdContent = `
+
+# 从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)
+
+> **作者**：码视野物联网软件研发团队首席架构师  
+> **深耕领域**：工业IoT与边缘计算6年 | 累计交付产线接入项目47+  
+> **关键词**：Modbus RTU、MQTT、边缘网关、时序数据库、工业现场调试
+
+---
+
+## 一、工业现场真实硬件环境与底层痛点深度剖析
+
+### 1.1 产线环境快照
+
+我们接手的是一家汽车零部件焊接产线，现场部署了以下设备：
+
+| 设备类型 | 数量 | 通信协议 | 波特率 | 物理层 |
+|---------|------|---------|--------|--------|
+| 焊接机器人控制器 | 12台 | Modbus RTU | 19200 | RS-485 |
+| 温控模块（回流焊） | 8台 | Modbus RTU | 9600 | RS-485 |
+| 能耗采集电表 | 24台 | Modbus RTU | 9600 | RS-485 |
+| PLC（西门子S7-1200） | 3台 | Profinet→Modbus TCP | - | 以太网 |
+| 边缘网关（自研） | 3台 | 多串口+以太网 | - | - |
+
+总设备点位超过 **3,200个**，数据采样频率从 **100ms~5s** 不等。
+
+### 1.2 四大底层痛点
+
+#### 痛点一：报文时序混乱，CRC校验频繁失败
+
+Modbus RTU帧结构依赖**3.5个字符间隔**作为帧边界。现场实测发现：
+
+- 部分廉价485转换器时钟晶振偏差±3%，导致字符间距不稳定
+- 主站轮询间隔设置不当（< 100ms），缓冲区未清空即发送新帧
+- 从站响应延时不一致，有的5ms响应，有的需要40ms
+
+\`\`\`python
+# 典型问题：未处理响应超时与重试
+def read_register(device_id, addr):
+    # ❌ 没有超时控制，直接阻塞等待
+    response = serial.read(9)  
+    if not validate_crc(response):
+        return None  # 静默失败，上层无感知
+    return parse_response(response)
+\`\`\`
+
+**根因**：工业现场电磁干扰（焊机启动时浪涌电流达200A）导致485总线差分信号畸变，串口接收中断丢字节。
+
+#### 痛点二：RS-485总线反射与终端电阻匹配
+
+长距离485总线（>200m）未加终端电阻时，信号反射造成码间干扰：
+
+- 使用示波器测量，总线空闲电平存在**50mV纹波**
+- 高速波特率（115200）下误码率高达 **10⁻³**
+- 改造措施：加装120Ω终端电阻 + 隔离型485转换器后，误码率降至 **10⁻⁷**
+
+#### 痛点三：网络间歇性断连与MQTT重连风暴
+
+边缘网关通过4G/工业WiFi上传数据，曾出现：
+
+- 弱信号区域（RSRP=-110dBm）频繁断线
+- 断网期间缓存数据堆积，恢复后瞬间发送数万条MQTT消息
+- 云端订阅者队列积压，部分消息被丢弃
+
+#### 痛点四：时间戳漂移导致时序数据错位
+
+GPS时钟未同步时，网关本地RTC日漂移可达±5秒，多网关数据融合时出现时间交叉混乱，影响后续分析。
+
+---
+
+## 二、码视野高可用边缘系统拓扑架构
+
+### 2.1 整体架构设计
+
+\`\`\`mermaid
+flowchart TD
+    subgraph 现场设备层["🏭 现场设备层（Modbus RTU/TCP）"]
+        A1["焊接机器人 ×12"]
+        A2["温控模块 ×8"]
+        A3["智能电表 ×24"]
+        A4["PLC S7-1200 ×3"]
+    end
+
+    subgraph 物理层["⚡ 物理层隔离与信号调理"]
+        B1["工业级RS-485转换器<br/>（隔离型，3000VDC）× 6端口"]
+        B2["信号中继放大器<br/>（2km延伸）× 2台"]
+        B3["PTP时钟同步模块<br/>（精度±1μs）"]
+    end
+
+    subgraph 边缘网关层["🖥️ 码视野边缘网关（ARM Cortex-A53 / Linux）"]
+        C1["串口驱动层<br/>（libserialport + 硬件流控）"]
+        C2["Modbus协议解析引擎<br/>（主从模式切换）"]
+        C3["帧校验与重传队列<br/>（CRC16/32双重校验）"]
+        C4["数据缓冲池<br/>（Ring Buffer，内存映射）"]
+        C5["MQTT客户端<br/>（TLS 1.3 + QoS1）"]
+        C6["本地时序缓存<br/>（SQLite + WAL模式）"]
+        C7["断网续传引擎<br/>（指数退避 + 批量压缩）"]
+        C8["设备健康监控<br/>（看门狗 + 心跳检测）"]
+    end
+
+    subgraph 云平台层["☁️ 云平台（Sapiens IoT Platform）"]
+        D1["MQTT Broker集群<br/>（EMQX，集群部署）"]
+        D2["规则引擎<br/>（异常检测 + 告警路由）"]
+        D3["时序数据库<br/>（TDengine集群）"]
+        D4["数据可视化<br/>（Grafana + 自定义看板）"]
+    end
+
+    A1 & A2 & A3 & A4 -->|"RS-485总线 / Ethernet"| B1 & B2 & B3
+    B1 & B2 & B3 -->|"隔离信号 + PTP同步"| C1
+    C1 --> C2 --> C3 --> C4
+    C4 --> C5
+    C4 --> C6
+    C5 --> D1
+    C6 -->|"断网续传"| C7 --> C5
+    C8 -.->|"健康状态上报"| C5
+    D1 --> D2 --> D3
+    D3 --> D4
+
+    style 现场设备层 fill:#ffe4e1,stroke:#b22222
+    style 物理层 fill:#e0ffff,stroke:#4682b4
+    style 边缘网关层 fill:#f0fff0,stroke:#228b22
+    style 云平台层 fill:#fff8dc,stroke:#daa520
+\`\`\`
+
+### 2.2 核心模块职责说明
+
+| 模块 | 技术选型 | 关键能力 |
+|------|---------|---------|
+| 串口驱动层 | libserialport | 硬件流控（RTS/CTS）、超时可配置 |
+| Modbus解析引擎 | 自研状态机 | 支持FC03/06/16/23，主从双模式 |
+| 帧校验与重传 | CRC16/MODBUS | 失败自动重试3次，指数退避 |
+| 数据缓冲池 | mmap共享内存 | 零拷贝，Ring Buffer容量2MB |
+| MQTT客户端 | Paho MQTT C | TLS加密，断线自动重连（最大间隔30s） |
+| 本地时序缓存 | SQLite WAL | 落盘保障，每日自动清理7天前数据 |
+| 断网续传引擎 | LZF压缩 | 批量打包（每包50条），限速100条/s |
+
+---
+
+## 三、工业级生产环境完整实现代码示例
+
+### 3.1 Go语言实现：边缘网关核心服务
+
+\`\`\`go
+package main
+
+import (
+    "encoding/binary"
+    "fmt"
+    "log"
+    "math"
+    "sync"
+    "time"
+
+    "github.com/eclipse/paho.mqtt.golang"
+    "github.com/tarm/serial"
+)
+
+// ==================== 配置结构体 ====================
+
+type GatewayConfig struct {
+    SerialPort     string        \`json:"serial_port"\`     // 如 "/dev/ttyUSB0"
+    BaudRate       int           \`json:"baud_rate"\`       // 9600 / 19200
+    DataBits       int           \`json:"data_bits"\`       // 8
+    Parity         string        \`json:"parity"\`          // "N" / "E" / "O"
+    StopBits       int           \`json:"stop_bits"\`       // 1
+    Timeout        time.Duration \`json:"timeout"\`         // 单次读超时
+    MQTTBroker     string        \`json:"mqtt_broker"\`     // mqtt://broker:1883
+    MQTTUsername   string        \`json:"mqtt_username"\`
+    MQTTPassword   string        \`json:"mqtt_password"\`
+    TopicPrefix    string        \`json:"topic_prefix"\`    // 如 "factory/line1"
+    RetryCount     int           \`json:"retry_count"\`     // 重试次数
+    RetryInterval  time.Duration \`json:"retry_interval"\`  // 重试间隔
+    CacheDuration  time.Duration \`json:"cache_duration"\`  // 本地缓存保留时长
+}
+
+// ==================== Modbus RTU CRC校验 ====================
+
+// CRC16_MODBUS 计算Modbus RTU帧的CRC校验码
+func CRC16MODBUS(data []byte) uint16 {
+    crc := uint16(0xFFFF)
+    for _, b := range data {
+        crc ^= uint16(b)
+        for i := 0; i < 8; i++ {
+            if crc&0x0001 == 1 {
+                crc >>= 1
+                crc ^= 0xA001
+            } else {
+                crc >>= 1
+            }
+        }
+    }
+    return crc
+}
+
+// BuildReadHoldingRequest 构建读保持寄存器请求帧
+func BuildReadHoldingRequest(slaveID byte, startAddr uint16, quantity uint16) []byte {
+    payload := []byte{
+        slaveID,                  // 从站地址
+        0x03,                     // 功能码：读保持寄存器
+        byte(startAddr >> 8),     // 起始地址高字节
+        byte(startAddr & 0xFF),   // 起始地址低字节
+        byte(quantity >> 8),      // 寄存器数量高字节
+        byte(quantity & 0xFF),    // 寄存器数量低字节
+    }
+    crc := CRC16MODBUS(payload)
+    // 低字节在前
+    payload = append(payload, byte(crc&0xFF), byte(crc>>8))
+    return payload
+}
+
+// ParseResponse 解析读保持寄存器响应帧
+func ParseResponse(data []byte) ([]uint16, error) {
+    if len(data) < 5 {
+        return nil, fmt.Errorf("响应帧过短")
+    }
+    byteCount := int(data[2])
+    if len(data) < 3+byteCount {
+        return nil, fmt.Errorf("数据长度不匹配: 期望%d字节, 实际%d字节", 3+byteCount, len(data))
+    }
+    regs := make([]uint16, byteCount/2)
+    for i := 0; i < byteCount/2; i++ {
+        regs[i] = binary.BigEndian.Uint16(data[3+i*2:])
+    }
+    return regs, nil
+}
+
+// ==================== 串口管理器 ====================
+
+type SerialManager struct {
+    cfg     *GatewayConfig
+    port    *serial.Port
+    mu      sync.Mutex
+    isConnected bool
+}
+
+func NewSerialManager(cfg *GatewayConfig) (*SerialManager, error) {
+    sm := &SerialManager{cfg: cfg}
+    
+    // 打开串口（硬件流控关闭，依赖软件超时）
+    c := &serial.Config{
+        Name:  cfg.SerialPort,
+        Baud:  cfg.BaudRate,
+        Bits:  cfg.DataBits,
+        Parity: parityToChar(cfg.Parity),
+        StopBits: cfg.StopBits,
+        ReadTimeout: cfg.Timeout,
+    }
+    
+    var err error
+    sm.port, err = serial.OpenPort(c)
+    if err != nil {
+        return nil, fmt.Errorf("打开串口 %s 失败: %v", cfg.SerialPort, err)
+    }
+    sm.isConnected = true
+    log.Printf("[串口] 已连接: %s @ %d baud", cfg.SerialPort, cfg.BaudRate)
+    return sm, nil
+}
+
+func parityToChar(p string) serial.Parity {
+    switch p {
+    case "E": return serial.Even
+    case "O": return serial.Odd
+    default: return serial.None
+    }
+}
+
+// ReadRegister 带重试的寄存器读取
+func (sm *SerialManager) ReadRegister(slaveID byte, addr uint16, qty uint16) ([]uint16, error) {
+    sm.mu.Lock()
+    defer sm.mu.Unlock()
+    
+    if !sm.isConnected {
+        return nil, fmt.Errorf("串口未连接")
+    }
+    
+    request := BuildReadHoldingRequest(slaveID, addr, qty)
+    
+    for attempt := 0; attempt <= sm.cfg.RetryCount; attempt++ {
+        // 发送请求
+        if _, err := sm.port.Write(request); err != nil {
+            log.Printf("[重试 %d/%d] 写入失败: %v", attempt+1, sm.cfg.RetryCount+1, err)
+            time.Sleep(sm.cfg.RetryInterval)
+            continue
+        }
+        
+        // 读取响应（固定最大响应长度256字节）
+        response := make([]byte, 256)
+        n, err := sm.port.Read(response)
+        if err != nil {
+            log.Printf("[重试 %d/%d] 读取失败: %v", attempt+1, sm.cfg.RetryCount+1, err)
+            time.Sleep(sm.cfg.RetryInterval)
+            continue
+        }
+        
+        // 验证CRC
+        respData := response[:n]
+        if n < 5 {
+            continue // 帧太短，继续重试
+        }
+        
+        calcCRC := CRC16MODBUS(respData[:n-2])
+        recvCRC := binary.LittleEndian.Uint16(respData[n-2:])
+        if calcCRC != recvCRC {
+            log.Printf("[重试 %d/%d] CRC校验失败", attempt+1, sm.cfg.RetryCount+1)
+            time.Sleep(sm.cfg.RetryInterval)
+            continue
+        }
+        
+        // 解析响应
+        regs, err := ParseResponse(respData)
+        if err != nil {
+            log.Printf("[重试 %d/%d] 解析失败: %v", attempt+1, sm.cfg.RetryCount+1, err)
+            time.Sleep(sm.cfg.RetryInterval)
+            continue
+        }
+        
+        return regs, nil
+    }
+    
+    return nil, fmt.Errorf("重试%d次后仍失败", sm.cfg.RetryCount+1)
+}
+
+// ==================== MQTT客户端与数据`;
+mermaid.initialize({startOnLoad:false,theme:'default'});
+async function render() {
+  const container = document.getElementById('content-body');
+  const mermaidBlocks = [];
+  const processedMd = mdContent.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+    const id = 'mermaid-' + mermaidBlocks.length;
+    mermaidBlocks.push({id, code: code.trim()});
+    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+  });
+  container.innerHTML = marked.parse(processedMd);
+  for(const {id, code} of mermaidBlocks) {
+    const placeholder = container.querySelector(`[data-id="${id}"]`);
+    if(placeholder) {
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code;
+      placeholder.replaceWith(div);
+    }
+  }
+  await mermaid.run();
+}
+render();
+
+// 移动端菜单控制
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+}
+</script>
+</body>
+</html>

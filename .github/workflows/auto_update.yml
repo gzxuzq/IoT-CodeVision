@@ -25,6 +25,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: 安装 Python 依赖
+        run: pip install -r requirements.txt
+
       - name: 配置 Git 提交身份
         run: |
           git config --global user.name "github-actions[bot]"
@@ -38,9 +41,9 @@ jobs:
         env:
           TZ: 'Asia/Shanghai'
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY || 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH' }}
-          AGNES_BASE_URL: https://apihub.agnes-ai.com/v1
-          AGNES_MODEL: agnes-2.5-flash
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
+          AGNES_BASE_URL: ${{ vars.AGNES_BASE_URL || 'https://apihub.agnes-ai.com/v1' }}
+          AGNES_MODEL: ${{ vars.AGNES_MODEL || 'agnes-2.5-flash' }}
         run: |
           python auto_update_iot.py
 
@@ -48,10 +51,16 @@ jobs:
         run: |
           git status
           if [ -n "$(git status --porcelain)" ]; then
-            git add .
+            git add -A -- . ':!.env' ':!.env.*'
+            git add -- .env.example
+            leaked=$(git diff --cached --name-only | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$' || true)
+            if [ -n "$leaked" ]; then
+              echo "Refusing to commit environment files"
+              exit 1
+            fi
             git commit -m "[auto-update] 云端定时自造血：更新行业解决方案/案例/技术博文与静态落地页"
             git push origin main
-            echo "✅ 新内容已成功推送到 main 分支，Vercel 正在自动构建上线！"
+            echo "新内容已成功推送到 main 分支，Vercel 正在自动构建上线。"
           else
-            echo "ℹ️ 本次没有新增未提交的文件，已保持最新。"
+            echo "本次没有新增未提交的文件，已保持最新。"
           fi

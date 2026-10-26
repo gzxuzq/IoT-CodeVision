@@ -8,10 +8,18 @@
   <meta name="keywords" content="物联网软件开发,MQTT平台定制,工业物联网,IoT设备管理系统,智慧农业平台开发,工业监控系统,ThingsBoard二次开发,EMQX私有化部署">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
   <meta name="msvalidate.01" content="F3C35A8C570163FEFCE56F09F70A0042" />
-  <meta property="og:title" content="码视野 · 物联网软件开发团队">
-  <meta property="og:description" content="从传感器到云端，全栈交付IoT软件系统。专注工业监控·智慧农业·智能楼宇·硬件云服务。">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80">
   <link rel="canonical" href="https://iot-showcase.hei-ai.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="码视野">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="码视野 · 物联网软件开发团队 | MQTT平台定制 · 工业监控系统">
+  <meta property="og:description" content="码视野是一支专注物联网软件开发的资深技术团队，提供MQTT平台搭建、工业设备监控系统、智慧农业平台、智能楼宇能耗管理等IoT软件定制开发服务。">
+  <meta property="og:url" content="https://iot-showcase.hei-ai.com/">
+  <meta property="og:image" content="https://iot-showcase.hei-ai.com/images/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="码视野 · 物联网软件开发团队 | MQTT平台定制 · 工业监控系统">
+  <meta name="twitter:description" content="码视野是一支专注物联网软件开发的资深技术团队，提供MQTT平台搭建、工业设备监控系统、智慧农业平台、智能楼宇能耗管理等IoT软件定制开发服务。">
+  <meta name="twitter:image" content="https://iot-showcase.hei-ai.com/images/logo.png">
   <!-- 百度统计 -->
   <script>
   var _hmt = _hmt || [];
@@ -46,17 +54,47 @@
     .counter { font-variant-numeric: tabular-nums; }
     html { scroll-behavior: smooth; }
   </style>
-  <!-- Schema.org 结构化数据 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "码视野物联网软件开发团队",
-    "description": "专注物联网软件定制开发，提供MQTT平台、工业监控、智慧农业、智能楼宇等IoT系统开发服务",
-    "telephone": "+8619168817431",
-    "address": { "@type": "PostalAddress", "addressLocality": "广州", "addressRegion": "广东", "addressCountry": "CN" },
-    "areaServed": "CN",
-    "serviceType": ["物联网软件开发", "MQTT平台搭建", "工业设备监控", "智慧农业系统", "智能楼宇能耗管理"]
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://iot-showcase.hei-ai.com/#organization",
+        "name": "码视野",
+        "alternateName": "CodeVision IoT Lab",
+        "url": "https://iot-showcase.hei-ai.com/",
+        "logo": "https://iot-showcase.hei-ai.com/images/logo.png",
+        "description": "专注物联网软件定制开发，提供 MQTT 平台、工业监控、智慧农业与智能楼宇系统。",
+        "email": "4601134@qq.com",
+        "telephone": "+8619168817431",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "广州",
+          "addressRegion": "广东",
+          "addressCountry": "CN"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://iot-showcase.hei-ai.com/#website",
+        "url": "https://iot-showcase.hei-ai.com/",
+        "name": "码视野",
+        "inLanguage": "zh-CN",
+        "publisher": { "@id": "https://iot-showcase.hei-ai.com/#organization" }
+      },
+      {
+        "@type": "ProfessionalService",
+        "name": "码视野物联网软件开发团队",
+        "url": "https://iot-showcase.hei-ai.com/",
+        "parentOrganization": { "@id": "https://iot-showcase.hei-ai.com/#organization" },
+        "description": "专注物联网软件定制开发，提供MQTT平台、工业监控、智慧农业、智能楼宇等IoT系统开发服务",
+        "telephone": "+8619168817431",
+        "address": { "@type": "PostalAddress", "addressLocality": "广州", "addressRegion": "广东", "addressCountry": "CN" },
+        "areaServed": "CN",
+        "serviceType": ["物联网软件开发", "MQTT平台搭建", "工业设备监控", "智慧农业系统", "智能楼宇能耗管理"]
+      }
+    ]
   }
   </script>
 </head>
@@ -267,7 +305,7 @@
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2 leading-snug">
               <a href="solutions/sol_20261026135631.html">化工园区综合管廊有毒可燃气体泄漏毫秒级遥测与应急联动切断方案 (升级迭代版)</a>
             </h3>
-            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">面向化工与危化安全垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持HART · Modbus RTU防爆 · LoRaWAN防爆等主流通信标准。</p>
+            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">化工园区地下/半地下综合管廊是油气输送、危化品管道通行的核心载体，空间封闭、通风受限、管线密集，一旦发生有毒（H₂S、Cl₂、NH₃等）或可燃气体（甲烷、丙烷、VOCs等）泄漏，极易引发闪爆、中毒群死群伤事故。传统气体监测方案存在以下痛点：</p>
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
               <span class="text-xs text-slate-400 font-mono">HART · Modbus RTU防爆</span>
               <a href="solutions/sol_20261026135631.html" class="text-brand-600 font-bold text-xs sm:text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
@@ -292,7 +330,7 @@
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2 leading-snug">
               <a href="solutions/sol_20261025122013.html">城市供水管网管压水平衡分析与隐蔽漏损声震智能辨识方案 (升级迭代版)</a>
             </h3>
-            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">面向智慧市政水务垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持NB-IoT · Modbus TCP · MQTT等主流通信标准。</p>
+            <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 mb-4 flex-1">中国城市供水管网总长度已超过100万公里，年供水量超过600亿立方米。然而，全国平均管网漏损率仍维持在12%~18%之间，部分老旧城区甚至高达25%以上。据住建部统计，全国每年因管网漏损造成的水资源浪费超过100亿立方米，经济损失逾千亿元</p>
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
               <span class="text-xs text-slate-400 font-mono">NB-IoT · Modbus TCP</span>
               <a href="solutions/sol_20261025122013.html" class="text-brand-600 font-bold text-xs sm:text-sm hover:translate-x-1 transition-transform inline-flex items-center gap-1">
@@ -1200,7 +1238,7 @@
             </span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)</h3>
-          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">针对架构选型在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。</p>
+          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">码视野当前部署的工业遥测平台，覆盖华东地区 320+ 条产线，接入设备类型包含：</p>
         </div>
       </a>
 
@@ -1217,7 +1255,7 @@
             </span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">从串口帧到时序库：Modbus RTU 转 MQTT 边缘网关调优全流程实战指南 (深度实战篇)</h3>
-          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">针对Modbus转MQTT在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。</p>
+          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">根因：工业现场电磁干扰（焊机启动时浪涌电流达200A）导致485总线差分信号畸变，串口接收中断丢字节</p>
         </div>
       </a>
 
@@ -1234,7 +1272,7 @@
             </span>
           </div>
           <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-brand-600 transition-colors">MQTT 5.0 用户属性与原因码实战：如何实现毫秒级设备鉴权与精准异常定位？ (深度实战篇)</h3>
-          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">针对MQTT 5.0在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。</p>
+          <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">在苏州某汽车零部件厂的生产线改造项目中，我们遇到了一个极其典型的工业通信难题。车间内部署了 287 台 CNC 数控机床、43 台 AGV 小车 以及 12 条自动化装配线，全部通过串口服务器转换为 TCP/IP 接入边缘网关集群</p>
         </div>
       </a>
     </div>

@@ -58,9 +58,9 @@ if env_path.exists():
             k, v = line.split('=', 1)
             os.environ.setdefault(k.strip(), v.strip())
 
-AGNES_API_KEY = os.getenv('AGNES_API_KEY') or 'sk-SW1i66PiPOCR7gaUqExzJapMsfF0Cl3qEKuWCATG3uYFcqQH'
-AGNES_BASE_URL = os.getenv('AGNES_BASE_URL', 'https://apihub.agnes-ai.com/v1')
-AGNES_MODEL = os.getenv('AGNES_MODEL', 'agnes-2.5-flash')
+AGNES_API_KEY = (os.getenv('AGNES_API_KEY') or '').strip()
+AGNES_BASE_URL = (os.getenv('AGNES_BASE_URL') or 'https://apihub.agnes-ai.com/v1').strip()
+AGNES_MODEL = (os.getenv('AGNES_MODEL') or os.getenv('AGNES_DEFAULT_MODEL') or 'agnes-2.5-flash').strip()
 
 POSTS_INDEX_FILE = BASE_DIR / 'posts_index.json'
 SOLUTIONS_INDEX_FILE = BASE_DIR / 'solutions_index.json'
@@ -265,7 +265,10 @@ def call_agnes_llm(system_prompt, user_prompt, max_tokens=3000, timeout_sec=90):
                 else:
                     print(f"[LLM] Agnes AI 响应内容较短 ({len(content) if content else 0} 字符)，准备安全回退", flush=True)
     except Exception as e:
-        print(f"[LLM] Agnes AI 调用未完成 ({e})，准备安全回退", flush=True)
+        msg = str(e)
+        if any(token in msg for token in ('sk-', 'Bearer ', 'AGNES_API_KEY')):
+            msg = 'request failed'
+        print(f"[LLM] Agnes AI 调用未完成 ({msg})，准备安全回退", flush=True)
     return None
 
 
@@ -368,7 +371,7 @@ flowchart TD
         "title": target_topic['title'],
         "industry": target_topic['industry'],
         "industry_tag": target_topic['industry_tag'],
-        "summary": f"面向{target_topic['industry']}垂直业务场景，码视野研发团队提供从底层传感器选型、工业网关协议转换到云端时序大屏的端到端交钥匙方案，支持{' · '.join(target_topic['protocols'][:3])}等主流通信标准。",
+        "summary": f"{target_topic['title']}：面向{target_topic['industry']}，说明{'、'.join(target_topic['protocols'][:3])}接入、边缘网关与云端监控的实施范围。",
         "cover_image": target_topic['cover_image'],
         "date": now.strftime('%Y-%m-%d %H:%M'),
         "deploy_cycle": target_topic.get('deploy_cycle', '15~25 天快速上线'),
@@ -553,7 +556,7 @@ client.loop_forever()
         "tag": target['tag'],
         "read_time": "8 分钟",
         "date": now.strftime('%Y-%m-%d %H:%M'),
-        "summary": f"针对{target['tag']}在实际工业场景中的工程难题，码视野研发团队深度复盘核心架构设计、高可用优化与实战避坑经验。",
+        "summary": f"{target['title']}：围绕{target['tag']}整理现场约束、架构取舍与落地步骤。",
         "cover_image": target['cover'],
         "roi_stats": {"消息可靠性": "99.99%", "延迟": "< 50ms"},
         "content_markdown": content
@@ -580,7 +583,12 @@ def compile_and_deploy():
             print("[Git] ℹ️ 本次运行各板块均处于周期内，无新增内容，保持最新状态无需重复推流。", flush=True)
             return
 
-        subprocess.run(['git', 'add', '.'], cwd=str(BASE_DIR), check=True, capture_output=True)
+        subprocess.run(['git', 'add', '-A', '--', '.', ':!.env', ':!.env.*', ':!.env.example'], cwd=str(BASE_DIR), check=True, capture_output=True)
+        subprocess.run(['git', 'add', '-f', '--', '.env.example'], cwd=str(BASE_DIR), check=True, capture_output=True)
+        staged = subprocess.run(['git', 'diff', '--cached', '--name-only'], cwd=str(BASE_DIR), capture_output=True, text=True)
+        leaked = [name for name in staged.stdout.splitlines() if name == '.env' or (name.startswith('.env.') and name != '.env.example')]
+        if leaked:
+            raise RuntimeError('refusing to commit environment files')
         now_str = get_beijing_now().strftime('%m-%d %H:%M')
         subprocess.run(['git', 'commit', '-m', f'[auto-update] 解决方案/案例/博文定时自造血更新 ({now_str})'], cwd=str(BASE_DIR), check=True, capture_output=True)
         subprocess.run(['git', 'push', 'origin', 'main'], cwd=str(BASE_DIR), check=True, capture_output=True)

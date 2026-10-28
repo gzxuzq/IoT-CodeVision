@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)（2026-10-28 05:11） · 码视野</title>
-  <meta name="description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题">
+  <meta name="description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题（2026-10-28 05:11）">
   <link rel="canonical" href="https://iot-showcase.hei-ai.com/posts/post_20261028051140.html">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="码视野">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:title" content="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)（2026-10-28 05:11）">
-  <meta property="og:description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题">
+  <meta property="og:description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题（2026-10-28 05:11）">
   <meta property="og:url" content="https://iot-showcase.hei-ai.com/posts/post_20261028051140.html">
   <meta property="og:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&amp;q=80">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)（2026-10-28 05:11）">
-  <meta name="twitter:description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题">
+  <meta name="twitter:description" content="在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题（2026-10-28 05:11）">
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&amp;q=80">
   <meta property="article:published_time" content="2026-10-28T05:11:00+08:00">
   <meta name="baidu-site-verification" content="codeva-qFRgW9V0Kz" />
@@ -34,7 +34,7 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/images/logo.png">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)", "description": "在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题", "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80", "author": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/"}, "publisher": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/", "logo": {"@type": "ImageObject", "url": "https://iot-showcase.hei-ai.com/images/logo.png"}}, "mainEntityOfPage": "https://iot-showcase.hei-ai.com/posts/post_20261028051140.html", "inLanguage": "zh-CN", "datePublished": "2026-10-28T05:11:00+08:00"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://iot-showcase.hei-ai.com/"}, {"@type": "ListItem", "position": 2, "name": "技术博文", "item": "https://iot-showcase.hei-ai.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)", "item": "https://iot-showcase.hei-ai.com/posts/post_20261028051140.html"}]}]}
+  {"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)", "description": "在大型物联网与工业设备采集场景中，通信链路常受到现场强电磁干扰与弱网波动影响。如何保障数据可靠性是每一个架构师不可回避的命题（2026-10-28 05:11）", "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80", "author": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/"}, "publisher": {"@type": "Organization", "name": "码视野", "url": "https://iot-showcase.hei-ai.com/", "logo": {"@type": "ImageObject", "url": "https://iot-showcase.hei-ai.com/images/logo.png"}}, "mainEntityOfPage": "https://iot-showcase.hei-ai.com/posts/post_20261028051140.html", "inLanguage": "zh-CN", "datePublished": "2026-10-28T05:11:00+08:00"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://iot-showcase.hei-ai.com/"}, {"@type": "ListItem", "position": 2, "name": "技术博文", "item": "https://iot-showcase.hei-ai.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "高并发工业遥测平台选型：Kafka 与 EMQX 消息队列的边界与融合实践 (深度实战篇)", "item": "https://iot-showcase.hei-ai.com/posts/post_20261028051140.html"}]}]}
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{brand:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a'}}}}}</script>
